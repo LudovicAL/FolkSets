@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">FolkSets</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="selectStorageDirectory">Select a storage directory</string>
+    <string name="exportDatabaseToStorage">Export database to storage</string>
+    <string name="importDatabaseFromStorage">Import database from storage</string>
+    <string name="tab_songs">SONGS</string>
+    <string name="tab_sets">SETS</string>
+    <string name="tab_settings">SETTINGS</string>
+
+    <string name="title">Title</string>
+    <string name="titles">Titles</string>
+    <string name="tag">Tag</string>
+    <string name="tags">Tags</string>
+    <string name="file_path">File path</string>
+    <string name="file_type">File type</string>
+    <string name="composer">Composer</string>
+    <string name="region">Region</string>
+    <string name="region_of_origin">Region of origin</string>
+    <string name="key">Key</string>
+    <string name="incipit">Incipit</string>
+    <string name="form">Form</string>
+    <string name="played_by">Played by</string>
+    <string name="note">Note</string>
+    <string name="file_creation">File creation</string>
+    <string name="file_last_consultation">File last consultation</string>
+    <string name="consultation_number">Consultation number</string>
+
+    <string name="search">Search</string>
+    <string name="placeholder">Placeholder</string>
+
+    <string name="sort_by_title">Sort by title</string>
+    <string name="sort_by_last_created">Sort by last created</string>
+    <string name="sort_by_last_consulted">Sort by last consulted</string>
+    <string name="sort_by_most_consulted">Sort by most consulted</string>
+
+    <string-array name="song_sort_array">
+        <item>@string/sort_by_title</item>
+        <item>@string/sort_by_last_created</item>
+        <item>@string/sort_by_last_consulted</item>
+        <item>@string/sort_by_most_consulted</item>
+    </string-array>
+</resources>
