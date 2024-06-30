@@ -10,12 +10,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
+import com.bandito.folksets.SetListFragment;
 import com.bandito.folksets.sql.entities.SetEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecyclerViewAdapter.SetViewHolder> {
+    private static final String TAG = SetListRecyclerViewAdapter.class.getName();
     public static List<SetEntity> setEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
@@ -37,7 +39,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
         try {
             viewHolder.getSetNameTextView().setText(setEntityList.get(position).setName);
         } catch (Exception e) {
-            Log.w("ViewHolder", "An error occured while binding ViewHolder " + position + ".");
+            Log.w(TAG, "An error occured while binding ViewHolder " + position + ".");
         }
     }
 

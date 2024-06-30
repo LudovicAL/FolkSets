@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.SetEntity;
@@ -182,7 +183,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         StringBuilder query = new StringBuilder();
         query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_SONG).append(" WHERE ");
         for (int i = 0, max = valueArray.length; i < max; i++) {
-            query.append(fieldListName + " LIKE '%").append(valueArray[i]).append("%'");
+            query.append(fieldListName).append(" LIKE '%").append(valueArray[i]).append("%'");
             if (i < max - 1) {
                 query.append(" AND ");
             }
@@ -203,15 +204,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return convertCursorToSetEntityList(cursor);
     }
 
-    public List<SetEntity> findSetsWithSongInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, long songId, String sortOnField, String sortDirection) {
-        fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
-        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SET + " WHERE " + SET_SONGS + " LIKE '%" + songId + "%'";
-        query += getSortOptionString(sortOnField, sortDirection);
-        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
+    public Pair<Integer, List<SetEntity>> findSetsWithSongsInDatabase(SQLiteDatabase sqLiteDatabase, String songTitles, String sortOnField, String sortDirection) {
+        String[] songTitlesArray = StringUtils.split(songTitles, DEFAULT_SEPARATOR);
+        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_ID, SONG_TITLES, songTitlesArray, null, null);
+        if (songEntityList.isEmpty()) {
+            return new Pair<>(0, new ArrayList<>());
+        } else {
+            Long[] songIdArray = songEntityList.stream().map(songEntity -> songEntity.songId).toArray(Long[]::new);
+            return new Pair<>(songEntityList.size(), findSetsWithSongsInDatabase(sqLiteDatabase, songIdArray, sortOnField, sortDirection));
+        }
+    }
+
+    public List<SetEntity> findSetsWithSongsInDatabase(SQLiteDatabase sqLiteDatabase, Long[] songIdArray, String sortOnField, String sortDirection) {
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT * FROM " + TABLE_SET + " WHERE");
+        for (int i = 0, max = songIdArray.length; i < max; i++) {
+            query.append(" ").append(SET_SONGS).append(" LIKE '%").append(songIdArray[i]).append("%'");
+            if (i < max - 1) {
+                query.append(" OR");
+            }
+        }
+        query.append(getSortOptionString(sortOnField, sortDirection));
+        Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
         List<SetEntity> setEntityList = convertCursorToSetEntityList(cursor);
         for (int i = setEntityList.size() - 1; i >= 0; i--) {
-            String[] setSongsArray = StringUtils.split(setEntityList.get(i).setSongs, DEFAULT_SEPARATOR);
-            if (Arrays.stream(setSongsArray).noneMatch(setSongsValue -> setSongsValue.equals(String.valueOf(songId)))) {
+            String[] setSongArray = StringUtils.split(setEntityList.get(i).setSongs, DEFAULT_SEPARATOR);
+            if (Arrays.stream(setSongArray)
+                    .map(setSong -> Long.valueOf(setSong))
+                    .noneMatch(setSongLong -> Arrays.asList(songIdArray).contains(setSongLong))) {
                 setEntityList.remove(i);
             }
         }
@@ -250,7 +270,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void removeSongFromSets(SQLiteDatabase sqLiteDatabase, long songId) {
-        List<SetEntity> setEntityList = findSetsWithSongInDatabase(sqLiteDatabase, "*", songId, null, null);
+        List<SetEntity> setEntityList = findSetsWithSongsInDatabase(sqLiteDatabase, new Long[]{songId}, null, null);
         for (SetEntity setEntity : setEntityList) {
             List<String> setSongsList = Arrays.asList(StringUtils.split(setEntity.setSongs, DEFAULT_SEPARATOR));
             setSongsList = setSongsList.stream().filter(songIdInSet -> !songIdInSet.equals(String.valueOf(songId))).collect(Collectors.toList());

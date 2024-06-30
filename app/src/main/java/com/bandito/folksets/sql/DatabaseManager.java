@@ -12,6 +12,8 @@ import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import android.app.Activity;
 
+import androidx.core.util.Pair;
+
 import java.util.List;
 import java.util.Set;
 
@@ -158,11 +160,19 @@ public class DatabaseManager {
         }
     }
 
-    public static List<SetEntity> findSetsWithSongInDatabase(String fieldsNames, long songId, String sortOnField, String sortDirection) throws FolkSetsException {
+    public static Pair<Integer, List<SetEntity>> findSetsWithSongsInDatabase(String songTitles, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findSetsWithSongInDatabase(sqLiteDatabase, fieldsNames, songId, sortOnField, sortDirection);
+            return databaseHelper.findSetsWithSongsInDatabase(sqLiteDatabase, songTitles, sortOnField, sortDirection);
         } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while looking for sets with a songs in the database.", e);
+            throw new FolkSetsException("An exception occured while looking for sets with a songs title in the database.", e);
+        }
+    }
+
+    public static List<SetEntity> findSetsWithSongsInDatabase(Long[] songId, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findSetsWithSongsInDatabase(sqLiteDatabase, songId, sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for sets with a songs id in the database.", e);
         }
     }
 

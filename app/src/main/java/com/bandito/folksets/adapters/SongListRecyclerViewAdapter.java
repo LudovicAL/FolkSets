@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SongListRecyclerViewAdapter extends RecyclerView.Adapter<SongListRecyclerViewAdapter.SongViewHolder> {
+    private static final String TAG = SongListRecyclerViewAdapter.class.getName();
     public static List<SongEntity> songEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
@@ -37,7 +38,7 @@ public class SongListRecyclerViewAdapter extends RecyclerView.Adapter<SongListRe
         try {
             viewHolder.getSongTitleTextView().setText(songEntityList.get(position).getFirstTitle());
         } catch (Exception e) {
-            Log.w("ViewHolder", "An error occured while binding ViewHolder " + position + ".");
+            Log.w(TAG, "An error occured while binding ViewHolder " + position + ".");
         }
     }
 

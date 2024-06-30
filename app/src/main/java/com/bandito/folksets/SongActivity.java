@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bandito.folksets.sql.DatabaseManager;
+import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.SongEntity;
 import com.bandito.folksets.util.Constants;
 import com.google.android.material.navigation.NavigationView;
@@ -26,6 +27,10 @@ import java.time.OffsetDateTime;
 
 public class SongActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final String TAG = SongActivity.class.getName();
+    private Constants.SongOrSet songOrSet;
+    private int position;
+    private SetEntity setEntity;
     private SongEntity songEntity;
     private DrawerLayout drawerLayout;
     private TextView songTitlesTextView;
@@ -49,7 +54,24 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_song);
 
-        songEntity = (SongEntity) getIntent().getExtras().getSerializable(Constants.SONG_ENTITY);
+        //Determine what was received: a song or a set
+        String songOrSetStr = getIntent().getExtras().getString(Constants.OPERATION);
+        songOrSet = Constants.SongOrSet.set.toString().equals(songOrSetStr) ? Constants.SongOrSet.set : Constants.SongOrSet.song;
+
+        //Retrieve Song data
+        if (songOrSet.equals(Constants.SongOrSet.song)) {
+            songEntity = (SongEntity) getIntent().getExtras().getSerializable(Constants.SONG_ENTITY);
+        } else {
+            setEntity = (SetEntity) getIntent().getExtras().getSerializable(Constants.SET_ENTITY);
+            position = getIntent().getExtras().getInt(Constants.POSITION);
+            try {
+                songEntity = DatabaseManager.findSongsInDatabase("*", Constants.SONG_ID, setEntity.getSong(position), null, null).get(0);
+            } catch (Exception e) {
+                Log.e(TAG, "An error occured while fetching a song at position " + position + " in set.", e);
+            }
+        }
+
+        //Display song data
         if (!isNull(songEntity)) {
             View headerView = ((NavigationView)findViewById(R.id.song_nav_view)).getHeaderView(0);
             songTitlesTextView = headerView.findViewById(R.id.nav_song_title_textview);
@@ -82,10 +104,10 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
             songConsultationNumberTextView.setText(songEntity.songConsultationNumber.toString());
         }
 
-        drawerLayout = findViewById(R.id.drawer_layout);
+        drawerLayout = findViewById(R.id.drawer_layout_song);
         String clickType = getIntent().getExtras().getString(Constants.CLICK_TYPE);
         if (!isNull(clickType)) {
-            Log.i("ClickType", "Activity entered via " + clickType + ".");
+            Log.i(TAG, "Activity entered via " + clickType + ".");
             if (Constants.ClickType.longClick.toString().equals(clickType)) {
                 drawerLayout.openDrawer(GravityCompat.END);
             }
@@ -97,11 +119,11 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        songEntity.songLastConsultationDate = OffsetDateTime.now().toString();
         try {
+            songEntity.songLastConsultationDate = OffsetDateTime.now().toString();
             DatabaseManager.updateSongInDatabase(songEntity);
         } catch (Exception e) {
-            //Do nothing
+            Log.e(TAG, "And error occured when trying to update the song last consultation date.", e);
         }
         super.onDestroy();
     }

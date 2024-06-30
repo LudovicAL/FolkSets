@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class IoUtilities {
+
+    private static final String TAG = IoUtilities.class.getName();
     public static void assertDirectoryExist(Context context, String uriFromTreeAsString) throws FolkSetsException {
         Utilities.assertObjectIsNotNull("uriFromTreeAsString", uriFromTreeAsString);
         DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(uriFromTreeAsString));
@@ -94,7 +96,7 @@ public class IoUtilities {
                 flushable.flush();
             }
         } catch (Exception e) {
-            Log.e("Close", "An error occured while flushing a Flushable: " + flushable.getClass(), e);
+            Log.e(TAG, "An error occured while flushing a Flushable: " + flushable.getClass(), e);
         }
 
     }
@@ -105,7 +107,7 @@ public class IoUtilities {
                 closeable.close();
             }
         } catch (Exception e) {
-            Log.e("Close", "An error occured while closing a Closable: " + closeable.getClass(), e);
+            Log.e(TAG, "An error occured while closing a Closable: " + closeable.getClass(), e);
         }
     }
 

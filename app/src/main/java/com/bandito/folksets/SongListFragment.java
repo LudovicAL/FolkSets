@@ -53,6 +53,8 @@ import java.util.concurrent.Executors;
 
 public class SongListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SongListRecyclerViewAdapter.ItemClickListener {
 
+    private static final String TAG = SongListFragment.class.getName();
+
     private ProgressBar progressBar;
 
     private Spinner sortSpinner;
@@ -159,24 +161,24 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonTitle) {
-                    Log.i("Search", "Seaching title: " + textToSearch);
+                    Log.i(TAG, "Seaching title: " + textToSearch);
                     String[] titleArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TITLES, titleArray, sortParameters.first, sortParameters.second);
                 } else if (i == R.id.toggleButtonTag) {
-                    Log.i("Search", "Seaching tag: " + textToSearch);
+                    Log.i(TAG, "Seaching tag: " + textToSearch);
                     String[] tagArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TAGS, tagArray, sortParameters.first, sortParameters.second);
                 } else if (i == R.id.toggleButtonComposer) {
-                    Log.i("Search", "Seaching composer: " + textToSearch);
+                    Log.i(TAG, "Seaching composer: " + textToSearch);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_COMPOSER, textToSearch, sortParameters.first, sortParameters.second);
                 } else if (i == R.id.toggleButtonRegion) {
-                    Log.i("Search", "Seaching region: " + textToSearch);
+                    Log.i(TAG, "Seaching region: " + textToSearch);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_REGION_OF_ORIGIN, textToSearch, sortParameters.first, sortParameters.second);
                 } else if (i == R.id.toggleButtonKey) {
-                    Log.i("Search", "Seaching key: " + textToSearch);
+                    Log.i(TAG, "Seaching key: " + textToSearch);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_KEY, textToSearch, sortParameters.first, sortParameters.second);
                 } else if (i == R.id.toggleButtonPlayedBy) {
-                    Log.i("Search", "Seaching played by: " + textToSearch);
+                    Log.i(TAG, "Seaching played by: " + textToSearch);
                     String[] playedByArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
                     SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second);
                 }
@@ -215,8 +217,9 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             SongEntity songEntity = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null).get(0);
             songEntity.songConsultationNumber++;
             DatabaseManager.updateSongInDatabase(songEntity);
-            Log.i("TAG", "You short clicked " + songEntity.getFirstTitle() + ", which is at cell position " + position);
+            Log.i(TAG, "You short clicked " + songEntity.getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
+                    new Pair<>(Constants.OPERATION, Constants.SONG_ENTITY),
                     new Pair<>(Constants.SONG_ENTITY, songEntity),
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
@@ -229,8 +232,9 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     public void onLongItemClick(View view, int position) {
         try {
             List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null);
-            Log.i("TAG", "You long clicked " + songEntityList.get(0).getFirstTitle() + ", which is at cell position " + position);
+            Log.i(TAG, "You long clicked " + songEntityList.get(0).getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
+                    new Pair<>(Constants.OPERATION, Constants.SONG_ENTITY),
                     new Pair<>(Constants.SONG_ENTITY, songEntityList.get(0)),
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.longClick.toString())
             });
@@ -242,7 +246,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.song_sort_spinner) {
-            Log.i("PopupMenu", "You clicked " + sortSpinner.getSelectedItem().toString());
+            Log.i(TAG, "You clicked " + sortSpinner.getSelectedItem().toString());
             demandNewSearch(false);
         }
     }

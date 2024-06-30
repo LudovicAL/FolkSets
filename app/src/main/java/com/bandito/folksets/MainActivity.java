@@ -28,6 +28,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getName();
     private TabLayout tabLayout;
 
     @Override
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         tabAdapter.addFragment(new SetListFragment());
         tabAdapter.addFragment(new SettingsFragment());
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+        viewPager2.setUserInputEnabled(false);
         viewPager2.setAdapter(tabAdapter);
         tabLayout = findViewById(R.id.tabsLayout);
         new TabLayoutMediator(tabLayout, viewPager2,
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             DatabaseManager.closeDatabase();
         } catch (Exception e) {
-            Log.e("Close", "An error occured while closing the database.", e);
+            Log.e(TAG, "An error occured while closing the database.", e);
         }
         super.onDestroy();
     }

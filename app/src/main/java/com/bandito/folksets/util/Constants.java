@@ -30,11 +30,23 @@ public class Constants {
     public static final String DEFAULT_SEPARATOR = ";";
     public static final String SONG_ENTITY = "songEntity";
     public static final String SET_ENTITY = "setEntity";
+    public static final String OPERATION = "operation";
     public static final String CLICK_TYPE = "clickType";
     public static final String SORT_ASC = "ASC";
     public static final String SORT_DESC = "DESC";
+    public static final String POSITION = "Position";
     public enum ClickType {
         shortClick,
         longClick
+    }
+
+    public enum SetOperation {
+        createSet,
+        editSet
+    }
+
+    public enum SongOrSet {
+        song,
+        set
     }
 }

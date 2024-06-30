@@ -64,7 +64,7 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.insertSongsInDatabase(songEntityToAddList);
             callingActivity.runOnUiThread(() -> progressBar.setProgress(8));
             //Update song adapter
-            SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(Constants.SONG_ID + "," + Constants.SONG_TITLES, null, null, null, null);
+            SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(Constants.SONG_ID + "," + Constants.SONG_TITLES, null, null, Constants.SONG_TITLES, null);
             callingActivity.runOnUiThread(() -> progressBar.setProgress(9));
             callingActivity.runOnUiThread(() -> songListRecyclerViewAdapter.notifyDataSetChanged());
             callingActivity.runOnUiThread(() -> progressBar.setProgress(10));

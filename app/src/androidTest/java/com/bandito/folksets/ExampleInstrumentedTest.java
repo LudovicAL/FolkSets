@@ -8,6 +8,7 @@ import static com.bandito.folksets.util.Constants.TABLE_SONG;
 
 import android.content.Context;
 
+import androidx.core.util.Pair;
 import androidx.test.platform.app.InstrumentationRegistry;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
@@ -230,7 +231,44 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void findSetsWithSongInDatabase() {
+    public void findSetsWithSongInDatabase1() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SONG);
+            DatabaseManager.truncateTable(TABLE_SET);
+            SongEntity songEntity1 = generateSongEntity();
+            SongEntity songEntity2 = generateSongEntity();
+            SongEntity songEntity3 = generateSongEntity();
+            songEntity1.songTitles = "song1;otherName";
+            songEntity2.songTitles = "placeholder;song2";
+            songEntity3.songTitles = "song3";
+            DatabaseManager.insertSongInDatabase(songEntity1);
+            DatabaseManager.insertSongInDatabase(songEntity2);
+            DatabaseManager.insertSongInDatabase(songEntity3);
+            SetEntity setEntity1 = generateSetEntity();
+            SetEntity setEntity2 = generateSetEntity();
+            SetEntity setEntity3 = generateSetEntity();
+            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID, null, null, null, null);
+            setEntity1.setSongs = songEntityList.get(0).songId + ";" + songEntityList.get(1).songId;
+            setEntity2.setSongs = songEntityList.get(1).songId + ";" + songEntityList.get(2).songId;
+            setEntity3.setSongs = songEntityList.get(0).songId + ";" + songEntityList.get(2).songId;
+            DatabaseManager.insertSetInDatabase(setEntity1);
+            DatabaseManager.insertSetInDatabase(setEntity2);
+            DatabaseManager.insertSetInDatabase(setEntity3);
+            Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithSongsInDatabase("song", null, null);
+            Assertions.assertThat(result.first).isEqualTo(3);
+            Assertions.assertThat(result.second).hasSize(3);
+            result = DatabaseManager.findSetsWithSongsInDatabase("song3", null, null);
+            Assertions.assertThat(result.first).isEqualTo(1);
+            Assertions.assertThat(result.second).hasSize(2);
+            result = DatabaseManager.findSetsWithSongsInDatabase("inexistant", null, null);
+            Assertions.assertThat(result.first).isEqualTo(0);
+            Assertions.assertThat(result.second).hasSize(0);
+        });
+    }
+
+    @Test
+    public void findSetsWithSongInDatabase2() {
         Assertions.assertThatNoException().isThrownBy(() -> {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SET);
@@ -242,7 +280,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.insertSetInDatabase(setEntity2);
             DatabaseManager.insertSetInDatabase(setEntity3);
             long songId = 2;
-            List<SetEntity> setEntityList = DatabaseManager.findSetsWithSongInDatabase("*", songId, null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findSetsWithSongsInDatabase(new Long[]{songId}, null, null);
             Assertions.assertThat(setEntityList).hasSize(2);
             for (SetEntity se : setEntityList) {
                 Assertions.assertThat(se.setSongs).contains(String.valueOf(songId));

@@ -24,6 +24,7 @@ import com.bandito.folksets.util.Utilities;
 
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
+    private static final String TAG = SettingsFragment.class.getName();
     private TextView storageDirectorySelectionTextView;
 
     protected final IntentLauncher<Intent, ActivityResult> intentLauncher = IntentLauncher.registerActivityForResult(this);
@@ -69,7 +70,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Intent resultData = activityResult.getData();
             Uri uriTree = resultData.getData();
             if (isNull(uriTree)) {
-                Log.e("FolderPicking", "The folder picking intent returned a null object.");
+                Log.e(TAG, "The folder picking intent returned a null object.");
             } else {
                 final int modeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 requireActivity().getContentResolver().takePersistableUriPermission(uriTree, modeFlags);
@@ -77,7 +78,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 updateSelectStorageDirectoryTextView(null);
             }
         } else {
-            Log.e("FolderPicking", "The folder picking intent failed.");
+            Log.e(TAG, "The folder picking intent failed.");
         }
     }
 
@@ -87,7 +88,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(requireContext(), "Exportation complete", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(requireContext(), "An error occured", Toast.LENGTH_SHORT).show();
-            Log.e("Export", "An error occured when exporting the database to storage.", e);
+            Log.e(TAG, "An error occured when exporting the database to storage.", e);
         }
     }
 
@@ -97,7 +98,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             Toast.makeText(requireContext(), "Importation complete", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(requireContext(), "An error occured", Toast.LENGTH_SHORT).show();
-            Log.e("Import", "An error occured when importing the database from storage.", e);
+            Log.e(TAG, "An error occured when importing the database from storage.", e);
         }
     }
 

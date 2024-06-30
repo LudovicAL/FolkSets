@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,7 +19,8 @@
             android:id="@+id/songListEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:hint="@string/search"
+            android:hint="@string/search_songs"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:maxLength="80"
             android:singleLine="true"
@@ -104,13 +106,10 @@
         android:id="@+id/songListRecyclerView"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/songListProgressBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintTop_toBottomOf="@+id/songToggleButtonGroup"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/songToggleButtonGroup" />
+        app:layout_constraintBottom_toTopOf="@+id/songListProgressBar" />
 
     <ProgressBar
         android:id="@+id/songListProgressBar"

@@ -29,13 +29,25 @@
     <string name="file_last_consultation">File last consultation</string>
     <string name="consultation_number">Consultation number</string>
 
-    <string name="search">Search</string>
+    <string name="search_songs">Search songs</string>
+    <string name="search_sets">Search sets</string>
     <string name="placeholder">Placeholder</string>
+    <string name="back">Back</string>
+    <string name="edit">Edit</string>
+    <string name="save">Save</string>
+
+    <string name="create_new_set">Create new set</string>
+    <string name="edit_set">Edit set</string>
+    <string name="set_name">Set name</string>
+    <string name="song_in_set">Song in set</string>
 
     <string name="sort_by_title">Sort by title</string>
     <string name="sort_by_last_created">Sort by last created</string>
     <string name="sort_by_last_consulted">Sort by last consulted</string>
     <string name="sort_by_most_consulted">Sort by most consulted</string>
+
+    <string name="available_songs">Available songs</string>
+    <string name="selected_songs">Selected songs</string>
 
     <string-array name="song_sort_array">
         <item>@string/sort_by_title</item>
