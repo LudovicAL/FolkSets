@@ -26,7 +26,6 @@ import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.util.Constants;
-import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -125,12 +124,12 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         try {
             String textToSearch = editText.getText().toString();
             if (textToSearch.isEmpty()) {
-                SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findSetsInDatabase(SET_ID + "," + SET_NAME, null, null, SET_NAME, null);
+                SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findAllSetsInDatabase(SET_ID + "," + SET_NAME, SET_NAME, null);
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonSetName) {
                     Log.i(TAG, "Seaching name: " + textToSearch);
-                    SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findSetsInDatabase(SET_ID + "," + SET_NAME, SET_NAME, textToSearch, SET_NAME, null);
+                    SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findSetsByNameInDatabase(SET_ID + "," + SET_NAME, textToSearch, SET_NAME, null);
                 } else if (i == R.id.toggleButtonSongInSet) {
                     Log.i(TAG, "Seaching song in set: " + textToSearch);
                     Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithSongsInDatabase(textToSearch, SET_NAME, null);
@@ -155,10 +154,10 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onItemClick(View view, int position) {
         try {
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", SET_ID, String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You short clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SET_ENTITY),
+                    new Pair<>(Constants.OPERATION, Constants.SongOrSet.set.toString()),
                     new Pair<>(Constants.POSITION, 0),
                     new Pair<>(Constants.SET_ENTITY, setEntityList.get(0)),
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
@@ -171,7 +170,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onLongItemClick(View view, int position) {
         try {
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", SET_ID, String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
                     new Pair<>(Constants.OPERATION, Constants.SetOperation.editSet.toString()),

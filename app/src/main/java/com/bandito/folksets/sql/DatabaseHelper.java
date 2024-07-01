@@ -2,6 +2,8 @@ package com.bandito.folksets.sql;
 
 import static com.bandito.folksets.util.Constants.*;
 
+import static java.util.Objects.isNull;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -167,12 +169,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
-    public List<SongEntity> findSongsInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String whereClauseFieldName, String whereClauseFieldValue, String sortOnField, String sortDirection) {
+    public List<SongEntity> findSongByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String songId, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
-        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SONG;
-        if (StringUtils.isNotBlank(whereClauseFieldName)) {
-            query += " WHERE " + whereClauseFieldName + " = " + whereClauseFieldValue;
-        }
+        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SONG + " WHERE " + SONG_ID + " = " + songId;
         query += getSortOptionString(sortOnField, sortDirection);
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
         return convertCursorToSongEntityList(cursor);
@@ -181,11 +180,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<SongEntity> findSongsWithValueInListInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String fieldListName, String[] valueArray, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder();
-        query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_SONG).append(" WHERE ");
-        for (int i = 0, max = valueArray.length; i < max; i++) {
-            query.append(fieldListName).append(" LIKE '%").append(valueArray[i]).append("%'");
-            if (i < max - 1) {
-                query.append(" AND ");
+        query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_SONG);
+        if (!isNull(fieldListName) && !isNull(valueArray)) {
+            for (int i = 0, max = valueArray.length; i < max; i++) {
+                if (i == 0) {
+                    query.append(" WHERE ");
+                }
+                query.append(fieldListName).append(" LIKE '%").append(valueArray[i]).append("%'");
+                if (i < max - 1) {
+                    query.append(" AND ");
+                }
             }
         }
         query.append(getSortOptionString(sortOnField, sortDirection));
@@ -193,12 +197,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return convertCursorToSongEntityList(cursor);
     }
 
-    public List<SetEntity> findSetsInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String whereClauseFieldName, String whereClauseFieldValue, String sortOnField, String sortDirection) {
+    public List<SetEntity> findSetByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String setId, String sortOnField, String sortDirection) {
+        fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
+        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SET + " WHERE " + SET_ID + " = " + setId;
+        query += getSortOptionString(sortOnField, sortDirection);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
+        return convertCursorToSetEntityList(cursor);
+    }
+
+    public List<SetEntity> findSetsByNameInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String setName, String sortOnField, String sortDirection) {
+        fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
+        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SET + " WHERE " + SET_NAME + " LIKE '%" + setName + "%'";
+        query += getSortOptionString(sortOnField, sortDirection);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
+        return convertCursorToSetEntityList(cursor);
+    }
+
+    public List<SetEntity> findAllSetsInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         String query = "SELECT " + fieldsNames + " FROM " + TABLE_SET;
-        if (StringUtils.isNotBlank(whereClauseFieldName)) {
-            query += " WHERE " + whereClauseFieldName + " = " + whereClauseFieldValue;
-        }
         query += getSortOptionString(sortOnField, sortDirection);
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
         return convertCursorToSetEntityList(cursor);
@@ -284,7 +301,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Set<String> getAllTagsInSongTable(SQLiteDatabase sqLiteDatabase) {
-        List<SongEntity> songEntityList = findSongsInDatabase(sqLiteDatabase, SONG_TAGS, null, null, null, null);
+        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_TAGS, null, null, null, null);
         Set<String> uniqueTagList = new HashSet<>();
         for (SongEntity songEntity : songEntityList) {
             uniqueTagList.addAll(Arrays.asList(StringUtils.split(songEntity.songTags, DEFAULT_SEPARATOR)));
@@ -293,7 +310,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public Set<String> getAllPlayersInSongTable(SQLiteDatabase sqLiteDatabase) {
-        List<SongEntity> songEntityList = findSongsInDatabase(sqLiteDatabase, SONG_PLAYED_BY, null, null, null, null);
+        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_PLAYED_BY, null, null, null, null);
         Set<String> uniquePlayerList = new HashSet<>();
         for (SongEntity songEntity : songEntityList) {
             uniquePlayerList.addAll(Arrays.asList(StringUtils.split(songEntity.songPlayedBy, DEFAULT_SEPARATOR)));

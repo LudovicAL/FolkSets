@@ -48,6 +48,11 @@
 
     <string name="available_songs">Available songs</string>
     <string name="selected_songs">Selected songs</string>
+    <string name="select_song">Select song</string>
+    <string name="deselect_song">Deselect song</string>
+    <string name="move_song_up">Move song up</string>
+    <string name="move_song_down">Move song down</string>
+    <string name="delete_set">Delete set</string>
 
     <string-array name="song_sort_array">
         <item>@string/sort_by_title</item>

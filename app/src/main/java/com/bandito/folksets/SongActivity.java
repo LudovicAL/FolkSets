@@ -65,7 +65,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
             setEntity = (SetEntity) getIntent().getExtras().getSerializable(Constants.SET_ENTITY);
             position = getIntent().getExtras().getInt(Constants.POSITION);
             try {
-                songEntity = DatabaseManager.findSongsInDatabase("*", Constants.SONG_ID, setEntity.getSong(position), null, null).get(0);
+                songEntity = DatabaseManager.findSongByIdInDatabase("*", setEntity.getSong(position), null, null).get(0);
             } catch (Exception e) {
                 Log.e(TAG, "An error occured while fetching a song at position " + position + " in set.", e);
             }

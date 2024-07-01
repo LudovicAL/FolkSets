@@ -26,6 +26,8 @@ public class DatabaseManager {
         try {
             if (isNull(databaseHelper)) {
                 databaseHelper = new DatabaseHelper(context);
+            }
+            if (isNull(sqLiteDatabase) || !sqLiteDatabase.isOpen()) {
                 sqLiteDatabase = databaseHelper.getWritableDatabase();
                 databaseHelper.initializeDatabase(sqLiteDatabase);
             }
@@ -136,9 +138,17 @@ public class DatabaseManager {
         }
     }
 
-    public static List<SongEntity> findSongsInDatabase(String fieldsNames, String whereClauseFieldName, String whereClauseFieldValue, String sortOnField, String sortDirection) throws FolkSetsException {
+    public static List<SongEntity> findSongByIdInDatabase(String fieldsNames, Long songId, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findSongsInDatabase(sqLiteDatabase, fieldsNames, whereClauseFieldName, whereClauseFieldValue, sortOnField, sortDirection);
+            return databaseHelper.findSongByIdInDatabase(sqLiteDatabase, fieldsNames, String.valueOf(songId), sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for songs in the database.", e);
+        }
+    }
+
+    public static List<SongEntity> findSongByIdInDatabase(String fieldsNames, String songId, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findSongByIdInDatabase(sqLiteDatabase, fieldsNames, songId, sortOnField, sortDirection);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for songs in the database.", e);
         }
@@ -152,9 +162,33 @@ public class DatabaseManager {
         }
     }
 
-    public static List<SetEntity> findSetsInDatabase(String fieldsNames, String whereClauseFieldName, String whereClauseFieldValue, String sortOnField, String sortDirection) throws FolkSetsException {
+    public static List<SetEntity> findSetByIdInDatabase(String fieldsNames, Long setId, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findSetsInDatabase(sqLiteDatabase, fieldsNames, whereClauseFieldName, whereClauseFieldValue, sortOnField, sortDirection);
+            return databaseHelper.findSetByIdInDatabase(sqLiteDatabase, fieldsNames, String.valueOf(setId), sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for sets in the database.", e);
+        }
+    }
+
+    public static List<SetEntity> findSetByIdInDatabase(String fieldsNames, String setId, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findSetByIdInDatabase(sqLiteDatabase, fieldsNames, setId, sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for sets in the database.", e);
+        }
+    }
+
+    public static List<SetEntity> findSetsByNameInDatabase(String fieldsNames, String setName, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findSetsByNameInDatabase(sqLiteDatabase, fieldsNames, setName, sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for sets in the database.", e);
+        }
+    }
+
+    public static List<SetEntity> findAllSetsInDatabase(String fieldsNames, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findAllSetsInDatabase(sqLiteDatabase, fieldsNames, sortOnField, sortDirection);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for sets in the database.", e);
         }

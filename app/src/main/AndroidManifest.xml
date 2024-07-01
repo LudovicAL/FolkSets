@@ -18,7 +18,8 @@
         tools:targetApi="30">
         <activity
             android:name=".SetActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:screenOrientation="landscape" />
         <activity
             android:name=".SongActivity"
             android:exported="false" />

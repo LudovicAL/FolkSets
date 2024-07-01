@@ -154,33 +154,34 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
 
     private void performSearch() {
         try {
+            DatabaseManager.initializeDatabase(requireContext());
             String textToSearch = editText.getText().toString();
             Pair<String, String> sortParameters = getSortParameters();
             if (textToSearch.isEmpty()) {
-                SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, null, null, sortParameters.first, sortParameters.second);
+                songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, null, null, sortParameters.first, sortParameters.second));
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonTitle) {
                     Log.i(TAG, "Seaching title: " + textToSearch);
                     String[] titleArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TITLES, titleArray, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TITLES, titleArray, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonTag) {
                     Log.i(TAG, "Seaching tag: " + textToSearch);
                     String[] tagArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TAGS, tagArray, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TAGS, tagArray, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonComposer) {
                     Log.i(TAG, "Seaching composer: " + textToSearch);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_COMPOSER, textToSearch, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_COMPOSER, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonRegion) {
                     Log.i(TAG, "Seaching region: " + textToSearch);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_REGION_OF_ORIGIN, textToSearch, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_REGION_OF_ORIGIN, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonKey) {
                     Log.i(TAG, "Seaching key: " + textToSearch);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID + "," + SONG_TITLES, SONG_KEY, textToSearch, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_KEY, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonPlayedBy) {
                     Log.i(TAG, "Seaching played by: " + textToSearch);
                     String[] playedByArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
-                    SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second);
+                    songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second));
                 }
             }
             songListRecyclerViewAdapter.notifyDataSetChanged();
@@ -214,7 +215,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onItemClick(View view, int position) {
         try {
-            SongEntity songEntity = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null).get(0);
+            SongEntity songEntity = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null).get(0);
             songEntity.songConsultationNumber++;
             DatabaseManager.updateSongInDatabase(songEntity);
             Log.i(TAG, "You short clicked " + songEntity.getFirstTitle() + ", which is at cell position " + position);
@@ -231,7 +232,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onLongItemClick(View view, int position) {
         try {
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + songEntityList.get(0).getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
                     new Pair<>(Constants.OPERATION, Constants.SONG_ENTITY),

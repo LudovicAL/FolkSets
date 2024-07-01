@@ -15,7 +15,7 @@
         app:layout_constraintRight_toLeftOf="@+id/song_sort_spinner"
         app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/songListEditText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

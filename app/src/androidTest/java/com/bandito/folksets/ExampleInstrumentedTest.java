@@ -1,6 +1,5 @@
 package com.bandito.folksets;
 
-import static com.bandito.folksets.util.Constants.SET_ID;
 import static com.bandito.folksets.util.Constants.SONG_ID;
 import static com.bandito.folksets.util.Constants.SONG_TAGS;
 import static com.bandito.folksets.util.Constants.TABLE_SET;
@@ -57,7 +56,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SONG);
             DatabaseManager.insertSongInDatabase(songEntity);
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(1);
             Assertions.assertThat(songEntityList.get(0).songTitles).isEqualTo(songEntity.songTitles);
         });
@@ -73,7 +72,7 @@ public class ExampleInstrumentedTest {
             songEntityList.add(generateSongEntity());
             songEntityList.add(generateSongEntity());
             DatabaseManager.insertSongsInDatabase(songEntityList);
-            songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(3);
         });
     }
@@ -85,11 +84,11 @@ public class ExampleInstrumentedTest {
             DatabaseManager.truncateTable(TABLE_SONG);
             long songIdToDelete = DatabaseManager.insertSongInDatabase(songEntity);
             DatabaseManager.insertSongInDatabase(songEntity);
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(2);
             int numberOfRowsDeleted = DatabaseManager.removeSongFromDatabase(songIdToDelete);
             Assertions.assertThat(numberOfRowsDeleted).isEqualTo(1);
-            songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(1);
         });
     }
@@ -104,11 +103,11 @@ public class ExampleInstrumentedTest {
             songEntityList.add(generateSongEntity());
             songEntityList.add(generateSongEntity());
             DatabaseManager.insertSongsInDatabase(songEntityList);
-            songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(3);
             List<Long> songIds = songEntityList.stream().map(songEntity -> songEntity.songId).collect(Collectors.toList());
             DatabaseManager.removeSongsFromDatabase(songIds);
-            songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
             Assertions.assertThat(songEntityList).hasSize(0);
         });
     }
@@ -120,14 +119,14 @@ public class ExampleInstrumentedTest {
             DatabaseManager.truncateTable(TABLE_SONG);
             long idOfSongToUpdate = DatabaseManager.insertSongInDatabase(songEntity);
             DatabaseManager.insertSongInDatabase(songEntity);
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(idOfSongToUpdate), null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(idOfSongToUpdate), null, null);
             Assertions.assertThat(songEntityList).hasSize(1);
             SongEntity songEntityForUpdate = songEntityList.get(0);
             String newTitle = "newTitle";
             songEntityForUpdate.songTitles = newTitle;
             int numberOfRowsUpdated = DatabaseManager.updateSongInDatabase(songEntityForUpdate);
             Assertions.assertThat(numberOfRowsUpdated).isEqualTo(1);
-            songEntityList = DatabaseManager.findSongsInDatabase("*", SONG_ID, String.valueOf(idOfSongToUpdate), null, null);
+            songEntityList = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(idOfSongToUpdate), null, null);
             Assertions.assertThat(songEntityList).hasSize(1);
             Assertions.assertThat(songEntityList.get(0).songTitles).isEqualTo(newTitle);
             Assertions.assertThat(songEntityList.get(0).songComposer).isEqualTo(songEntity.songComposer);
@@ -140,7 +139,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SET);
             DatabaseManager.insertSetInDatabase(setEntity);
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", null, null, null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", null, null);
             Assertions.assertThat(setEntityList).hasSize(1);
             Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(setEntity.setName);
         });
@@ -153,11 +152,11 @@ public class ExampleInstrumentedTest {
             DatabaseManager.truncateTable(TABLE_SET);
             long setIdToDelete = DatabaseManager.insertSetInDatabase(setEntity);
             DatabaseManager.insertSetInDatabase(setEntity);
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", null, null, null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", null, null);
             Assertions.assertThat(setEntityList).hasSize(2);
             int numberOfRowsDeleted = DatabaseManager.removeSetFromDatabase(setIdToDelete);
             Assertions.assertThat(numberOfRowsDeleted).isEqualTo(1);
-            setEntityList = DatabaseManager.findSetsInDatabase("*", null, null, null, null);
+            setEntityList = DatabaseManager.findAllSetsInDatabase("*", null, null);
             Assertions.assertThat(setEntityList).hasSize(1);
         });
     }
@@ -169,14 +168,14 @@ public class ExampleInstrumentedTest {
             DatabaseManager.truncateTable(TABLE_SET);
             long idOfSetToUpdate = DatabaseManager.insertSetInDatabase(setEntity);
             DatabaseManager.insertSetInDatabase(setEntity);
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", SET_ID, String.valueOf(idOfSetToUpdate), null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*",  String.valueOf(idOfSetToUpdate), null, null);
             Assertions.assertThat(setEntityList).hasSize(1);
             SetEntity setEntityForUpdate = setEntityList.get(0);
             String newName = "newName";
             setEntityForUpdate.setName = newName;
             int numberOfRowsUpdated = DatabaseManager.updateSetInDatabase(setEntityForUpdate);
             Assertions.assertThat(numberOfRowsUpdated).isEqualTo(1);
-            setEntityList = DatabaseManager.findSetsInDatabase("*", SET_ID, String.valueOf(idOfSetToUpdate), null, null);
+            setEntityList = DatabaseManager.findSetByIdInDatabase("*",  String.valueOf(idOfSetToUpdate), null, null);
             Assertions.assertThat(setEntityList).hasSize(1);
             Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(newName);
             Assertions.assertThat(setEntityList.get(0).setSongs).isEqualTo(setEntity.setSongs);
@@ -184,19 +183,43 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void findSongsInDatabase() {
+    public void findSongByLongIdInListInDatabase() {
         Assertions.assertThatNoException().isThrownBy(() -> {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SONG);
-            DatabaseManager.insertSongInDatabase(songEntity);
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase("*", null, null, null, null);
+            Long songId = DatabaseManager.insertSongInDatabase(songEntity);
+            List<SongEntity> songEntityList = DatabaseManager.findSongByIdInDatabase("*", songId, null, null);
             Assertions.assertThat(songEntityList).hasSize(1);
             Assertions.assertThat(songEntityList.get(0).songTitles).isEqualTo(songEntity.songTitles);
         });
     }
 
     @Test
-    public void findSongsWithTagsInDatabase() {
+    public void findSongByStringIdInListInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SONG);
+            Long songId = DatabaseManager.insertSongInDatabase(songEntity);
+            List<SongEntity> songEntityList = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(songId), null, null);
+            Assertions.assertThat(songEntityList).hasSize(1);
+            Assertions.assertThat(songEntityList.get(0).songTitles).isEqualTo(songEntity.songTitles);
+        });
+    }
+
+    @Test
+    public void findSongsWithNullValueInListInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SONG);
+            DatabaseManager.insertSongInDatabase(songEntity);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase("*", null, null, null, null);
+            Assertions.assertThat(songEntityList).hasSize(1);
+            Assertions.assertThat(songEntityList.get(0).songTitles).isEqualTo(songEntity.songTitles);
+        });
+    }
+
+    @Test
+    public void findSongsWithTagsValuesInDatabase() {
         Assertions.assertThatNoException().isThrownBy(() -> {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SONG);
@@ -219,12 +242,48 @@ public class ExampleInstrumentedTest {
     }
 
     @Test
-    public void findSetsInDatabase() {
+    public void findAllSetsInDatabase() {
         Assertions.assertThatNoException().isThrownBy(() -> {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_SET);
             DatabaseManager.insertSetInDatabase(setEntity);
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", null, null, null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", null, null);
+            Assertions.assertThat(setEntityList).hasSize(1);
+            Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(setEntity.setName);
+        });
+    }
+
+    @Test
+    public void findSetByStringIdInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SET);
+            Long setId = DatabaseManager.insertSetInDatabase(setEntity);
+            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setId), null, null);
+            Assertions.assertThat(setEntityList).hasSize(1);
+            Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(setEntity.setName);
+        });
+    }
+
+    @Test
+    public void findSetByLongIdInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SET);
+            Long setId = DatabaseManager.insertSetInDatabase(setEntity);
+            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", setId, null, null);
+            Assertions.assertThat(setEntityList).hasSize(1);
+            Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(setEntity.setName);
+        });
+    }
+
+    @Test
+    public void findSetByNameInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_SET);
+            DatabaseManager.insertSetInDatabase(setEntity);
+            List<SetEntity> setEntityList = DatabaseManager.findSetsByNameInDatabase("*", setEntity.setName, null, null);
             Assertions.assertThat(setEntityList).hasSize(1);
             Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(setEntity.setName);
         });
@@ -248,7 +307,7 @@ public class ExampleInstrumentedTest {
             SetEntity setEntity1 = generateSetEntity();
             SetEntity setEntity2 = generateSetEntity();
             SetEntity setEntity3 = generateSetEntity();
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase(SONG_ID, null, null, null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID, null, null, null, null);
             setEntity1.setSongs = songEntityList.get(0).songId + ";" + songEntityList.get(1).songId;
             setEntity2.setSongs = songEntityList.get(1).songId + ";" + songEntityList.get(2).songId;
             setEntity3.setSongs = songEntityList.get(0).songId + ";" + songEntityList.get(2).songId;
@@ -301,7 +360,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.insertSetInDatabase(setEntity2);
             DatabaseManager.insertSetInDatabase(setEntity3);
             DatabaseManager.removeSongFromSets(2);
-            List<SetEntity> setEntityList = DatabaseManager.findSetsInDatabase("*", null, null, null, null);
+            List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", null, null);
             Assertions.assertThat(setEntityList).hasSize(2);
         });
     }

@@ -17,10 +17,30 @@ import java.util.List;
 
 public class SongListRecyclerViewAdapter extends RecyclerView.Adapter<SongListRecyclerViewAdapter.SongViewHolder> {
     private static final String TAG = SongListRecyclerViewAdapter.class.getName();
-    public static List<SongEntity> songEntityList = new ArrayList<>();
+    private List<SongEntity> songEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
     public SongListRecyclerViewAdapter() {
+    }
+
+
+    public List<SongEntity> getSongEntityList() {
+        return songEntityList;
+    }
+    public void setSongEntityList(List<SongEntity> songEntityList) {
+        this.songEntityList = songEntityList;
+    }
+
+    public SongEntity removeSongEntity(int position) {
+        return songEntityList.remove(position);
+    }
+
+    public void addSongEntity(SongEntity songEntity) {
+        songEntityList.add(songEntity);
+    }
+
+    public void addSongEntityAtIndex(int index, SongEntity songEntity) {
+        songEntityList.add(index, songEntity);
     }
 
     // Create new views (invoked by the layout manager)

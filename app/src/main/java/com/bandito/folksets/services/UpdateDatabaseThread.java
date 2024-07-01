@@ -42,7 +42,7 @@ public class UpdateDatabaseThread extends Thread {
             callingActivity.runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
             callingActivity.runOnUiThread(() -> progressBar.setProgress(3));
-            List<SongEntity> songEntityList = DatabaseManager.findSongsInDatabase(Constants.SONG_ID + "," + Constants.SONG_FILE_PATH, null, null, null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(Constants.SONG_ID + "," + Constants.SONG_FILE_PATH, null, null, null, null);
             callingActivity.runOnUiThread(() -> progressBar.setProgress(4));
             //Remove deprecated songs
             List<Long> songIdToRemoveList = songEntityList.stream()
@@ -64,7 +64,7 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.insertSongsInDatabase(songEntityToAddList);
             callingActivity.runOnUiThread(() -> progressBar.setProgress(8));
             //Update song adapter
-            SongListRecyclerViewAdapter.songEntityList = DatabaseManager.findSongsInDatabase(Constants.SONG_ID + "," + Constants.SONG_TITLES, null, null, Constants.SONG_TITLES, null);
+            songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(Constants.SONG_ID + "," + Constants.SONG_TITLES, null, null, Constants.SONG_TITLES, null));
             callingActivity.runOnUiThread(() -> progressBar.setProgress(9));
             callingActivity.runOnUiThread(() -> songListRecyclerViewAdapter.notifyDataSetChanged());
             callingActivity.runOnUiThread(() -> progressBar.setProgress(10));
