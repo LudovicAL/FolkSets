@@ -13,21 +13,30 @@
 
     <string name="title">Title</string>
     <string name="titles">Titles</string>
+    <string name="title_input">Add titles</string>
     <string name="tag">Tag</string>
     <string name="tags">Tags</string>
-    <string name="file_path">File path</string>
-    <string name="file_type">File type</string>
+    <string name="tag_input">Add tags</string>
     <string name="composer">Composer</string>
+    <string name="composer_input">Add a composer</string>
     <string name="region">Region</string>
     <string name="region_of_origin">Region of origin</string>
+    <string name="region_of_origin_input">Add a region of origin</string>
     <string name="key">Key</string>
+    <string name="key_input">Add a key</string>
     <string name="incipit">Incipit</string>
+    <string name="incipit_input">Add an incipit</string>
     <string name="form">Form</string>
+    <string name="form_input">Add a form</string>
     <string name="played_by">Played by</string>
+    <string name="played_by_input">Add players</string>
     <string name="note">Note</string>
+    <string name="note_input">Add a note</string>
+    <string name="file_path">File path</string>
+    <string name="file_type">File type</string>
     <string name="file_creation">File creation</string>
-    <string name="file_last_consultation">File last consultation</string>
-    <string name="consultation_number">Consultation number</string>
+    <string name="last_consultation">Last consultation</string>
+    <string name="consultations">Consultations</string>
 
     <string name="search_songs">Search songs</string>
     <string name="search_sets">Search sets</string>
@@ -35,6 +44,8 @@
     <string name="back">Back</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
+
+    <string name="edit_song">Edit song</string>
 
     <string name="create_new_set">Create new set</string>
     <string name="edit_set">Edit set</string>

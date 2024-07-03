@@ -2,7 +2,10 @@ package com.bandito.folksets;
 
 import static java.util.Objects.isNull;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,16 +24,23 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bandito.folksets.adapters.TabAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.services.UpdateDatabaseThread;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getName();
     private TabLayout tabLayout;
+    private ProgressBar progressBar;
+    private ExecutorService executorService;
+    private UpdateDatabaseThread updateDatabaseThread;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +52,8 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
+        progressBar = findViewById(R.id.progressBar);
+        executorService = Executors.newFixedThreadPool(2);
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
         tabAdapter.addFragment(new SongListFragment());
@@ -69,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             DatabaseManager.initializeDatabase(this);
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(this, e);
         }
 
         checkStorageDirectory();
@@ -90,6 +102,28 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "An error occured while closing the database.", e);
         }
         super.onDestroy();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, Constants.STORAGE_DIRECTORY_URI, null);
+            if (!isNull(selectedDirectoryUri)) {
+                updateDatabaseThread = new UpdateDatabaseThread(this, this, progressBar);
+                executorService.execute(updateDatabaseThread);
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (!isNull(updateDatabaseThread)) {
+            updateDatabaseThread.interrupt();
+        }
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.

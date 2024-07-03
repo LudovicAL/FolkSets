@@ -378,8 +378,8 @@ public class ExampleInstrumentedTest {
             DatabaseManager.insertSongInDatabase(songEntity1);
             DatabaseManager.insertSongInDatabase(songEntity2);
             DatabaseManager.insertSongInDatabase(songEntity3);
-            Set<String> tagSet = DatabaseManager.getAllTagsInSongTable();
-            Assertions.assertThat(tagSet).hasSize(5);
+            String[] tagArray = DatabaseManager.getAllUniqueTagInSongTable();
+            Assertions.assertThat(tagArray).hasSize(5);
         });
     }
 
@@ -396,8 +396,8 @@ public class ExampleInstrumentedTest {
             DatabaseManager.insertSongInDatabase(songEntity1);
             DatabaseManager.insertSongInDatabase(songEntity2);
             DatabaseManager.insertSongInDatabase(songEntity3);
-            Set<String> playerSet = DatabaseManager.getAllPlayersInSongTable();
-            Assertions.assertThat(playerSet).hasSize(5);
+            String[] playerArray = DatabaseManager.getAllUniquePlayedByInSongTable();
+            Assertions.assertThat(playerArray).hasSize(5);
         });
     }
 

@@ -139,7 +139,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             }
             setListRecyclerViewAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 
@@ -163,7 +163,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 
@@ -177,7 +177,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     new Pair<>(Constants.SET_ENTITY, setEntityList.get(0))
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 

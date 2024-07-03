@@ -27,6 +27,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -286,6 +287,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return setEntityList;
     }
 
+    private List<String> convertCursorToStringList(Cursor cursor, String field) {
+        List<String> stringList = new ArrayList<>();
+        boolean result = cursor.moveToNext();
+        int columnIndex = cursor.getColumnIndex(field);
+        if (result && columnIndex >= 0) {
+            do {
+                stringList.add(cursor.getString(columnIndex));
+            } while (cursor.moveToNext());
+        }
+        return stringList;
+    }
+
     public void removeSongFromSets(SQLiteDatabase sqLiteDatabase, long songId) {
         List<SetEntity> setEntityList = findSetsWithSongsInDatabase(sqLiteDatabase, new Long[]{songId}, null, null);
         for (SetEntity setEntity : setEntityList) {
@@ -300,21 +313,57 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public Set<String> getAllTagsInSongTable(SQLiteDatabase sqLiteDatabase) {
-        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_TAGS, null, null, null, null);
-        Set<String> uniqueTagList = new HashSet<>();
-        for (SongEntity songEntity : songEntityList) {
-            uniqueTagList.addAll(Arrays.asList(StringUtils.split(songEntity.songTags, DEFAULT_SEPARATOR)));
-        }
-        return uniqueTagList;
+    private String[] getAllUniqueValueInSongTable(SQLiteDatabase sqLiteDatabase, String table, String field) {
+        String query = "SELECT DISTINCT " + field + " FROM " + table + " WHERE " + field + " IS NOT NULL";
+        query += getSortOptionString(field, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
+        return convertCursorToStringList(cursor, field).toArray(new String[0]);
     }
 
-    public Set<String> getAllPlayersInSongTable(SQLiteDatabase sqLiteDatabase) {
-        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_PLAYED_BY, null, null, null, null);
-        Set<String> uniquePlayerList = new HashSet<>();
-        for (SongEntity songEntity : songEntityList) {
-            uniquePlayerList.addAll(Arrays.asList(StringUtils.split(songEntity.songPlayedBy, DEFAULT_SEPARATOR)));
+    public String[] getAllUniqueTitleInSongTable(SQLiteDatabase sqLiteDatabase) {
+        String[] songTitlesArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_TITLES);
+        Set<String> uniqueTitleSet = new HashSet<>();
+        for (String songTitles : songTitlesArray) {
+            String[] titleArray = StringUtils.split(songTitles, DEFAULT_SEPARATOR);
+            if (!isNull(titleArray)) {
+                uniqueTitleSet.addAll(Arrays.asList(titleArray));
+            }
         }
-        return uniquePlayerList;
+        return uniqueTitleSet.toArray(new String[0]);
+    }
+
+    public String[] getAllUniqueTagInSongTable(SQLiteDatabase sqLiteDatabase) {
+        String[] tagsArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_TAGS);
+        Set<String> uniqueTagSet = new HashSet<>();
+        for (String tags : tagsArray) {
+            String[] tagArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
+            if (!isNull(tagArray)) {
+                uniqueTagSet.addAll(Arrays.asList(tagArray));
+            }
+        }
+        return uniqueTagSet.toArray(new String[0]);
+    }
+
+    public String[] getAllUniquePlayedByInSongTable(SQLiteDatabase sqLiteDatabase) {
+        String[] playersArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_PLAYED_BY);
+        Set<String> uniquePlayerSet = new HashSet<>();
+        for (String players : playersArray) {
+            String[] playerArray = StringUtils.split(players, DEFAULT_SEPARATOR);
+            if (!isNull(playerArray)) {
+                uniquePlayerSet.addAll(Arrays.asList(playerArray));
+            }
+        }
+        return uniquePlayerSet.toArray(new String[0]);
+    }
+
+    public String[] getAllUniqueValueInSongTable(SQLiteDatabase sqLiteDatabase, String field) {
+        return getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, field);
+    }
+
+    public String[] getAllUniqueNameInSetTable(SQLiteDatabase sqLiteDatabase) {
+        String query = "SELECT DISTINCT " + SET_NAME + " FROM " + TABLE_SET + " WHERE " + SET_NAME + " IS NOT NULL";
+        query += getSortOptionString(SET_NAME, null);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
+        return convertCursorToStringList(cursor, SET_NAME).toArray(new String[0]);
     }
 }

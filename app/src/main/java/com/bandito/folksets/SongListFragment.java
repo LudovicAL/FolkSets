@@ -1,23 +1,17 @@
 package com.bandito.folksets;
 
-import static com.bandito.folksets.util.Constants.SONG_COMPOSER;
-import static com.bandito.folksets.util.Constants.SONG_CONSULTATION_NUMBER;
-import static com.bandito.folksets.util.Constants.SONG_FILE_CREATION_DATE;
-import static com.bandito.folksets.util.Constants.SONG_ID;
-import static com.bandito.folksets.util.Constants.SONG_KEY;
-import static com.bandito.folksets.util.Constants.SONG_LAST_CONSULTATION_DATE;
-import static com.bandito.folksets.util.Constants.SONG_PLAYED_BY;
-import static com.bandito.folksets.util.Constants.SONG_REGION_OF_ORIGIN;
-import static com.bandito.folksets.util.Constants.SONG_TAGS;
-import static com.bandito.folksets.util.Constants.SONG_TITLES;
-import static com.bandito.folksets.util.Constants.SORT_ASC;
-import static com.bandito.folksets.util.Constants.SORT_DESC;
+import static com.bandito.folksets.util.Constants.*;
 import static java.util.Objects.isNull;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,16 +24,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 
 import com.bandito.folksets.adapters.SongListRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
-import com.bandito.folksets.services.UpdateDatabaseThread;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SongEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -48,15 +41,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class SongListFragment extends Fragment implements AdapterView.OnItemSelectedListener, SongListRecyclerViewAdapter.ItemClickListener {
 
     private static final String TAG = SongListFragment.class.getName();
-
-    private ProgressBar progressBar;
-
+    private final MyBroadcastReceiver myBroadcastReceiver = new MyBroadcastReceiver();
     private Spinner sortSpinner;
     private MaterialButtonToggleGroup materialButtonToggleGroup;
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
@@ -78,23 +67,14 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             demandNewSearch(true);
         }
     };
-    private ExecutorService executorService;
-    private UpdateDatabaseThread updateDatabaseThread;
     public SongListRecyclerViewAdapter songListRecyclerViewAdapter;
 
     public SongListFragment() {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        executorService = Executors.newFixedThreadPool(2);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_song_list, container, false);
-        progressBar = view.findViewById(R.id.songListProgressBar);
         materialButtonToggleGroup = view.findViewById(R.id.songToggleButtonGroup);
         materialButtonToggleGroup.addOnButtonCheckedListener(materialButtonToggleGroupCheckedListener);
         editText = view.findViewById(R.id.songListEditText);
@@ -116,6 +96,19 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
         sortSpinner.setSelection(0,false);
         sortSpinner.setOnItemSelectedListener(this);
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.STATICDATA_UPDATE));
+        demandNewSearch(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(myBroadcastReceiver);
     }
 
     private void demandNewSearch(boolean userIsTyping) {
@@ -186,29 +179,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             }
             songListRecyclerViewAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        try {
-            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(requireActivity(), Constants.STORAGE_DIRECTORY_URI, null);
-            if (!isNull(selectedDirectoryUri)) {
-                updateDatabaseThread = new UpdateDatabaseThread(requireActivity(), requireContext(), progressBar, songListRecyclerViewAdapter);
-                executorService.execute(updateDatabaseThread);
-            }
-        } catch (Exception e) {
-            ExceptionManager.manageException(e);
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (!isNull(updateDatabaseThread)) {
-            updateDatabaseThread.interrupt();
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 
@@ -225,7 +196,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 
@@ -240,7 +211,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
                     new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.longClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(requireContext(), e);
         }
     }
 
@@ -255,5 +226,15 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (SONG_ENTITY_LIST.equals(intent.getExtras().getString(VALUE_UPDATED))) {
+                songListRecyclerViewAdapter.setSongEntityList(StaticData.songEntityList);
+                songListRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        }
     }
 }

@@ -181,7 +181,7 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set deleted", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(this, e);
         }
     }
 
@@ -208,7 +208,7 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set saved", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(e);
+            ExceptionManager.manageException(this, e);
         }
     }
 

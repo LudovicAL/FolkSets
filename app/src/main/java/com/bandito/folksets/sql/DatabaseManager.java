@@ -14,6 +14,7 @@ import android.app.Activity;
 
 import androidx.core.util.Pair;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -226,19 +227,83 @@ public class DatabaseManager {
         }
     }
 
-    public static Set<String> getAllTagsInSongTable() throws FolkSetsException {
+    public static String[] getAllUniqueTitleInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllTagsInSongTable(sqLiteDatabase);
+            return databaseHelper.getAllUniqueTitleInSongTable(sqLiteDatabase);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique titles from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueTagInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueTagInSongTable(sqLiteDatabase);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique tags from the song table", e);
         }
     }
 
-    public static Set<String> getAllPlayersInSongTable() throws FolkSetsException {
+    public static String[] getAllUniqueComposerInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllPlayersInSongTable(sqLiteDatabase);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_COMPOSER);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique composers from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueRegionInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_REGION_OF_ORIGIN);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique regions of origin from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueKeyInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_KEY);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique keys from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueIncipitInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_INCIPIT);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique incipits from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueFormInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_FORM);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique forms from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniquePlayedByInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniquePlayedByInSongTable(sqLiteDatabase);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique players from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueNoteInSongTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_NOTE);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique notes from the song table", e);
+        }
+    }
+
+    public static String[] getAllUniqueNameInSetTable() throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueNameInSetTable(sqLiteDatabase);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving all unique name from the set table", e);
         }
     }
 }

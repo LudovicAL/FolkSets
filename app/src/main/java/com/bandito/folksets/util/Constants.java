@@ -1,6 +1,11 @@
 package com.bandito.folksets.util;
 
 public class Constants {
+
+    public static final String STATICDATA_UPDATE = "StaticData update";
+    public static final String VALUE_UPDATED = "Value updated";
+    public static final String SONG_ENTITY_LIST = "songEntityList";
+    public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";

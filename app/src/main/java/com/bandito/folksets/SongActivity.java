@@ -1,7 +1,5 @@
 package com.bandito.folksets;
 
-import static java.util.Objects.isNull;
-
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -9,18 +7,23 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.SongEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.StaticData;
 import com.google.android.material.navigation.NavigationView;
 
 import java.time.OffsetDateTime;
@@ -33,20 +36,15 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
     private SetEntity setEntity;
     private SongEntity songEntity;
     private DrawerLayout drawerLayout;
-    private TextView songTitlesTextView;
-    private TextView songTagsTextView;
-    private TextView songFilePathTextView;
-    private TextView songFileTypeTextView;
-    private TextView songComposerTextView;
-    private TextView songRegionOfOriginTextView;
-    private TextView songKeyTextView;
-    private TextView songIncipitTextView;
-    private TextView songFormTextView;
-    private TextView songPlayedByTextView;
-    private TextView songNoteTextView;
-    private TextView songFileCreationDateTextView;
-    private TextView songLastConsultationDateTextView;
-    private TextView songConsultationNumberTextView;
+    private AutoCompleteTextView songTitlesAutoCompleteTextView;
+    private AutoCompleteTextView songTagsAutoCompleteTextView;
+    private AutoCompleteTextView songComposerAutoCompleteTextView;
+    private AutoCompleteTextView songRegionOfOriginAutoCompleteTextView;
+    private AutoCompleteTextView songKeyAutoCompleteTextView;
+    private AutoCompleteTextView songIncipitAutoCompleteTextView;
+    private AutoCompleteTextView songFormAutoCompleteTextView;
+    private AutoCompleteTextView songPlayedByAutoCompleteTextView;
+    private AutoCompleteTextView songNoteAutoCompleteTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,50 +69,106 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        //Display song data
-        if (!isNull(songEntity)) {
-            View headerView = ((NavigationView)findViewById(R.id.song_nav_view)).getHeaderView(0);
-            songTitlesTextView = headerView.findViewById(R.id.nav_song_title_textview);
-            songTitlesTextView.setText(songEntity.songTitles);
-            songTagsTextView = headerView.findViewById(R.id.nav_song_tags_textview);
-            songTagsTextView.setText(songEntity.songTags);
-            songFilePathTextView = headerView.findViewById(R.id.nav_song_filePath_textview);
-            songFilePathTextView.setText(songEntity.songFilePath);
-            songFileTypeTextView = headerView.findViewById(R.id.nav_song_fileType_textview);
-            songFileTypeTextView.setText(songEntity.songFileType);
-            songComposerTextView = headerView.findViewById(R.id.nav_song_composer_textview);
-            songComposerTextView.setText(songEntity.songComposer);
-            songRegionOfOriginTextView = headerView.findViewById(R.id.nav_song_region_textview);
-            songRegionOfOriginTextView.setText(songEntity.songRegionOfOrigin);
-            songKeyTextView = headerView.findViewById(R.id.nav_song_key_textview);
-            songKeyTextView.setText(songEntity.songKey);
-            songIncipitTextView = headerView.findViewById(R.id.nav_song_incipit_textview);
-            songIncipitTextView.setText(songEntity.songIncipit);
-            songFormTextView = headerView.findViewById(R.id.nav_song_form_textview);
-            songFormTextView.setText(songEntity.songForm);
-            songPlayedByTextView = headerView.findViewById(R.id.nav_song_players_textview);
-            songPlayedByTextView.setText(songEntity.songPlayedBy);
-            songNoteTextView = headerView.findViewById(R.id.nav_song_note_textview);
-            songNoteTextView.setText(songEntity.songNote);
-            songFileCreationDateTextView = headerView.findViewById(R.id.nav_song_creation_date_textview);
-            songFileCreationDateTextView.setText(songEntity.songFileCreationDate);
-            songLastConsultationDateTextView = headerView.findViewById(R.id.nav_song_consultation_date_textview);
-            songLastConsultationDateTextView.setText(songEntity.songLastConsultationDate);
-            songConsultationNumberTextView = headerView.findViewById(R.id.nav_song_consultation_number_textview);
-            songConsultationNumberTextView.setText(songEntity.songConsultationNumber.toString());
+        View headerView = ((NavigationView)findViewById(R.id.song_nav_view)).getHeaderView(0);
+        //Set listeners
+        headerView.findViewById(R.id.back_from_edit_song_fab).setOnClickListener(this);
+        headerView.findViewById(R.id.button_save_song).setOnClickListener(this);
+        findViewById(R.id.edit_song_fab).setOnClickListener(this);
+        findViewById(R.id.back_song_fab).setOnClickListener(this);
+
+        //Prepare the autocompletes
+        ArrayAdapter<String> songTitleAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTitleArray);
+        songTitlesAutoCompleteTextView = headerView.findViewById(R.id.nav_song_title_textview);
+        songTitlesAutoCompleteTextView.setAdapter(songTitleAdapter);
+        songTitlesAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songTagAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTagArray);
+        songTagsAutoCompleteTextView = headerView.findViewById(R.id.nav_song_tags_textview);
+        songTagsAutoCompleteTextView.setAdapter(songTagAdapter);
+        songTagsAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songComposerAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongComposerArray);
+        songComposerAutoCompleteTextView = headerView.findViewById(R.id.nav_song_composer_textview);
+        songComposerAutoCompleteTextView.setAdapter(songComposerAdapter);
+        songComposerAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songRegionAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongRegionArray);
+        songRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.nav_song_region_textview);
+        songRegionOfOriginAutoCompleteTextView.setAdapter(songRegionAdapter);
+        songRegionOfOriginAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songKeyAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongKeyArray);
+        songKeyAutoCompleteTextView = headerView.findViewById(R.id.nav_song_key_textview);
+        songKeyAutoCompleteTextView.setAdapter(songKeyAdapter);
+        songKeyAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songIncipitAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongIncipitArray);
+        songIncipitAutoCompleteTextView = headerView.findViewById(R.id.nav_song_incipit_textview);
+        songIncipitAutoCompleteTextView.setAdapter(songIncipitAdapter);
+        songIncipitAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songFormAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongFormArray);
+        songFormAutoCompleteTextView = headerView.findViewById(R.id.nav_song_form_textview);
+        songFormAutoCompleteTextView.setAdapter(songFormAdapter);
+        songFormAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songPlayedByAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongPlayedByArray);
+        songPlayedByAutoCompleteTextView = headerView.findViewById(R.id.nav_song_players_textview);
+        songPlayedByAutoCompleteTextView.setAdapter(songPlayedByAdapter);
+        songPlayedByAutoCompleteTextView.setThreshold(0);
+
+        ArrayAdapter<String> songNoteAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongNoteArray);
+        songNoteAutoCompleteTextView = headerView.findViewById(R.id.nav_song_note_textview);
+        songNoteAutoCompleteTextView.setAdapter(songNoteAdapter);
+        songNoteAutoCompleteTextView.setThreshold(0);
+
+        //Display the data
+        try {
+            songTitlesAutoCompleteTextView.setText(songEntity.songTitles);
+            songTagsAutoCompleteTextView.setText(songEntity.songTags);
+            songComposerAutoCompleteTextView.setText(songEntity.songComposer);
+            songRegionOfOriginAutoCompleteTextView.setText(songEntity.songRegionOfOrigin);
+            songKeyAutoCompleteTextView.setText(songEntity.songKey);
+            songIncipitAutoCompleteTextView.setText(songEntity.songIncipit);
+            songFormAutoCompleteTextView.setText(songEntity.songForm);
+            songPlayedByAutoCompleteTextView.setText(songEntity.songPlayedBy);
+            songNoteAutoCompleteTextView.setText(songEntity.songNote);
+            ((TextView)headerView.findViewById(R.id.nav_song_filePath_textview)).setText(songEntity.songFilePath);
+            ((TextView)headerView.findViewById(R.id.nav_song_fileType_textview)).setText(songEntity.songFileType);
+            ((TextView)headerView.findViewById(R.id.nav_song_creation_date_textview)).setText(songEntity.songFileCreationDate);
+            ((TextView)headerView.findViewById(R.id.nav_song_consultation_date_textview)).setText(songEntity.songLastConsultationDate);
+            ((TextView)headerView.findViewById(R.id.nav_song_consultation_number_textview)).setText(songEntity.songConsultationNumber.toString());
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
         }
 
         drawerLayout = findViewById(R.id.drawer_layout_song);
         String clickType = getIntent().getExtras().getString(Constants.CLICK_TYPE);
-        if (!isNull(clickType)) {
-            Log.i(TAG, "Activity entered via " + clickType + ".");
-            if (Constants.ClickType.longClick.toString().equals(clickType)) {
-                drawerLayout.openDrawer(GravityCompat.END);
-            }
+        if (Constants.ClickType.longClick.toString().equals(clickType)) {
+            drawerLayout.openDrawer(GravityCompat.END);
         }
+    }
 
-        findViewById(R.id.edit_song_fab).setOnClickListener(this);
-        findViewById(R.id.back_song_fab).setOnClickListener(this);
+    private void saveSong() {
+        songEntity.songTitles = songTitlesAutoCompleteTextView.getText().toString();
+        if (songEntity.songTitles.isEmpty()) {
+            Toast.makeText(this, "A title is required", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        songEntity.songTags = songTagsAutoCompleteTextView.getText().toString();
+        songEntity.songComposer = songComposerAutoCompleteTextView.getText().toString();
+        songEntity.songRegionOfOrigin = songRegionOfOriginAutoCompleteTextView.getText().toString();
+        songEntity.songKey = songKeyAutoCompleteTextView.getText().toString();
+        songEntity.songIncipit = songIncipitAutoCompleteTextView.getText().toString();
+        songEntity.songForm = songFormAutoCompleteTextView.getText().toString();
+        songEntity.songPlayedBy = songPlayedByAutoCompleteTextView.getText().toString();
+        songEntity.songNote = songNoteAutoCompleteTextView.getText().toString();
+        try {
+            DatabaseManager.updateSongInDatabase(songEntity);
+            Toast.makeText(this, "Song saved", Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
+        }
     }
 
     @Override
@@ -132,6 +186,10 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.edit_song_fab) {
             drawerLayout.openDrawer(GravityCompat.END);
+        } else if (view.getId() == R.id.back_from_edit_song_fab) {
+            drawerLayout.closeDrawer(GravityCompat.END);
+        } else if (view.getId() == R.id.button_save_song) {
+            saveSong();
         } else if (view.getId() == R.id.back_song_fab) {
             this.finish();
         }

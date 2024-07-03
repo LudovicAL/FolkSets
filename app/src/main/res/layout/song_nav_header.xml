@@ -4,419 +4,462 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15sp">
+    android:layout_margin="5sp">
 
-    <TextView
-        android:id="@+id/nav_song_titles_hint_textview"
-        android:layout_width="0dp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/back_from_edit_song_fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/titles"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
+        android:contentDescription="@string/edit"
+        android:src="@drawable/ic_arrow_back"
+        app:fabSize="mini"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/nav_song_tags_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/tags"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_titles_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_filePath_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/file_path"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_tags_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_fileType_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/file_type"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_filePath_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_composer_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/composer"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_fileType_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_region_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/region_of_origin"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_composer_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_key_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/key"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_region_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_incipit_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/incipit"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_key_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_form_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/form"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_incipit_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_players_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/played_by"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_form_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_note_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/note"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_players_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_creation_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/file_creation"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_note_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_last_consultation_hint_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/file_last_consultation"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_creation_hint_textview" />
-
-    <TextView
-        android:id="@+id/nav_song_consultation_number_hint_textview"
+        android:id="@+id/nav_song_header_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:background="@drawable/view_border"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/consultation_number"
-        android:textAlignment="viewEnd"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_last_consultation_hint_textview" />
+        android:text="@string/edit_song"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/back_from_edit_song_fab"
+        app:layout_constraintRight_toLeftOf="@+id/button_save_song" />
+
+    <Button
+        android:id="@+id/button_save_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/save"
+        android:textSize="18sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/nav_song_barrier"
+        android:id="@+id/nav_header_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="end"
-        app:constraint_referenced_ids="nav_song_titles_hint_textview,nav_song_tags_hint_textview,nav_song_filePath_hint_textview,nav_song_fileType_hint_textview,nav_song_composer_hint_textview,nav_song_region_hint_textview,nav_song_key_hint_textview,nav_song_incipit_hint_textview,nav_song_form_hint_textview,nav_song_players_hint_textview,nav_song_note_hint_textview,nav_song_creation_hint_textview,nav_song_last_consultation_hint_textview,nav_song_consultation_number_hint_textview" />
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="back_from_edit_song_fab,nav_song_header_textview,button_save_song" />
 
-    <TextView
-        android:id="@+id/nav_song_title_textview"
-        android:layout_width="0dp"
+    <GridLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="5sp"
-        android:layout_marginLeft="10sp"
-        android:padding="2sp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textAlignment="viewStart"
-        android:textSize="24sp"
+        android:background="#000000"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:padding="3sp"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/nav_header_barrier">
 
-    <TextView
-        android:id="@+id/nav_song_tags_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_title_textview" />
+        <TextView
+            android:id="@+id/nav_song_titles_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/titles"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_filePath_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_tags_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/title_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_fileType_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_filePath_textview" />
+        <TextView
+            android:id="@+id/nav_song_tags_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/tags"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_composer_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_fileType_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_tags_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/tag_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_region_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_composer_textview" />
+        <TextView
+            android:id="@+id/nav_song_composer_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/composer"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_key_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_region_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_composer_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/composer_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_incipit_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_key_textview" />
+        <TextView
+            android:id="@+id/nav_song_region_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/region_of_origin"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_form_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_incipit_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_region_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/region_of_origin_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_players_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_form_textview" />
+        <TextView
+            android:id="@+id/nav_song_key_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/key"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_note_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_players_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_key_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/key_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_creation_date_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_note_textview" />
+        <TextView
+            android:id="@+id/nav_song_incipit_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/incipit"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/nav_song_consultation_date_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_creation_date_textview" />
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_incipit_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/incipit_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
 
-    <TextView
-        android:id="@+id/nav_song_consultation_number_textview"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="5dp"
-        android:layout_marginLeft="10dp"
-        android:padding="2dp"
-        android:singleLine="true"
-        android:text="@string/placeholder"
-        android:textSize="24sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/nav_song_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/nav_song_consultation_date_textview" />
+        <TextView
+            android:id="@+id/nav_song_form_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/form"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_form_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/form_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
+
+        <TextView
+            android:id="@+id/nav_song_players_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/played_by"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_players_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/played_by_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
+
+        <TextView
+            android:id="@+id/nav_song_note_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/note"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <AutoCompleteTextView
+            android:id="@+id/nav_song_note_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:hint="@string/note_input"
+            android:maxLength="80"
+            android:singleLine="true"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            android:layout_margin="3sp"
+            android:padding="3sp"
+            android:background="#FFFFFF"
+            android:layout_gravity="start|end" />
+
+        <TextView
+            android:id="@+id/nav_song_filePath_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/file_path"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_song_filePath_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/placeholder"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/nav_song_fileType_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/file_type"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_song_fileType_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/placeholder"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/nav_song_creation_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/file_creation"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_song_creation_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/placeholder"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+
+        <TextView
+            android:id="@+id/nav_song_last_consultation_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/last_consultation"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_song_consultation_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/placeholder"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/nav_song_consultation_number_hint_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/consultations"
+            android:textAlignment="viewEnd"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_song_consultation_number_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#D8D8D8"
+            android:padding="3sp"
+            android:singleLine="true"
+            android:text="@string/placeholder"
+            android:textAlignment="viewStart"
+            android:textSize="18sp" />
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
