@@ -77,47 +77,47 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.back_song_fab).setOnClickListener(this);
 
         //Prepare the autocompletes
-        ArrayAdapter<String> songTitleAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTitleArray);
+        ArrayAdapter<String> songTitleAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTitleArray);
         songTitlesAutoCompleteTextView = headerView.findViewById(R.id.nav_song_title_textview);
         songTitlesAutoCompleteTextView.setAdapter(songTitleAdapter);
         songTitlesAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songTagAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTagArray);
+        ArrayAdapter<String> songTagAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongTagArray);
         songTagsAutoCompleteTextView = headerView.findViewById(R.id.nav_song_tags_textview);
         songTagsAutoCompleteTextView.setAdapter(songTagAdapter);
         songTagsAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songComposerAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongComposerArray);
+        ArrayAdapter<String> songComposerAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongComposerArray);
         songComposerAutoCompleteTextView = headerView.findViewById(R.id.nav_song_composer_textview);
         songComposerAutoCompleteTextView.setAdapter(songComposerAdapter);
         songComposerAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songRegionAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongRegionArray);
+        ArrayAdapter<String> songRegionAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongRegionArray);
         songRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.nav_song_region_textview);
         songRegionOfOriginAutoCompleteTextView.setAdapter(songRegionAdapter);
         songRegionOfOriginAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songKeyAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongKeyArray);
+        ArrayAdapter<String> songKeyAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongKeyArray);
         songKeyAutoCompleteTextView = headerView.findViewById(R.id.nav_song_key_textview);
         songKeyAutoCompleteTextView.setAdapter(songKeyAdapter);
         songKeyAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songIncipitAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongIncipitArray);
+        ArrayAdapter<String> songIncipitAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongIncipitArray);
         songIncipitAutoCompleteTextView = headerView.findViewById(R.id.nav_song_incipit_textview);
         songIncipitAutoCompleteTextView.setAdapter(songIncipitAdapter);
         songIncipitAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songFormAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongFormArray);
+        ArrayAdapter<String> songFormAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongFormArray);
         songFormAutoCompleteTextView = headerView.findViewById(R.id.nav_song_form_textview);
         songFormAutoCompleteTextView.setAdapter(songFormAdapter);
         songFormAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songPlayedByAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongPlayedByArray);
+        ArrayAdapter<String> songPlayedByAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongPlayedByArray);
         songPlayedByAutoCompleteTextView = headerView.findViewById(R.id.nav_song_players_textview);
         songPlayedByAutoCompleteTextView.setAdapter(songPlayedByAdapter);
         songPlayedByAutoCompleteTextView.setThreshold(0);
 
-        ArrayAdapter<String> songNoteAdapter = new ArrayAdapter(this, android.R.layout.select_dialog_item, StaticData.uniqueSongNoteArray);
+        ArrayAdapter<String> songNoteAdapter = new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueSongNoteArray);
         songNoteAutoCompleteTextView = headerView.findViewById(R.id.nav_song_note_textview);
         songNoteAutoCompleteTextView.setAdapter(songNoteAdapter);
         songNoteAutoCompleteTextView.setThreshold(0);

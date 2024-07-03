@@ -14,9 +14,7 @@ import android.app.Activity;
 
 import androidx.core.util.Pair;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class DatabaseManager {
 
@@ -141,7 +139,7 @@ public class DatabaseManager {
 
     public static List<SongEntity> findSongByIdInDatabase(String fieldsNames, Long songId, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findSongByIdInDatabase(sqLiteDatabase, fieldsNames, String.valueOf(songId), sortOnField, sortDirection);
+            return databaseHelper.findSongsByIdInDatabase(sqLiteDatabase, fieldsNames, new String[]{String.valueOf(songId)}, sortOnField, sortDirection);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for songs in the database.", e);
         }
@@ -149,7 +147,15 @@ public class DatabaseManager {
 
     public static List<SongEntity> findSongByIdInDatabase(String fieldsNames, String songId, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findSongByIdInDatabase(sqLiteDatabase, fieldsNames, songId, sortOnField, sortDirection);
+            return databaseHelper.findSongsByIdInDatabase(sqLiteDatabase, fieldsNames, new String[]{songId}, sortOnField, sortDirection);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for songs in the database.", e);
+        }
+    }
+
+    public static List<SongEntity> findSongsByIdInDatabase(String fieldsNames, String[] songIdArray, String sortOnField, String sortDirection) throws FolkSetsException {
+        try {
+            return databaseHelper.findSongsByIdInDatabase(sqLiteDatabase, fieldsNames, songIdArray, sortOnField, sortDirection);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for songs in the database.", e);
         }

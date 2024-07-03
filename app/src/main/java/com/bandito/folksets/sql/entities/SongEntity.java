@@ -19,9 +19,9 @@ public class SongEntity implements Serializable {
     public String songForm;
     public String songPlayedBy;
     public String songNote;
-    public String songFilePath;
-    public String songFileType;
-    public String songFileCreationDate;
+    public final String songFilePath;
+    public final String songFileType;
+    public final String songFileCreationDate;
     public String songLastConsultationDate;
     public Integer songConsultationNumber;
 

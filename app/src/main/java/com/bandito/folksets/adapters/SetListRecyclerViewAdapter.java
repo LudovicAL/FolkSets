@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
-import com.bandito.folksets.SetListFragment;
 import com.bandito.folksets.sql.entities.SetEntity;
 
 import java.util.ArrayList;

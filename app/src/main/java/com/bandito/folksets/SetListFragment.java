@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bandito.folksets.adapters.SetListRecyclerViewAdapter;
@@ -36,7 +35,6 @@ import java.util.TimerTask;
 public class SetListFragment extends Fragment implements View.OnClickListener, SetListRecyclerViewAdapter.ItemClickListener {
 
     private static final String TAG = SetListFragment.class.getName();
-    private ProgressBar progressBar;
     private TextView setMatchNumberTextview;
 
     private MaterialButtonToggleGroup materialButtonToggleGroup;
@@ -80,7 +78,6 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_set_list, container, false);
-        progressBar = view.findViewById(R.id.setListProgressBar);
         materialButtonToggleGroup = view.findViewById(R.id.setToggleButtonGroup);
         materialButtonToggleGroup.addOnButtonCheckedListener(materialButtonToggleGroupCheckedListener);
         editText = view.findViewById(R.id.setListEditText);

@@ -1,5 +1,9 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.PROGRESS_UPDATE;
+import static com.bandito.folksets.util.Constants.PROGRESS_VALUE;
+import static com.bandito.folksets.util.Constants.PROGRESS_VISIBILITY;
+import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static java.util.Objects.isNull;
 
 import android.content.BroadcastReceiver;
@@ -14,19 +18,20 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.bandito.folksets.adapters.TabAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.services.UpdateDatabaseThread;
 import com.bandito.folksets.sql.DatabaseManager;
-import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -39,8 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getName();
     private TabLayout tabLayout;
     private ProgressBar progressBar;
+    private TextView progressBarHintTextView;
     private ExecutorService executorService;
     private UpdateDatabaseThread updateDatabaseThread;
+    private final MainActivity.MyBroadcastReceiver myBroadcastReceiver = new MainActivity.MyBroadcastReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
         progressBar = findViewById(R.id.progressBar);
+        progressBarHintTextView = findViewById(R.id.progressBarHintTextView);
         executorService = Executors.newFixedThreadPool(2);
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
@@ -88,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkStorageDirectory() {
-        String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, Constants.STORAGE_DIRECTORY_URI, null);
+        String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
         if (isNull(selectedDirectoryUri) && tabLayout.getSelectedTabPosition() != 2) {
             tabLayout.selectTab(tabLayout.getTabAt(2));
         }
@@ -107,10 +115,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(PROGRESS_UPDATE));
         try {
-            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, Constants.STORAGE_DIRECTORY_URI, null);
+            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
             if (!isNull(selectedDirectoryUri)) {
-                updateDatabaseThread = new UpdateDatabaseThread(this, this, progressBar);
+                updateDatabaseThread = new UpdateDatabaseThread(this, this);
                 executorService.execute(updateDatabaseThread);
             }
         } catch (Exception e) {
@@ -121,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onPause() {
         super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
         if (!isNull(updateDatabaseThread)) {
             updateDatabaseThread.interrupt();
         }
@@ -143,5 +153,25 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return super.dispatchTouchEvent( event );
+    }
+
+    private void updateProgressBar(int value) {
+        progressBar.setProgress(value);
+    }
+
+    private void displayProgressBar(int visibility) {
+        progressBarHintTextView.setVisibility(visibility);
+        progressBar.setVisibility(visibility);
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.getExtras().containsKey(PROGRESS_VALUE)) {
+                updateProgressBar(intent.getExtras().getInt(PROGRESS_VALUE));
+            } else if (intent.getExtras().containsKey(PROGRESS_VISIBILITY)) {
+                displayProgressBar(intent.getExtras().getInt(PROGRESS_VISIBILITY));
+            }
+        }
     }
 }

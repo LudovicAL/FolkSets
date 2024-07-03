@@ -27,7 +27,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -170,11 +169,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
-    public List<SongEntity> findSongByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String songId, String sortOnField, String sortDirection) {
+    public List<SongEntity> findSongsByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String[] songIdArray, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
-        String query = "SELECT " + fieldsNames + " FROM " + TABLE_SONG + " WHERE " + SONG_ID + " = " + songId;
-        query += getSortOptionString(sortOnField, sortDirection);
-        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
+        StringBuilder query = new StringBuilder("SELECT " + fieldsNames + " FROM " + TABLE_SONG + " WHERE ");
+        for (int i = 0, max = songIdArray.length; i < max; i++) {
+            query.append(SONG_ID + " = " + songIdArray[i]);
+            if (i < max - 1) {
+                query.append(" OR ");
+            }
+        }
+        query.append(getSortOptionString(sortOnField, sortDirection));
+        Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
         return convertCursorToSongEntityList(cursor);
     }
 
@@ -234,8 +239,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<SetEntity> findSetsWithSongsInDatabase(SQLiteDatabase sqLiteDatabase, Long[] songIdArray, String sortOnField, String sortDirection) {
-        StringBuilder query = new StringBuilder();
-        query.append("SELECT * FROM " + TABLE_SET + " WHERE");
+        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_SET + " WHERE");
         for (int i = 0, max = songIdArray.length; i < max; i++) {
             query.append(" ").append(SET_SONGS).append(" LIKE '%").append(songIdArray[i]).append("%'");
             if (i < max - 1) {
@@ -316,7 +320,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private String[] getAllUniqueValueInSongTable(SQLiteDatabase sqLiteDatabase, String table, String field) {
         String query = "SELECT DISTINCT " + field + " FROM " + table + " WHERE " + field + " IS NOT NULL";
         query += getSortOptionString(field, null);
-        Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
+        Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
         return convertCursorToStringList(cursor, field).toArray(new String[0]);
     }
 
