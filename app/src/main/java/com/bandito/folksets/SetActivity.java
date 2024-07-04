@@ -4,14 +4,23 @@ import static com.bandito.folksets.util.Constants.SONG_ID;
 import static com.bandito.folksets.util.Constants.SONG_TITLES;
 import static java.util.Objects.isNull;
 
+import android.app.Dialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +34,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bandito.folksets.adapters.SongListArrayAdapter;
 import com.bandito.folksets.adapters.SongListRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
@@ -32,9 +42,11 @@ import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.SongEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.StaticData;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,6 +61,7 @@ public class SetActivity extends AppCompatActivity {
     private Drawable lastSelectedSongSelectedDrawable = null;
     private Integer selectedSongSelectionPosition = null;
     private Context context;
+    private Dialog dialog;
 
     private final SongListRecyclerViewAdapter.ItemClickListener selectedSongItemClickListener = new SongListRecyclerViewAdapter.ItemClickListener() {
         @Override
@@ -104,14 +117,12 @@ public class SetActivity extends AppCompatActivity {
             String[] currentSetSongIdArrayOfStrings = StringUtils.split(currentSet.setSongs, Constants.DEFAULT_SEPARATOR);
             if (!isNull(currentSetSongIdArrayOfStrings)) {
                 try {
-                    List<SongEntity> currentSetSongEntityList = DatabaseManager.findSongsByIdInDatabase(SONG_ID + "," + SONG_TITLES, currentSetSongIdArrayOfStrings, null, null);
-                    for (int i = 0, max = currentSetSongIdArrayOfStrings.length; i < max; i++) {
-                        int j = getIndexOfSongIdInListOfSongEntities(currentSetSongIdArrayOfStrings[i], currentSetSongEntityList);
-                        if (j != i) {
-                            currentSetSongEntityList.add(i, currentSetSongEntityList.remove(j));
-                        }
+                    List<SongEntity> unorderedCurrentSetSongEntityList = DatabaseManager.findSongsByIdInDatabase(SONG_ID + "," + SONG_TITLES, currentSetSongIdArrayOfStrings, null, null);
+                    List<SongEntity> orderedCurrentSetSongEntityList = new ArrayList<>();
+                    for (String songId : currentSetSongIdArrayOfStrings) {
+                        orderedCurrentSetSongEntityList.add(unorderedCurrentSetSongEntityList.stream().filter(songEntity -> songEntity.songId == Long.valueOf(songId)).findFirst().get());
                     }
-                    selectedSongListRecyclerViewAdapter.setSongEntityList(currentSetSongEntityList);
+                    selectedSongListRecyclerViewAdapter.setSongEntityList(orderedCurrentSetSongEntityList);
                 } catch (FolkSetsException e) {
                     ExceptionManager.manageException(this, e);
                 }
@@ -180,6 +191,11 @@ public class SetActivity extends AppCompatActivity {
         }
     }
 
+    private void selectSong(SongEntity songEntity) {
+        selectedSongListRecyclerViewAdapter.addSongEntity(songEntity);
+        selectedSongListRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
     public void deselectSong(View view) {
         if (!isNull(selectedSongSelectionPosition)) {
             lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
@@ -215,6 +231,43 @@ public class SetActivity extends AppCompatActivity {
             selectedSongSelectionPosition = null;
             selectedSongItemClickListener.onItemClick(selectedSongsRecyclerView.getChildAt(newPosition), newPosition);
         }
+    }
+
+    public void openSelectSongDialog(View view) {
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.searchable_spinner);
+        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+        dialog.getWindow().setLayout(width, height);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+        ListView listView=dialog.findViewById(R.id.searchable_spinner_list_view);
+        SongListArrayAdapter arrayAdapter = new SongListArrayAdapter(this, android.R.layout.simple_list_item_1, StaticData.songEntityList);
+        listView.setAdapter(arrayAdapter);
+        ((EditText)dialog.findViewById(R.id.searchable_spinner_edit_text)).addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                arrayAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectSong(arrayAdapter.getItem(position));
+                dialog.dismiss();
+            }
+        });
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.

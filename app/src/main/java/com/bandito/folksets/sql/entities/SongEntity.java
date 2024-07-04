@@ -2,6 +2,7 @@ package com.bandito.folksets.sql.entities;
 
 import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 
+import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -38,6 +39,14 @@ public class SongEntity implements Serializable {
             return StringUtils.split(this.songTitles, DEFAULT_SEPARATOR)[0];
         } catch (Exception e) {
             throw new FolkSetsException("An error occured while trying to read the first title of a song.", null);
+        }
+    }
+
+    public String toString() {
+        try {
+            return getFirstTitle();
+        } catch (Exception e) {
+            return songTitles;
         }
     }
 }

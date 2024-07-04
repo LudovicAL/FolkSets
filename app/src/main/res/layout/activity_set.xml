@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
             android:onClick="onBackButtonClick"
-            android:src="@drawable/ic_arrow_back"
+            android:src="@drawable/ic_half_arrow_left"
             app:fabSize="mini"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -76,28 +76,20 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/available_song_titles_edittext_input_layout"
+    <TextView
+        android:id="@+id/available_song_titles_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:background="@android:drawable/editbox_background"
+        android:drawableEnd="@drawable/ic_arrow_drop_down"
+        android:hint="@string/select_a_song"
+        android:textAlignment="viewStart"
+        android:textSize="24sp"
+        android:onClick="openSelectSongDialog"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/set_name_edittext_input_layout">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/available_song_titles_edittext"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="@string/search_songs"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:maxLength="80"
-            android:singleLine="true"
-            android:textAlignment="viewStart"
-            android:textSize="24sp" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/set_name_edittext_input_layout" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/selected_songs_recyclerview"
@@ -105,7 +97,7 @@
         android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/set_activity_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/available_song_titles_edittext_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/available_song_titles_textview"
         app:layout_constraintBottom_toTopOf="@+id/button_delete_set"/>
 
     <androidx.constraintlayout.widget.Barrier
@@ -124,7 +116,7 @@
         android:onClick="moveSongUp"
         android:src="@drawable/ic_arrow_up"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/available_song_titles_edittext_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/available_song_titles_textview" />
 
     <ImageButton
         android:id="@+id/move_down_song_button"
