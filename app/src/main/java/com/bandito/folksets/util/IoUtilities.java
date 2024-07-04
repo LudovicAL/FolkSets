@@ -1,5 +1,6 @@
 package com.bandito.folksets.util;
 
+import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static java.util.Objects.isNull;
 
 import android.app.Activity;
@@ -122,7 +123,7 @@ public class IoUtilities {
 
     public static List<DocumentFile> listPdfFilesFromStorage(Context context, Activity activity) throws FolkSetsException {
         try {
-            DocumentFile[] documentFileArray = listFilesFromDirectory(context, Utilities.readStringFromSharedPreferences(activity, Constants.STORAGE_DIRECTORY_URI, ""));
+            DocumentFile[] documentFileArray = listFilesFromDirectory(context, Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, ""));
             return Arrays.stream(documentFileArray).filter(documentFile -> "application/pdf".equals(documentFile.getType())).collect(Collectors.toList());
         } catch (Exception e) {
             throw new FolkSetsException("An error occured withh listing pdf from storage.", e);

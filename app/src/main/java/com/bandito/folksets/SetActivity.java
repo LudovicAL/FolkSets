@@ -1,5 +1,8 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
+import static com.bandito.folksets.util.Constants.OPERATION;
+import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.SONG_ID;
 import static com.bandito.folksets.util.Constants.SONG_TITLES;
 import static java.util.Objects.isNull;
@@ -13,12 +16,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -109,18 +110,18 @@ public class SetActivity extends AppCompatActivity {
 
         //Retrieve the bundle message
         setNameEditText = findViewById(R.id.set_name_edittext);
-        if (Constants.SetOperation.editSet.toString().equals(getIntent().getExtras().getString(Constants.OPERATION))) {
+        if (Constants.SetOperation.editSet.toString().equals(getIntent().getExtras().getString(OPERATION))) {
             currentSetOperation = Constants.SetOperation.editSet;
-            currentSet = (SetEntity) getIntent().getExtras().getSerializable(Constants.SET_ENTITY);
+            currentSet = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
             ((TextView)findViewById(R.id.set_activity_header)).setText(R.string.edit_set);
             setNameEditText.setText(currentSet.setName);
-            String[] currentSetSongIdArrayOfStrings = StringUtils.split(currentSet.setSongs, Constants.DEFAULT_SEPARATOR);
+            String[] currentSetSongIdArrayOfStrings = StringUtils.split(currentSet.setSongs, DEFAULT_SEPARATOR);
             if (!isNull(currentSetSongIdArrayOfStrings)) {
                 try {
                     List<SongEntity> unorderedCurrentSetSongEntityList = DatabaseManager.findSongsByIdInDatabase(SONG_ID + "," + SONG_TITLES, currentSetSongIdArrayOfStrings, null, null);
                     List<SongEntity> orderedCurrentSetSongEntityList = new ArrayList<>();
                     for (String songId : currentSetSongIdArrayOfStrings) {
-                        orderedCurrentSetSongEntityList.add(unorderedCurrentSetSongEntityList.stream().filter(songEntity -> songEntity.songId == Long.valueOf(songId)).findFirst().get());
+                        orderedCurrentSetSongEntityList.add(unorderedCurrentSetSongEntityList.stream().filter(songEntity -> songEntity.songId.equals(Long.valueOf(songId))).findFirst().get());
                     }
                     selectedSongListRecyclerViewAdapter.setSongEntityList(orderedCurrentSetSongEntityList);
                 } catch (FolkSetsException e) {
@@ -172,7 +173,7 @@ public class SetActivity extends AppCompatActivity {
         }
         currentSet.setSongs = StringUtils.join(
                 selectedSongListRecyclerViewAdapter.getSongEntityList().stream().map(songEntity -> songEntity.songId).collect(Collectors.toList()),
-                Constants.DEFAULT_SEPARATOR
+                DEFAULT_SEPARATOR
         );
         if (currentSet.setSongs.isEmpty()) {
             Toast.makeText(this, "Select at least one song", Toast.LENGTH_SHORT).show();

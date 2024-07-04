@@ -1,5 +1,6 @@
 package com.bandito.folksets.util;
 
+import static com.bandito.folksets.util.Constants.PREFERENCES_NAME;
 import static java.util.Objects.isNull;
 
 import android.app.Activity;
@@ -17,14 +18,14 @@ import java.io.Serializable;
 public class Utilities {
 
     public static void writeStringToSharedPreferences(Activity activity, String key, String value) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
         sharedPreferencesEditor.putString(key, value);
         sharedPreferencesEditor.commit();
     }
 
     public static String readStringFromSharedPreferences(Activity activity, String key, String defaultValue) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(Constants.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, defaultValue);
     }
 

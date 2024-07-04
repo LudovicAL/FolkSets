@@ -1,5 +1,9 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.CLICK_TYPE;
+import static com.bandito.folksets.util.Constants.OPERATION;
+import static com.bandito.folksets.util.Constants.POSITION;
+import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.SET_ID;
 import static com.bandito.folksets.util.Constants.SET_NAME;
 import static java.util.Objects.isNull;
@@ -154,10 +158,10 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You short clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SongOrSet.set.toString()),
-                    new Pair<>(Constants.POSITION, 0),
-                    new Pair<>(Constants.SET_ENTITY, setEntityList.get(0)),
-                    new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                    new Pair<>(OPERATION, Constants.SongOrSet.set.toString()),
+                    new Pair<>(POSITION, 0),
+                    new Pair<>(SET_ENTITY, setEntityList.get(0)),
+                    new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
             ExceptionManager.manageException(requireContext(), e);
@@ -170,8 +174,8 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SetOperation.editSet.toString()),
-                    new Pair<>(Constants.SET_ENTITY, setEntityList.get(0))
+                    new Pair<>(OPERATION, Constants.SetOperation.editSet.toString()),
+                    new Pair<>(SET_ENTITY, setEntityList.get(0))
             });
         } catch (Exception e) {
             ExceptionManager.manageException(requireContext(), e);
@@ -182,7 +186,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     public void onClick(View view) {
         if (view.getId() == R.id.create_new_set_button) {
             Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SetOperation.createSet.toString())
+                    new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
             });
         }
     }

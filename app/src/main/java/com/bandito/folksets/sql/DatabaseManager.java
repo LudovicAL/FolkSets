@@ -1,5 +1,12 @@
 package com.bandito.folksets.sql;
 
+import static com.bandito.folksets.util.Constants.SONG_COMPOSER;
+import static com.bandito.folksets.util.Constants.SONG_FORM;
+import static com.bandito.folksets.util.Constants.SONG_INCIPIT;
+import static com.bandito.folksets.util.Constants.SONG_KEY;
+import static com.bandito.folksets.util.Constants.SONG_NOTE;
+import static com.bandito.folksets.util.Constants.SONG_REGION_OF_ORIGIN;
+import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static java.util.Objects.isNull;
 
 import android.content.Context;
@@ -8,7 +15,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.SongEntity;
-import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import android.app.Activity;
 
@@ -41,7 +47,7 @@ public class DatabaseManager {
 
     public static void importDatabase(Context context, Activity activity) throws FolkSetsException {
         try {
-            String selectedFolder = Utilities.readStringFromSharedPreferences(activity, Constants.STORAGE_DIRECTORY_URI, null);
+            String selectedFolder = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
             if (!isNull(selectedFolder)) {
                 databaseHelper.importDatabase(context, selectedFolder);
             }
@@ -52,7 +58,7 @@ public class DatabaseManager {
 
     public static void exportDatabase(Context context, Activity activity) throws FolkSetsException {
         try {
-            String selectedFolder = Utilities.readStringFromSharedPreferences(activity, Constants.STORAGE_DIRECTORY_URI, null);
+            String selectedFolder = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
             if (!isNull(selectedFolder)) {
                 databaseHelper.exportDatabase(context, selectedFolder);
             }
@@ -251,7 +257,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueComposerInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_COMPOSER);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_COMPOSER);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique composers from the song table", e);
         }
@@ -259,7 +265,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueRegionInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_REGION_OF_ORIGIN);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_REGION_OF_ORIGIN);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique regions of origin from the song table", e);
         }
@@ -267,7 +273,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueKeyInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_KEY);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_KEY);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique keys from the song table", e);
         }
@@ -275,7 +281,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueIncipitInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_INCIPIT);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_INCIPIT);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique incipits from the song table", e);
         }
@@ -283,7 +289,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueFormInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_FORM);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_FORM);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique forms from the song table", e);
         }
@@ -299,7 +305,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueNoteInSongTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, Constants.SONG_NOTE);
+            return databaseHelper.getAllUniqueValueInSongTable(sqLiteDatabase, SONG_NOTE);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique notes from the song table", e);
         }

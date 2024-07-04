@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static java.util.Objects.isNull;
 
 import android.app.Activity;
@@ -18,7 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bandito.folksets.sql.DatabaseManager;
-import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IntentLauncher;
 import com.bandito.folksets.util.Utilities;
 
@@ -50,7 +50,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void updateSelectStorageDirectoryTextView(String text) {
         if (isNull(text)) {
-            text = Utilities.readStringFromSharedPreferences(requireActivity(), Constants.STORAGE_DIRECTORY_URI, getString (R.string.selectStorageDirectory));
+            text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString (R.string.selectStorageDirectory));
         }
         storageDirectorySelectionTextView.setText(text);
     }
@@ -74,7 +74,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             } else {
                 final int modeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 requireActivity().getContentResolver().takePersistableUriPermission(uriTree, modeFlags);
-                Utilities.writeStringToSharedPreferences(requireActivity(), Constants.STORAGE_DIRECTORY_URI, uriTree.toString());
+                Utilities.writeStringToSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, uriTree.toString());
                 updateSelectStorageDirectoryTextView(null);
             }
         } else {

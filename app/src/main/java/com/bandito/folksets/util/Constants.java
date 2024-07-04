@@ -7,6 +7,7 @@ public class Constants {
     public static final String PROGRESS_UPDATE = "Progress update";
     public static final String PROGRESS_VALUE = "Progress value";
     public static final String PROGRESS_VISIBILITY = "Progress visibility";
+    public static final String UNIQUE_VALUES = "Unique values";
     public static final String SONG_ENTITY_LIST = "songEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";

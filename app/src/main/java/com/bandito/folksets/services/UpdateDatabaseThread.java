@@ -3,6 +3,15 @@ package com.bandito.folksets.services;
 import static com.bandito.folksets.util.Constants.PROGRESS_UPDATE;
 import static com.bandito.folksets.util.Constants.PROGRESS_VALUE;
 import static com.bandito.folksets.util.Constants.PROGRESS_VISIBILITY;
+import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
+import static com.bandito.folksets.util.Constants.SET_NAME;
+import static com.bandito.folksets.util.Constants.SONG_ENTITY_LIST;
+import static com.bandito.folksets.util.Constants.SONG_FILE_PATH;
+import static com.bandito.folksets.util.Constants.SONG_ID;
+import static com.bandito.folksets.util.Constants.SONG_TITLES;
+import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
+import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
+import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +25,6 @@ import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SongEntity;
-import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.StaticData;
 
@@ -43,7 +51,7 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.initializeDatabase(callingActivity.getBaseContext());
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 1);
-            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(Constants.SONG_ID + "," + Constants.SONG_FILE_PATH, null, null, null, null);
+            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_FILE_PATH, null, null, null, null);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 2);
             //Remove deprecated songs
             List<Long> songIdToRemoveList = songEntityList.stream()
@@ -64,13 +72,13 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.insertSongsInDatabase(songEntityToAddList);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 6);
             //Get song list
-            StaticData.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(Constants.SONG_ID + "," + Constants.SONG_TITLES, null, null, Constants.SONG_TITLES, null);
+            StaticData.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, null, null, SONG_TITLES, null);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 7);
-            broadcastMessage(context, Constants.STATICDATA_UPDATE, Constants.VALUE_UPDATED, Constants.SONG_ENTITY_LIST);
+            broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, SONG_ENTITY_LIST);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 8);
             //Get set list
-            StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", Constants.SET_NAME, null);
-            broadcastMessage(context, Constants.STATICDATA_UPDATE, Constants.VALUE_UPDATED, Constants.SET_ENTITY_LIST);
+            StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
+            broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, SET_ENTITY_LIST);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 9);
             //Get unique values
             StaticData.uniqueSongTitleArray = DatabaseManager.getAllUniqueTitleInSongTable();
@@ -93,6 +101,7 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 18);
             StaticData.uniqueSetNameArray = DatabaseManager.getAllUniqueNameInSetTable();
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 19);
+            broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, UNIQUE_VALUES);
             //Linger a few more seconds
             sleep(3000L);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VISIBILITY, View.GONE);

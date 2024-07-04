@@ -173,7 +173,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder("SELECT " + fieldsNames + " FROM " + TABLE_SONG + " WHERE ");
         for (int i = 0, max = songIdArray.length; i < max; i++) {
-            query.append(SONG_ID + " = " + songIdArray[i]);
+            query.append(SONG_ID + " = ").append(songIdArray[i]);
             if (i < max - 1) {
                 query.append(" OR ");
             }

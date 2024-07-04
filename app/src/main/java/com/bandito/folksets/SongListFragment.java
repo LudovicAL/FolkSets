@@ -101,7 +101,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.STATICDATA_UPDATE));
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(STATICDATA_UPDATE));
         demandNewSearch(false);
     }
 
@@ -156,11 +156,11 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonTitle) {
                     Log.i(TAG, "Seaching title: " + textToSearch);
-                    String[] titleArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
+                    String[] titleArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TITLES, titleArray, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonTag) {
                     Log.i(TAG, "Seaching tag: " + textToSearch);
-                    String[] tagArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
+                    String[] tagArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_TAGS, tagArray, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonComposer) {
                     Log.i(TAG, "Seaching composer: " + textToSearch);
@@ -173,7 +173,7 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
                     songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_KEY, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
                 } else if (i == R.id.toggleButtonPlayedBy) {
                     Log.i(TAG, "Seaching played by: " + textToSearch);
-                    String[] playedByArray = StringUtils.split(textToSearch, Constants.DEFAULT_SEPARATOR);
+                    String[] playedByArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     songListRecyclerViewAdapter.setSongEntityList(DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, SONG_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second));
                 }
             }
@@ -191,9 +191,9 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             DatabaseManager.updateSongInDatabase(songEntity);
             Log.i(TAG, "You short clicked " + songEntity.getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SONG_ENTITY),
-                    new Pair<>(Constants.SONG_ENTITY, songEntity),
-                    new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                    new Pair<>(OPERATION, SONG_ENTITY),
+                    new Pair<>(SONG_ENTITY, songEntity),
+                    new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
             ExceptionManager.manageException(requireContext(), e);
@@ -206,9 +206,9 @@ public class SongListFragment extends Fragment implements AdapterView.OnItemSele
             List<SongEntity> songEntityList = DatabaseManager.findSongByIdInDatabase("*", String.valueOf(songListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + songEntityList.get(0).getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
-                    new Pair<>(Constants.OPERATION, Constants.SONG_ENTITY),
-                    new Pair<>(Constants.SONG_ENTITY, songEntityList.get(0)),
-                    new Pair<>(Constants.CLICK_TYPE, Constants.ClickType.longClick.toString())
+                    new Pair<>(OPERATION, SONG_ENTITY),
+                    new Pair<>(SONG_ENTITY, songEntityList.get(0)),
+                    new Pair<>(CLICK_TYPE, Constants.ClickType.longClick.toString())
             });
         } catch (Exception e) {
             ExceptionManager.manageException(requireContext(), e);
