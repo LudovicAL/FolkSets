@@ -4,14 +4,22 @@ import static com.bandito.folksets.util.Constants.CLICK_TYPE;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
+import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
 import static com.bandito.folksets.util.Constants.SET_ID;
 import static com.bandito.folksets.util.Constants.SET_NAME;
+import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
+import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
 import static java.util.Objects.isNull;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +37,7 @@ import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
@@ -39,8 +48,8 @@ import java.util.TimerTask;
 public class SetListFragment extends Fragment implements View.OnClickListener, SetListRecyclerViewAdapter.ItemClickListener {
 
     private static final String TAG = SetListFragment.class.getName();
+    private final SetListFragment.MyBroadcastReceiver myBroadcastReceiver = new SetListFragment.MyBroadcastReceiver();
     private TextView setMatchNumberTextview;
-
     private MaterialButtonToggleGroup materialButtonToggleGroup;
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
         if (isChecked) {
@@ -99,7 +108,14 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(STATICDATA_UPDATE));
         demandNewSearch(false);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(myBroadcastReceiver);
     }
 
     private void demandNewSearch(boolean userIsTyping) {
@@ -125,17 +141,17 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         try {
             String textToSearch = editText.getText().toString();
             if (textToSearch.isEmpty()) {
-                SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findAllSetsInDatabase(SET_ID + "," + SET_NAME, SET_NAME, null);
+                setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase(SET_ID + "," + SET_NAME, SET_NAME, null));
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonSetName) {
                     Log.i(TAG, "Seaching name: " + textToSearch);
-                    SetListRecyclerViewAdapter.setEntityList = DatabaseManager.findSetsByNameInDatabase(SET_ID + "," + SET_NAME, textToSearch, SET_NAME, null);
+                    setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase(SET_ID + "," + SET_NAME, textToSearch, SET_NAME, null));
                 } else if (i == R.id.toggleButtonSongInSet) {
                     Log.i(TAG, "Seaching song in set: " + textToSearch);
                     Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithSongsInDatabase(textToSearch, SET_NAME, null);
                     setMatchNumber(result.first);
-                    SetListRecyclerViewAdapter.setEntityList = result.second;
+                    setListRecyclerViewAdapter.setSetEntityList(result.second);
                 }
             }
             setListRecyclerViewAdapter.notifyDataSetChanged();
@@ -188,6 +204,16 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
                     new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
             });
+        }
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(VALUE_UPDATED))) {
+                setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
+                setListRecyclerViewAdapter.notifyDataSetChanged();
+            }
         }
     }
 }

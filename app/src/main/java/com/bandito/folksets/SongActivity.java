@@ -3,6 +3,7 @@ package com.bandito.folksets;
 import static com.bandito.folksets.util.Constants.CLICK_TYPE;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
+import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.SONG_ENTITY;
 import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
 import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
@@ -73,7 +74,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         if (songOrSet.equals(Constants.SongOrSet.song)) {
             songEntity = (SongEntity) getIntent().getExtras().getSerializable(SONG_ENTITY);
         } else {
-            setEntity = (SetEntity) getIntent().getExtras().getSerializable(FSET_ENTITY);
+            setEntity = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
             position = getIntent().getExtras().getInt(POSITION);
             try {
                 songEntity = DatabaseManager.findSongByIdInDatabase("*", setEntity.getSong(position), null, null).get(0);

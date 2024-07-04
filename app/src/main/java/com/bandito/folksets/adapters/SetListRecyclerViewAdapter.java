@@ -17,10 +17,17 @@ import java.util.List;
 
 public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecyclerViewAdapter.SetViewHolder> {
     private static final String TAG = SetListRecyclerViewAdapter.class.getName();
-    public static List<SetEntity> setEntityList = new ArrayList<>();
+    private List<SetEntity> setEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
     public SetListRecyclerViewAdapter() {
+    }
+
+    public List<SetEntity> getSetEntityList() {
+        return setEntityList;
+    }
+    public void setSetEntityList(List<SetEntity> setEntityList) {
+        this.setEntityList = setEntityList;
     }
 
     // Create new views (invoked by the layout manager)
