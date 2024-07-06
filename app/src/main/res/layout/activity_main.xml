@@ -58,7 +58,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:progress="0"
-        android:max="19"
+        android:max="18"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

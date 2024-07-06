@@ -1,6 +1,8 @@
 package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.CLICK_TYPE;
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
+import static com.bandito.folksets.util.Constants.DELIMITER_INPUT_PATTERN;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
@@ -9,12 +11,17 @@ import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
 import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
 import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
 
+import static java.util.Objects.isNull;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,16 +37,25 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bandito.folksets.adapters.SongPagesRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.SongEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.PdfUtilities;
 import com.bandito.folksets.util.StaticData;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationView;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.time.OffsetDateTime;
+import java.util.List;
 
 public class SongActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -52,6 +68,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
     private DrawerLayout drawerLayout;
     private AutoCompleteTextView songTitlesAutoCompleteTextView;
     private AutoCompleteTextView songTagsAutoCompleteTextView;
+    private ChipGroup songTagsChipGroup;
     private AutoCompleteTextView songComposerAutoCompleteTextView;
     private AutoCompleteTextView songRegionOfOriginAutoCompleteTextView;
     private AutoCompleteTextView songKeyAutoCompleteTextView;
@@ -59,6 +76,27 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
     private AutoCompleteTextView songFormAutoCompleteTextView;
     private AutoCompleteTextView songPlayedByAutoCompleteTextView;
     private AutoCompleteTextView songNoteAutoCompleteTextView;
+
+    private final TextWatcher tagTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+            if (DELIMITER_INPUT_PATTERN.matcher(charSequence).find()) {
+                String sanitizedString = charSequence.toString().replace(DEFAULT_SEPARATOR, "");
+                if (!sanitizedString.isEmpty()) {
+                    addChipToChipGroup(new String[]{sanitizedString}, songTagsChipGroup);
+                }
+                songTagsAutoCompleteTextView.setText("");
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,11 +128,13 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.edit_song_fab).setOnClickListener(this);
         findViewById(R.id.back_song_fab).setOnClickListener(this);
 
+        songTagsChipGroup = headerView.findViewById(R.id.nav_song_tags_chipGroup);
         //Prepare the autocompletes
         songTitlesAutoCompleteTextView = headerView.findViewById(R.id.nav_song_title_textview);
         songTitlesAutoCompleteTextView.setThreshold(0);
         songTagsAutoCompleteTextView = headerView.findViewById(R.id.nav_song_tags_textview);
         songTagsAutoCompleteTextView.setThreshold(0);
+        songTagsAutoCompleteTextView.addTextChangedListener(tagTextWatcher);
         songComposerAutoCompleteTextView = headerView.findViewById(R.id.nav_song_composer_textview);
         songComposerAutoCompleteTextView.setThreshold(0);
         songRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.nav_song_region_textview);
@@ -114,7 +154,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         //Display the data
         try {
             songTitlesAutoCompleteTextView.setText(songEntity.songTitles);
-            songTagsAutoCompleteTextView.setText(songEntity.songTags);
+            addChipToChipGroup(StringUtils.split(songEntity.songTags, DEFAULT_SEPARATOR), songTagsChipGroup);
             songComposerAutoCompleteTextView.setText(songEntity.songComposer);
             songRegionOfOriginAutoCompleteTextView.setText(songEntity.songRegionOfOrigin);
             songKeyAutoCompleteTextView.setText(songEntity.songKey);
@@ -136,6 +176,47 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         if (Constants.ClickType.longClick.toString().equals(clickType)) {
             drawerLayout.openDrawer(GravityCompat.END);
         }
+
+        try {
+            List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(this, TAG, songEntity.songFilePath);
+            SongPagesRecyclerViewAdapter songPagesRecyclerViewAdapter = new SongPagesRecyclerViewAdapter(bitmapList);
+            RecyclerView recyclerView = findViewById(R.id.songPagesRecyclerView);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            recyclerView.setAdapter(songPagesRecyclerViewAdapter);
+            songPagesRecyclerViewAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
+        }
+    }
+
+    private void addChipToChipGroup(String[] chipContentArray, ChipGroup chipGroup) {
+        if (isNull(chipContentArray)) {
+            return;
+        }
+        for (String chipContent : chipContentArray) {
+            Chip chip = new Chip(this);
+            chip.setText(chipContent);
+            chip.setCloseIconVisible(true);
+            chip.setCheckable(false);
+            chipGroup.addView(chip);
+            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    chipGroup.removeView(view);
+                }
+            });
+        }
+    }
+
+    private String retrieveChipsFromChipGroup(ChipGroup chipGroup) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0, max = chipGroup.getChildCount(); i < max; i++) {
+            stringBuilder.append(((Chip)chipGroup.getChildAt(i)).getText());
+            if (i < max - 1) {
+                stringBuilder.append(DEFAULT_SEPARATOR);
+            }
+        }
+        return stringBuilder.toString();
     }
 
     private void saveSong() {
@@ -144,7 +225,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "A title is required", Toast.LENGTH_SHORT).show();
             return;
         }
-        songEntity.songTags = songTagsAutoCompleteTextView.getText().toString();
+        songEntity.songTags = retrieveChipsFromChipGroup(songTagsChipGroup);
         songEntity.songComposer = songComposerAutoCompleteTextView.getText().toString();
         songEntity.songRegionOfOrigin = songRegionOfOriginAutoCompleteTextView.getText().toString();
         songEntity.songKey = songKeyAutoCompleteTextView.getText().toString();
@@ -155,6 +236,7 @@ public class SongActivity extends AppCompatActivity implements View.OnClickListe
         try {
             DatabaseManager.updateSongInDatabase(songEntity);
             Toast.makeText(this, "Song saved", Toast.LENGTH_SHORT).show();
+            drawerLayout.closeDrawer(GravityCompat.END);
         } catch (Exception e) {
             ExceptionManager.manageException(this, e);
         }

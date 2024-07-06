@@ -12,7 +12,18 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/songPagesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="3sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/edit_song_fab"
@@ -20,9 +31,12 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/edit"
             android:src="@drawable/ic_edit"
+            app:backgroundTint="#BF6750A4"
+            app:elevation="0dp"
             app:fabSize="mini"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:pressedTranslationZ="0dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/back_song_fab"
@@ -30,19 +44,12 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
             android:src="@drawable/ic_half_arrow_left"
+            app:backgroundTint="#BF6750A4"
+            app:elevation="0dp"
             app:fabSize="mini"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/songTitleTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/placeholder"
-            android:textSize="24sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:pressedTranslationZ="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

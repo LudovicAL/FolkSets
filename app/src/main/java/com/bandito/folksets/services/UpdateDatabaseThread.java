@@ -73,35 +73,34 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 6);
             //Get song list
             StaticData.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, null, null, SONG_TITLES, null);
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 7);
             broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, SONG_ENTITY_LIST);
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 8);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 7);
             //Get set list
             StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
             broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, SET_ENTITY_LIST);
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 9);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 8);
             //Get unique values
             StaticData.uniqueSongTitleArray = DatabaseManager.getAllUniqueTitleInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 10);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 9);
             StaticData.uniqueSongTagArray = DatabaseManager.getAllUniqueTagInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 11);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 10);
             StaticData.uniqueSongComposerArray = DatabaseManager.getAllUniqueComposerInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 12);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 11);
             StaticData.uniqueSongRegionArray = DatabaseManager.getAllUniqueRegionInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 13);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 12);
             StaticData.uniqueSongKeyArray = DatabaseManager.getAllUniqueKeyInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 14);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 13);
             StaticData.uniqueSongIncipitArray = DatabaseManager.getAllUniqueIncipitInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 15);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 14);
             StaticData.uniqueSongFormArray = DatabaseManager.getAllUniqueFormInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 16);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 15);
             StaticData.uniqueSongPlayedByArray = DatabaseManager.getAllUniquePlayedByInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 17);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 16);
             StaticData.uniqueSongNoteArray = DatabaseManager.getAllUniqueNoteInSongTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 18);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 17);
             StaticData.uniqueSetNameArray = DatabaseManager.getAllUniqueNameInSetTable();
-            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 19);
             broadcastMessage(context, STATICDATA_UPDATE, VALUE_UPDATED, UNIQUE_VALUES);
+            broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VALUE, 18);
             //Linger a few more seconds
             sleep(3000L);
             broadcastMessage(context, PROGRESS_UPDATE, PROGRESS_VISIBILITY, View.GONE);

@@ -1,5 +1,7 @@
 package com.bandito.folksets.util;
 
+import java.util.regex.Pattern;
+
 public class Constants {
 
     public static final String STATICDATA_UPDATE = "StaticData update";
@@ -44,6 +46,7 @@ public class Constants {
     public static final String SORT_ASC = "ASC";
     public static final String SORT_DESC = "DESC";
     public static final String POSITION = "Position";
+    public static final Pattern DELIMITER_INPUT_PATTERN = Pattern.compile("(\\n|;)$", Pattern.CASE_INSENSITIVE);
     public enum ClickType {
         shortClick,
         longClick

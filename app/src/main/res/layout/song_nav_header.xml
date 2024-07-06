@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="5sp">
+    android:layout_marginHorizontal="5sp"
+    android:layout_marginTop="30sp"
+    android:layout_marginBottom="5sp">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/back_from_edit_song_fab"
@@ -23,9 +24,9 @@
         android:text="@string/edit_song"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/back_from_edit_song_fab"
-        app:layout_constraintRight_toLeftOf="@+id/button_save_song" />
+        app:layout_constraintRight_toLeftOf="@+id/button_save_song"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button_save_song"
@@ -33,8 +34,8 @@
         android:layout_height="wrap_content"
         android:text="@string/save"
         android:textSize="18sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/nav_header_barrier"
@@ -70,25 +71,25 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_title_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/title_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/title_input"
-            android:maxLength="80"
+            android:maxLength="100"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_tags_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|end"
+            android:layout_gravity="fill|end"
             android:layout_margin="3sp"
             android:background="#FFFFFF"
             android:padding="3sp"
@@ -98,21 +99,41 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <AutoCompleteTextView
-            android:id="@+id/nav_song_tags_textview"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:hint="@string/tag_input"
-            android:maxLength="80"
-            android:singleLine="true"
-            android:textAlignment="viewStart"
-            android:textSize="18sp"
+            android:layout_gravity="start|end"
             android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:background="#FFFFFF">
+
+            <AutoCompleteTextView
+                android:id="@+id/nav_song_tags_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:hint="@string/tag_input"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                android:maxLength="80"
+                android:padding="3sp"
+                android:singleLine="false"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/nav_song_tags_chipGroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                app:chipSpacingVertical="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nav_song_tags_textview" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/nav_song_composer_hint_textview"
@@ -130,19 +151,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_composer_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/composer_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/composer_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_region_hint_textview"
@@ -160,19 +181,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_region_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/region_of_origin_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/region_of_origin_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_key_hint_textview"
@@ -190,19 +211,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_key_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/key_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/key_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_incipit_hint_textview"
@@ -220,19 +241,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_incipit_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/incipit_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/incipit_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_form_hint_textview"
@@ -250,19 +271,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_form_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/form_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/form_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_players_hint_textview"
@@ -280,19 +301,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_players_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/played_by_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/played_by_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_note_hint_textview"
@@ -310,19 +331,19 @@
 
         <AutoCompleteTextView
             android:id="@+id/nav_song_note_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="start|end"
+            android:layout_margin="3sp"
+            android:background="#FFFFFF"
+            android:hint="@string/note_input"
             android:importantForAutofill="no"
             android:inputType="text"
-            android:hint="@string/note_input"
             android:maxLength="80"
+            android:padding="3sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
-            android:textSize="18sp"
-            android:layout_margin="3sp"
-            android:padding="3sp"
-            android:background="#FFFFFF"
-            android:layout_gravity="start|end" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/nav_song_filePath_hint_textview"
@@ -340,7 +361,7 @@
 
         <TextView
             android:id="@+id/nav_song_filePath_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"
@@ -367,7 +388,7 @@
 
         <TextView
             android:id="@+id/nav_song_fileType_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"
@@ -394,7 +415,7 @@
 
         <TextView
             android:id="@+id/nav_song_creation_date_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"
@@ -422,7 +443,7 @@
 
         <TextView
             android:id="@+id/nav_song_consultation_date_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"
@@ -449,7 +470,7 @@
 
         <TextView
             android:id="@+id/nav_song_consultation_number_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"

@@ -3,6 +3,7 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="loading_data">Loading data</string>
+    <string name="song_file_content">Song file content</string>
 
     <string name="selectStorageDirectory">Select a storage directory</string>
     <string name="exportDatabaseToStorage">Export database to storage</string>

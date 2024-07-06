@@ -35,7 +35,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
     @Override
     public SetViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.adapter_item, viewGroup, false);
+                .inflate(R.layout.adapter_textview_item, viewGroup, false);
         return new SetViewHolder(view);
     }
 
