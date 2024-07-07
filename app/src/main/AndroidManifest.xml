@@ -21,7 +21,7 @@
             android:exported="false"
             android:screenOrientation="landscape" />
         <activity
-            android:name=".SongActivity"
+            android:name=".TuneActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

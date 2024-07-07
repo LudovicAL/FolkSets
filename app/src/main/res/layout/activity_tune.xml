@@ -3,11 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout_song"
+    android:id="@+id/drawer_layout_tune"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".SongActivity"
+    tools:context=".TuneActivity"
     tools:openDrawer="start">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -16,7 +16,7 @@
         android:background="#FFFFFF">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/songPagesRecyclerView"
+            android:id="@+id/tunePagesRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="3sp"
@@ -26,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/edit_song_fab"
+            android:id="@+id/edit_tune_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/edit"
@@ -39,7 +39,7 @@
             app:pressedTranslationZ="0dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/back_song_fab"
+            android:id="@+id/back_tune_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
@@ -54,11 +54,11 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.navigation.NavigationView
-        android:id="@+id/song_nav_view"
+        android:id="@+id/tune_nav_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        app:headerLayout="@layout/song_nav_header"
-        app:menu="@menu/song_nav_menu" />
+        app:headerLayout="@layout/tune_nav_header"
+        app:menu="@menu/tune_nav_menu" />
 
 </androidx.drawerlayout.widget.DrawerLayout>

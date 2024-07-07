@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/select_a_song"
+        android:text="@string/select_a_tune"
         android:textSize="24sp"
         android:textStyle="bold" />
 

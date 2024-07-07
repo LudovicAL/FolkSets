@@ -3,8 +3,8 @@ package com.bandito.folksets;
 import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
-import static com.bandito.folksets.util.Constants.SONG_ID;
-import static com.bandito.folksets.util.Constants.SONG_TITLES;
+import static com.bandito.folksets.util.Constants.TUNE_ID;
+import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 import static java.util.Objects.isNull;
 
 import android.app.Dialog;
@@ -35,13 +35,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bandito.folksets.adapters.SongListArrayAdapter;
-import com.bandito.folksets.adapters.SongListRecyclerViewAdapter;
+import com.bandito.folksets.adapters.TuneListArrayAdapter;
+import com.bandito.folksets.adapters.TuneListRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
-import com.bandito.folksets.sql.entities.SongEntity;
+import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 
@@ -56,29 +56,29 @@ public class SetActivity extends AppCompatActivity {
     private Constants.SetOperation currentSetOperation;
     private SetEntity currentSet = new SetEntity();
     private EditText setNameEditText;
-    private RecyclerView selectedSongsRecyclerView;
-    private SongListRecyclerViewAdapter selectedSongListRecyclerViewAdapter;
-    private View lastSelectedSongSelectedView = null;
-    private Drawable lastSelectedSongSelectedDrawable = null;
-    private Integer selectedSongSelectionPosition = null;
+    private RecyclerView selectedTunesRecyclerView;
+    private TuneListRecyclerViewAdapter selectedTuneListRecyclerViewAdapter;
+    private View lastSelectedTuneSelectedView = null;
+    private Drawable lastSelectedTuneSelectedDrawable = null;
+    private Integer selectedTuneSelectionPosition = null;
     private Context context;
     private Dialog dialog;
 
-    private final SongListRecyclerViewAdapter.ItemClickListener selectedSongItemClickListener = new SongListRecyclerViewAdapter.ItemClickListener() {
+    private final TuneListRecyclerViewAdapter.ItemClickListener selectedTuneItemClickListener = new TuneListRecyclerViewAdapter.ItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            if (view.equals(lastSelectedSongSelectedView)) {
-                lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
-                lastSelectedSongSelectedView = null;
-                lastSelectedSongSelectedDrawable = null;
-                selectedSongSelectionPosition = null;
+            if (view.equals(lastSelectedTuneSelectedView)) {
+                lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                lastSelectedTuneSelectedView = null;
+                lastSelectedTuneSelectedDrawable = null;
+                selectedTuneSelectionPosition = null;
             } else {
-                if (!isNull(lastSelectedSongSelectedView)) {
-                    lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
+                if (!isNull(lastSelectedTuneSelectedView)) {
+                    lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
                 }
-                lastSelectedSongSelectedView = view;
-                lastSelectedSongSelectedDrawable = view.getBackground();
-                selectedSongSelectionPosition = position;
+                lastSelectedTuneSelectedView = view;
+                lastSelectedTuneSelectedDrawable = view.getBackground();
+                selectedTuneSelectionPosition = position;
                 view.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.view_border, context.getTheme()));
             }
         }
@@ -102,11 +102,11 @@ public class SetActivity extends AppCompatActivity {
 
         context = this;
 
-        //Prepare the RecyclerView and its adapter for selected songs
-        selectedSongsRecyclerView = findViewById(R.id.selected_songs_recyclerview);
-        selectedSongsRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        selectedSongListRecyclerViewAdapter = new SongListRecyclerViewAdapter();
-        selectedSongListRecyclerViewAdapter.setClickListener(selectedSongItemClickListener);
+        //Prepare the RecyclerView and its adapter for selected tunes
+        selectedTunesRecyclerView = findViewById(R.id.selected_tunes_recyclerview);
+        selectedTunesRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        selectedTuneListRecyclerViewAdapter = new TuneListRecyclerViewAdapter();
+        selectedTuneListRecyclerViewAdapter.setClickListener(selectedTuneItemClickListener);
 
         //Retrieve the bundle message
         setNameEditText = findViewById(R.id.set_name_edittext);
@@ -115,15 +115,15 @@ public class SetActivity extends AppCompatActivity {
             currentSet = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
             ((TextView)findViewById(R.id.set_activity_header)).setText(R.string.edit_set);
             setNameEditText.setText(currentSet.setName);
-            String[] currentSetSongIdArrayOfStrings = StringUtils.split(currentSet.setSongs, DEFAULT_SEPARATOR);
-            if (!isNull(currentSetSongIdArrayOfStrings)) {
+            String[] currentSetTuneIdArrayOfStrings = StringUtils.split(currentSet.setTunes, DEFAULT_SEPARATOR);
+            if (!isNull(currentSetTuneIdArrayOfStrings)) {
                 try {
-                    List<SongEntity> unorderedCurrentSetSongEntityList = DatabaseManager.findSongsByIdInDatabase(SONG_ID + "," + SONG_TITLES, currentSetSongIdArrayOfStrings, null, null);
-                    List<SongEntity> orderedCurrentSetSongEntityList = new ArrayList<>();
-                    for (String songId : currentSetSongIdArrayOfStrings) {
-                        orderedCurrentSetSongEntityList.add(unorderedCurrentSetSongEntityList.stream().filter(songEntity -> songEntity.songId.equals(Long.valueOf(songId))).findFirst().get());
+                    List<TuneEntity> unorderedCurrentSetTuneEntityList = DatabaseManager.findTunesByIdInDatabase(TUNE_ID + "," + TUNE_TITLES, currentSetTuneIdArrayOfStrings, null, null);
+                    List<TuneEntity> orderedCurrentSetTuneEntityList = new ArrayList<>();
+                    for (String tuneId : currentSetTuneIdArrayOfStrings) {
+                        orderedCurrentSetTuneEntityList.add(unorderedCurrentSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
                     }
-                    selectedSongListRecyclerViewAdapter.setSongEntityList(orderedCurrentSetSongEntityList);
+                    selectedTuneListRecyclerViewAdapter.setTuneEntityList(orderedCurrentSetTuneEntityList);
                 } catch (FolkSetsException e) {
                     ExceptionManager.manageException(this, e);
                 }
@@ -134,16 +134,16 @@ public class SetActivity extends AppCompatActivity {
             ((TextView)findViewById(R.id.set_activity_header)).setText(R.string.create_new_set);
         }
 
-        selectedSongsRecyclerView.setAdapter(selectedSongListRecyclerViewAdapter);
+        selectedTunesRecyclerView.setAdapter(selectedTuneListRecyclerViewAdapter);
     }
 
-    private int getIndexOfSongIdInListOfSongEntities(String songId, List<SongEntity> songEntityList) throws FolkSetsException {
-        for (int i = 0, max = songEntityList.size(); i < max; i++) {
-            if (songEntityList.get(i).songId.equals(Long.valueOf(songId))) {
+    private int getIndexOfTuneIdInListOfTuneEntities(String tuneId, List<TuneEntity> tuneEntityList) throws FolkSetsException {
+        for (int i = 0, max = tuneEntityList.size(); i < max; i++) {
+            if (tuneEntityList.get(i).tuneId.equals(Long.valueOf(tuneId))) {
                 return i;
             }
         }
-        throw new FolkSetsException("An error occured while retrieving the index of a song id in a song list.", null);
+        throw new FolkSetsException("An error occured while retrieving the index of a tune id in a tune list.", null);
     }
 
     protected void onSaveInstanceState (@NonNull Bundle outState) {
@@ -171,12 +171,12 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Choose a name for the set", Toast.LENGTH_SHORT).show();
             return;
         }
-        currentSet.setSongs = StringUtils.join(
-                selectedSongListRecyclerViewAdapter.getSongEntityList().stream().map(songEntity -> songEntity.songId).collect(Collectors.toList()),
+        currentSet.setTunes = StringUtils.join(
+                selectedTuneListRecyclerViewAdapter.getTuneEntityList().stream().map(tuneEntity -> tuneEntity.tuneId).collect(Collectors.toList()),
                 DEFAULT_SEPARATOR
         );
-        if (currentSet.setSongs.isEmpty()) {
-            Toast.makeText(this, "Select at least one song", Toast.LENGTH_SHORT).show();
+        if (currentSet.setTunes.isEmpty()) {
+            Toast.makeText(this, "Select at least one tune", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -192,49 +192,49 @@ public class SetActivity extends AppCompatActivity {
         }
     }
 
-    private void selectSong(SongEntity songEntity) {
-        selectedSongListRecyclerViewAdapter.addSongEntity(songEntity);
-        selectedSongListRecyclerViewAdapter.notifyDataSetChanged();
+    private void selectTune(TuneEntity tuneEntity) {
+        selectedTuneListRecyclerViewAdapter.addTuneEntity(tuneEntity);
+        selectedTuneListRecyclerViewAdapter.notifyDataSetChanged();
     }
 
-    public void deselectSong(View view) {
-        if (!isNull(selectedSongSelectionPosition)) {
-            lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
-            selectedSongListRecyclerViewAdapter.removeSongEntity(selectedSongSelectionPosition);
-            selectedSongListRecyclerViewAdapter.notifyDataSetChanged();
-            lastSelectedSongSelectedView = null;
-            lastSelectedSongSelectedDrawable = null;
-            selectedSongSelectionPosition = null;
+    public void deselectTune(View view) {
+        if (!isNull(selectedTuneSelectionPosition)) {
+            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+            selectedTuneListRecyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition);
+            selectedTuneListRecyclerViewAdapter.notifyDataSetChanged();
+            lastSelectedTuneSelectedView = null;
+            lastSelectedTuneSelectedDrawable = null;
+            selectedTuneSelectionPosition = null;
         }
     }
 
-    public void moveSongUp(View view) {
-        if (!isNull(selectedSongSelectionPosition) && selectedSongSelectionPosition > 0) {
-            lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
-            selectedSongListRecyclerViewAdapter.addSongEntityAtIndex(selectedSongSelectionPosition - 1, selectedSongListRecyclerViewAdapter.removeSongEntity(selectedSongSelectionPosition));
-            selectedSongListRecyclerViewAdapter.notifyDataSetChanged();
-            lastSelectedSongSelectedView = null;
-            lastSelectedSongSelectedDrawable = null;
-            int newPosition = selectedSongSelectionPosition - 1;
-            selectedSongSelectionPosition = null;
-            selectedSongItemClickListener.onItemClick(selectedSongsRecyclerView.getChildAt(newPosition), newPosition);
+    public void moveTuneUp(View view) {
+        if (!isNull(selectedTuneSelectionPosition) && selectedTuneSelectionPosition > 0) {
+            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+            selectedTuneListRecyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition - 1, selectedTuneListRecyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
+            selectedTuneListRecyclerViewAdapter.notifyDataSetChanged();
+            lastSelectedTuneSelectedView = null;
+            lastSelectedTuneSelectedDrawable = null;
+            int newPosition = selectedTuneSelectionPosition - 1;
+            selectedTuneSelectionPosition = null;
+            selectedTuneItemClickListener.onItemClick(selectedTunesRecyclerView.getChildAt(newPosition), newPosition);
         }
     }
 
-    public void moveSongDown(View view) {
-        if (!isNull(selectedSongSelectionPosition) && selectedSongSelectionPosition < selectedSongListRecyclerViewAdapter.getItemCount() - 1) {
-            lastSelectedSongSelectedView.setBackground(lastSelectedSongSelectedDrawable);
-            selectedSongListRecyclerViewAdapter.addSongEntityAtIndex(selectedSongSelectionPosition + 1, selectedSongListRecyclerViewAdapter.removeSongEntity(selectedSongSelectionPosition));
-            selectedSongListRecyclerViewAdapter.notifyDataSetChanged();
-            lastSelectedSongSelectedView = null;
-            lastSelectedSongSelectedDrawable = null;
-            int newPosition = selectedSongSelectionPosition + 1;
-            selectedSongSelectionPosition = null;
-            selectedSongItemClickListener.onItemClick(selectedSongsRecyclerView.getChildAt(newPosition), newPosition);
+    public void moveTuneDown(View view) {
+        if (!isNull(selectedTuneSelectionPosition) && selectedTuneSelectionPosition < selectedTuneListRecyclerViewAdapter.getItemCount() - 1) {
+            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+            selectedTuneListRecyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition + 1, selectedTuneListRecyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
+            selectedTuneListRecyclerViewAdapter.notifyDataSetChanged();
+            lastSelectedTuneSelectedView = null;
+            lastSelectedTuneSelectedDrawable = null;
+            int newPosition = selectedTuneSelectionPosition + 1;
+            selectedTuneSelectionPosition = null;
+            selectedTuneItemClickListener.onItemClick(selectedTunesRecyclerView.getChildAt(newPosition), newPosition);
         }
     }
 
-    public void openSelectSongDialog(View view) {
+    public void openSelectTuneDialog(View view) {
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.searchable_spinner);
         int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
@@ -243,7 +243,7 @@ public class SetActivity extends AppCompatActivity {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
         ListView listView=dialog.findViewById(R.id.searchable_spinner_list_view);
-        SongListArrayAdapter arrayAdapter = new SongListArrayAdapter(this, android.R.layout.simple_list_item_1, StaticData.songEntityList);
+        TuneListArrayAdapter arrayAdapter = new TuneListArrayAdapter(this, android.R.layout.simple_list_item_1, StaticData.tuneEntityList);
         listView.setAdapter(arrayAdapter);
         ((EditText)dialog.findViewById(R.id.searchable_spinner_edit_text)).addTextChangedListener(new TextWatcher() {
             @Override
@@ -265,7 +265,7 @@ public class SetActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectSong(arrayAdapter.getItem(position));
+                selectTune(arrayAdapter.getItem(position));
                 dialog.dismiss();
             }
         });

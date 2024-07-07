@@ -6,10 +6,10 @@ import static com.bandito.folksets.util.Constants.PROGRESS_VALUE;
 import static com.bandito.folksets.util.Constants.PROGRESS_VISIBILITY;
 import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
 import static com.bandito.folksets.util.Constants.SET_NAME;
-import static com.bandito.folksets.util.Constants.SONG_ENTITY_LIST;
-import static com.bandito.folksets.util.Constants.SONG_FILE_PATH;
-import static com.bandito.folksets.util.Constants.SONG_ID;
-import static com.bandito.folksets.util.Constants.SONG_TITLES;
+import static com.bandito.folksets.util.Constants.TUNE_ENTITY_LIST;
+import static com.bandito.folksets.util.Constants.TUNE_FILE_PATH;
+import static com.bandito.folksets.util.Constants.TUNE_ID;
+import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
 import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
 import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
@@ -25,7 +25,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
-import com.bandito.folksets.sql.entities.SongEntity;
+import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.StaticData;
 
@@ -53,52 +53,52 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.initializeDatabase(callingActivity.getBaseContext());
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{1, "Loading known tunes"});
-            List<SongEntity> songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_FILE_PATH, null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_FILE_PATH, null, null, null, null);
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{2, "Loading deleted tunes"});
-            //Remove deprecated songs
-            List<Long> songIdToRemoveList = songEntityList.stream()
-                    .filter(songEntity -> documentFileList.stream().
-                            noneMatch(documentFile -> documentFile.getUri().toString().equals(songEntity.songFilePath)))
-                    .map(songEntity -> songEntity.songId)
+            //Remove deprecated tunes
+            List<Long> tuneIdToRemoveList = tuneEntityList.stream()
+                    .filter(tuneEntity -> documentFileList.stream().
+                            noneMatch(documentFile -> documentFile.getUri().toString().equals(tuneEntity.tuneFilePath)))
+                    .map(tuneEntity -> tuneEntity.tuneId)
                     .collect(Collectors.toList());
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{3, "Loading tune deletions"});
-            DatabaseManager.removeSongsFromDatabase(songIdToRemoveList);
+            DatabaseManager.removeTunesFromDatabase(tuneIdToRemoveList);
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{4, "Loading new tunes"});
-            //Insert new songs
-            List<SongEntity> songEntityToAddList = documentFileList.stream()
-                    .filter(documentFile -> songEntityList.stream()
-                            .noneMatch(songEntity -> songEntity.songFilePath.equals(documentFile.getUri().toString())))
-                    .map(documentFile -> new SongEntity(FilenameUtils.getBaseName(documentFile.getName()), documentFile.getUri().toString(), documentFile.getType(), OffsetDateTime.now().toString()))
+            //Insert new tunes
+            List<TuneEntity> tuneEntityToAddList = documentFileList.stream()
+                    .filter(documentFile -> tuneEntityList.stream()
+                            .noneMatch(tuneEntity -> tuneEntity.tuneFilePath.equals(documentFile.getUri().toString())))
+                    .map(documentFile -> new TuneEntity(FilenameUtils.getBaseName(documentFile.getName()), documentFile.getUri().toString(), documentFile.getType(), OffsetDateTime.now().toString()))
                     .collect(Collectors.toList());
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{5, "Loading tune insertions"});
-            DatabaseManager.insertSongsInDatabase(songEntityToAddList);
+            DatabaseManager.insertTunesInDatabase(tuneEntityToAddList);
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{6, "Loading final tune list"});
-            //Get song list
-            StaticData.songEntityList = DatabaseManager.findSongsWithValueInListInDatabase(SONG_ID + "," + SONG_TITLES, null, null, SONG_TITLES, null);
-            broadcastMessage(context, STATICDATA_UPDATE, new String[]{VALUE_UPDATED}, new String[]{SONG_ENTITY_LIST});
+            //Get tune list
+            StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, TUNE_TITLES, null);
+            broadcastMessage(context, STATICDATA_UPDATE, new String[]{VALUE_UPDATED}, new String[]{TUNE_ENTITY_LIST});
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{7, "Loading final set list"});
             //Get set list
             StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
             broadcastMessage(context, STATICDATA_UPDATE, new String[]{VALUE_UPDATED}, new String[]{SET_ENTITY_LIST});
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{8, "Loading unique tune titles"});
             //Get unique values
-            StaticData.uniqueSongTitleArray = DatabaseManager.getAllUniqueTitleInSongTable();
+            StaticData.uniqueTuneTitleArray = DatabaseManager.getAllUniqueTitleInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{9, "Loading unique tune tags"});
-            StaticData.uniqueSongTagArray = DatabaseManager.getAllUniqueTagInSongTable();
+            StaticData.uniqueTuneTagArray = DatabaseManager.getAllUniqueTagInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{10, "Loading unique tune composers"});
-            StaticData.uniqueSongComposerArray = DatabaseManager.getAllUniqueComposerInSongTable();
+            StaticData.uniqueTuneComposerArray = DatabaseManager.getAllUniqueComposerInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{11, "Loading unique tune regions of origin"});
-            StaticData.uniqueSongRegionArray = DatabaseManager.getAllUniqueRegionInSongTable();
+            StaticData.uniqueTuneRegionArray = DatabaseManager.getAllUniqueRegionInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{12, "Loading unique tune keys"});
-            StaticData.uniqueSongKeyArray = DatabaseManager.getAllUniqueKeyInSongTable();
+            StaticData.uniqueTuneKeyArray = DatabaseManager.getAllUniqueKeyInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{13, "Loading unique tune incipits"});
-            StaticData.uniqueSongIncipitArray = DatabaseManager.getAllUniqueIncipitInSongTable();
+            StaticData.uniqueTuneIncipitArray = DatabaseManager.getAllUniqueIncipitInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{14, "Loading unique tune forms"});
-            StaticData.uniqueSongFormArray = DatabaseManager.getAllUniqueFormInSongTable();
+            StaticData.uniqueTuneFormArray = DatabaseManager.getAllUniqueFormInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{15, "Loading unique tune players"});
-            StaticData.uniqueSongPlayedByArray = DatabaseManager.getAllUniquePlayedByInSongTable();
+            StaticData.uniqueTunePlayedByArray = DatabaseManager.getAllUniquePlayedByInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{16, "Loading unique tune notes"});
-            StaticData.uniqueSongNoteArray = DatabaseManager.getAllUniqueNoteInSongTable();
+            StaticData.uniqueTuneNoteArray = DatabaseManager.getAllUniqueNoteInTuneTable();
             broadcastMessage(context, PROGRESS_UPDATE, new String[]{PROGRESS_VALUE, PROGRESS_HINT}, new Serializable[]{17, "Loading unique set names"});
             StaticData.uniqueSetNameArray = DatabaseManager.getAllUniqueNameInSetTable();
             broadcastMessage(context, STATICDATA_UPDATE, new String[]{VALUE_UPDATED}, new String[]{UNIQUE_VALUES});

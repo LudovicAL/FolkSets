@@ -53,7 +53,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
         if (isChecked) {
             if (!isNull(setMatchNumberTextview)) {
-                if (checkedId == R.id.toggleButtonSongInSet) {
+                if (checkedId == R.id.toggleButtonTuneInSet) {
                     setMatchNumberTextview.setVisibility(View.VISIBLE);
                 } else {
                     setMatchNumberTextview.setVisibility(View.GONE);
@@ -146,9 +146,9 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                 if (i == R.id.toggleButtonSetName) {
                     Log.i(TAG, "Seaching name: " + textToSearch);
                     setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase("*", textToSearch, SET_NAME, null));
-                } else if (i == R.id.toggleButtonSongInSet) {
-                    Log.i(TAG, "Seaching song in set: " + textToSearch);
-                    Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithSongsInDatabase(textToSearch, SET_NAME, null);
+                } else if (i == R.id.toggleButtonTuneInSet) {
+                    Log.i(TAG, "Seaching tune in set: " + textToSearch);
+                    Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithTunesInDatabase(textToSearch, SET_NAME, null);
                     setMatchNumber(result.first);
                     setListRecyclerViewAdapter.setSetEntityList(result.second);
                 }
@@ -161,9 +161,9 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
 
     private void setMatchNumber(int matchNumber) {
         if (matchNumber > 1) {
-            setMatchNumberTextview.setText(matchNumber + " songs matching your prompt");
+            setMatchNumberTextview.setText(matchNumber + " tunes matching your prompt");
         } else {
-            setMatchNumberTextview.setText(matchNumber + " song matching your prompt");
+            setMatchNumberTextview.setText(matchNumber + " tune matching your prompt");
         }
     }
 
@@ -172,8 +172,8 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         try {
             List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You short clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
-            Utilities.loadActivity(requireActivity(), requireContext(), SongActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.SongOrSet.set.toString()),
+            Utilities.loadActivity(requireActivity(), requireContext(), TuneActivity.class, new Pair[]{
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
                     new Pair<>(POSITION, 0),
                     new Pair<>(SET_ENTITY, setEntityList.get(0)),
                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())

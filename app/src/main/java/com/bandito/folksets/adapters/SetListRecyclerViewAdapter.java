@@ -6,8 +6,8 @@ import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
-import static com.bandito.folksets.util.Constants.SONG_ID;
-import static com.bandito.folksets.util.Constants.SONG_TITLES;
+import static com.bandito.folksets.util.Constants.TUNE_ID;
+import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,11 +24,11 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
-import com.bandito.folksets.SongActivity;
+import com.bandito.folksets.TuneActivity;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
-import com.bandito.folksets.sql.entities.SongEntity;
+import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 
@@ -98,7 +98,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
     public class SetViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView setNameTextView;
-        private List<SongEntity> setSongEntityList;
+        private List<TuneEntity> setTuneEntityList;
 
         public SetViewHolder(View view) {
             super(view);
@@ -133,22 +133,22 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
         private void displayPopupMenuOfTunesInSet(View view) {
             try {
-                String[] songIdArray = StringUtils.split(setEntityList.get(getAdapterPosition()).setSongs, DEFAULT_SEPARATOR);
-                List<SongEntity> unorderedSongEntityList = DatabaseManager.findSongsByIdInDatabase(
-                        SONG_ID + "," + SONG_TITLES,
-                        songIdArray,
+                String[] tuneIdArray = StringUtils.split(setEntityList.get(getAdapterPosition()).setTunes, DEFAULT_SEPARATOR);
+                List<TuneEntity> unorderedTuneEntityList = DatabaseManager.findTunesByIdInDatabase(
+                        TUNE_ID + "," + TUNE_TITLES,
+                        tuneIdArray,
                         null,
                         null);
-                setSongEntityList = Utilities.rearangeSongInSetOrder(unorderedSongEntityList, songIdArray);
+                setTuneEntityList = Utilities.rearangeTuneInSetOrder(unorderedTuneEntityList, tuneIdArray);
                 PopupMenu popupMenu = new PopupMenu(context, view);
-                for (int i = 0, max = setSongEntityList.size(); i < max; i++) {
-                    popupMenu.getMenu().add(NONE, i, NONE, setSongEntityList.get(i).getFirstTitle());
+                for (int i = 0, max = setTuneEntityList.size(); i < max; i++) {
+                    popupMenu.getMenu().add(NONE, i, NONE, setTuneEntityList.get(i).getFirstTitle());
                 }
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        Utilities.loadActivity(activity, context, SongActivity.class, new Pair[]{
-                                new Pair<>(OPERATION, Constants.SongOrSet.set.toString()),
+                        Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
+                                new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
                                 new Pair<>(POSITION, menuItem.getItemId()),
                                 new Pair<>(SET_ENTITY, setEntityList.get(getAdapterPosition())),
                                 new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())

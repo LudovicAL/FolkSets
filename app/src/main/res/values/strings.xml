@@ -3,12 +3,12 @@
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="loading_data">Loading data</string>
-    <string name="song_file_content">Song file content</string>
+    <string name="tune_file_content">Tune file content</string>
 
     <string name="selectStorageDirectory">Select a storage directory</string>
     <string name="exportDatabaseToStorage">Export database to storage</string>
     <string name="importDatabaseFromStorage">Import database from storage</string>
-    <string name="tab_songs">SONGS</string>
+    <string name="tab_tunes">TUNES</string>
     <string name="tab_sets">SETS</string>
     <string name="tab_settings">SETTINGS</string>
 
@@ -39,35 +39,35 @@
     <string name="last_consultation">Last consultation</string>
     <string name="consultations">Consultations</string>
 
-    <string name="search_songs">Search songs</string>
-    <string name="select_a_song">Select a song</string>
+    <string name="search_tunes">Search tunes</string>
+    <string name="select_a_tune">Select a tune</string>
     <string name="search_sets">Search sets</string>
     <string name="placeholder">Placeholder</string>
     <string name="back">Back</string>
     <string name="edit">Edit</string>
     <string name="save">Save</string>
 
-    <string name="edit_song">Edit song</string>
+    <string name="edit_tune">Edit tune</string>
 
     <string name="create_new_set">Create new set</string>
     <string name="edit_set">Edit set</string>
     <string name="set_name">Set name</string>
-    <string name="song_in_set">Song in set</string>
+    <string name="tune_in_set">Tune in set</string>
 
     <string name="sort_by_title">Sort by title</string>
     <string name="sort_by_last_created">Sort by last created</string>
     <string name="sort_by_last_consulted">Sort by last consulted</string>
     <string name="sort_by_most_consulted">Sort by most consulted</string>
 
-    <string name="available_songs">Available songs</string>
-    <string name="selected_songs">Selected songs</string>
-    <string name="select_song">Select song</string>
-    <string name="deselect_song">Deselect song</string>
-    <string name="move_song_up">Move song up</string>
-    <string name="move_song_down">Move song down</string>
+    <string name="available_tunes">Available tunes</string>
+    <string name="selected_tunes">Selected tunes</string>
+    <string name="select_tune">Select tune</string>
+    <string name="deselect_tune">Deselect tune</string>
+    <string name="move_tune_up">Move tune up</string>
+    <string name="move_tune_down">Move tune down</string>
     <string name="delete_set">Delete set</string>
 
-    <string-array name="song_sort_array">
+    <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>
         <item>@string/sort_by_last_created</item>
         <item>@string/sort_by_last_consulted</item>

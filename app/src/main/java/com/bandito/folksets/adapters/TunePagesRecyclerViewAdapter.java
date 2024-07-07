@@ -13,10 +13,10 @@ import com.bandito.folksets.R;
 
 import java.util.List;
 
-public class SongPagesRecyclerViewAdapter extends RecyclerView.Adapter<SongPagesRecyclerViewAdapter.PageViewHolder> {
+public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePagesRecyclerViewAdapter.PageViewHolder> {
     private List<Bitmap> bitmapList;
 
-    public SongPagesRecyclerViewAdapter(List<Bitmap> bitmapList) {
+    public TunePagesRecyclerViewAdapter(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
     }
 

@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         executorService = Executors.newFixedThreadPool(2);
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
-        tabAdapter.addFragment(new SongListFragment());
+        tabAdapter.addFragment(new TuneListFragment());
         tabAdapter.addFragment(new SetListFragment());
         tabAdapter.addFragment(new SettingsFragment());
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
                 (tab, position) -> {
             switch (position) {
                 case 0:
-                    tab.setText(R.string.tab_songs);
+                    tab.setText(R.string.tab_tunes);
                     break;
                 case 1:
                     tab.setText(R.string.tab_sets);

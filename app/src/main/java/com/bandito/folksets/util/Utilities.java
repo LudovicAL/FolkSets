@@ -12,7 +12,7 @@ import android.os.Bundle;
 import androidx.core.util.Pair;
 
 import com.bandito.folksets.exception.FolkSetsException;
-import com.bandito.folksets.sql.entities.SongEntity;
+import com.bandito.folksets.sql.entities.TuneEntity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,11 +50,11 @@ public class Utilities {
         callingActivity.startActivity(intent);
     }
 
-    public static List<SongEntity> rearangeSongInSetOrder(List<SongEntity> unorderedSetSongEntityList, String[] songIdsInSetOrder) {
-        List<SongEntity> orderedSetSongEntityList = new ArrayList<>();
-        for (String songId : songIdsInSetOrder) {
-            orderedSetSongEntityList.add(unorderedSetSongEntityList.stream().filter(songEntity -> songEntity.songId.equals(Long.valueOf(songId))).findFirst().get());
+    public static List<TuneEntity> rearangeTuneInSetOrder(List<TuneEntity> unorderedSetTuneEntityList, String[] tuneIdsInSetOrder) {
+        List<TuneEntity> orderedSetTuneEntityList = new ArrayList<>();
+        for (String tuneId : tuneIdsInSetOrder) {
+            orderedSetTuneEntityList.add(unorderedSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
         }
-        return orderedSetSongEntityList;
+        return orderedSetTuneEntityList;
     }
 }

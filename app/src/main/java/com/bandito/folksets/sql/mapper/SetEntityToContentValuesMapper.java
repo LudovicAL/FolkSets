@@ -11,7 +11,7 @@ public class SetEntityToContentValuesMapper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SET_ID, setEntity.setId);
         contentValues.put(SET_NAME, setEntity.setName);
-        contentValues.put(SET_SONGS, setEntity.setSongs);
+        contentValues.put(SET_TUNES, setEntity.setTunes);
         return contentValues;
     }
 }

@@ -11,7 +11,7 @@ public class Constants {
     public static final String PROGRESS_HINT = "Progress hint";
     public static final String PROGRESS_VISIBILITY = "Progress visibility";
     public static final String UNIQUE_VALUES = "Unique values";
-    public static final String SONG_ENTITY_LIST = "songEntityList";
+    public static final String TUNE_ENTITY_LIST = "tuneEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
 
@@ -19,28 +19,28 @@ public class Constants {
 
     public static final int DATABASE_VERSION = 1;
     public static final String DATABASE_NAME = "FolkSets.db";
-    public static final String TABLE_SONG = "table_song";
-    public static final String SONG_ID = "song_id";
-    public static final String SONG_TITLES = "song_titles";
-    public static final String SONG_TAGS = "song_tags";
-    public static final String SONG_FILE_PATH = "song_file_path";
-    public static final String SONG_FILE_TYPE = "song_file_type";
-    public static final String SONG_COMPOSER = "song_composer";
-    public static final String SONG_REGION_OF_ORIGIN = "song_region_of_origin";
-    public static final String SONG_KEY = "song_key";
-    public static final String SONG_INCIPIT = "song_incipit";
-    public static final String SONG_FORM = "song_form";
-    public static final String SONG_PLAYED_BY = "song_played_by";
-    public static final String SONG_NOTE = "song_note";
-    public static final String SONG_FILE_CREATION_DATE = "song_file_creation_date";
-    public static final String SONG_LAST_CONSULTATION_DATE = "song_last_consultation_date";
-    public static final String SONG_CONSULTATION_NUMBER = "song_consultation_number";
+    public static final String TABLE_TUNE = "table_tune";
+    public static final String TUNE_ID = "tune_id";
+    public static final String TUNE_TITLES = "tune_titles";
+    public static final String TUNE_TAGS = "tune_tags";
+    public static final String TUNE_FILE_PATH = "tune_file_path";
+    public static final String TUNE_FILE_TYPE = "tune_file_type";
+    public static final String TUNE_COMPOSER = "tune_composer";
+    public static final String TUNE_REGION_OF_ORIGIN = "tune_region_of_origin";
+    public static final String TUNE_KEY = "tune_key";
+    public static final String TUNE_INCIPIT = "tune_incipit";
+    public static final String TUNE_FORM = "tune_form";
+    public static final String TUNE_PLAYED_BY = "tune_played_by";
+    public static final String TUNE_NOTE = "tune_note";
+    public static final String TUNE_FILE_CREATION_DATE = "tune_file_creation_date";
+    public static final String TUNE_LAST_CONSULTATION_DATE = "tune_last_consultation_date";
+    public static final String TUNE_CONSULTATION_NUMBER = "tune_consultation_number";
     public static final String TABLE_SET = "table_set";
     public static final String SET_ID = "set_id";
     public static final String SET_NAME = "set_name";
-    public static final String SET_SONGS = "set_song_ids";
+    public static final String SET_TUNES = "set_tune_ids";
     public static final String DEFAULT_SEPARATOR = ";";
-    public static final String SONG_ENTITY = "songEntity";
+    public static final String TUNE_ENTITY = "tuneEntity";
     public static final String SET_ENTITY = "setEntity";
     public static final String OPERATION = "operation";
     public static final String CLICK_TYPE = "clickType";
@@ -58,8 +58,8 @@ public class Constants {
         editSet
     }
 
-    public enum SongOrSet {
-        song,
+    public enum TuneOrSet {
+        tune,
         set
     }
 }

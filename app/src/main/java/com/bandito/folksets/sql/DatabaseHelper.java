@@ -15,11 +15,11 @@ import androidx.core.util.Pair;
 
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.SetEntity;
-import com.bandito.folksets.sql.entities.SongEntity;
+import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.sql.mapper.CursorToSetEntityMapper;
-import com.bandito.folksets.sql.mapper.CursorToSongEntityMapper;
+import com.bandito.folksets.sql.mapper.CursorToTuneEntityMapper;
 import com.bandito.folksets.sql.mapper.SetEntityToContentValuesMapper;
-import com.bandito.folksets.sql.mapper.SongEntityToContentValuesMapper;
+import com.bandito.folksets.sql.mapper.TuneEntityToContentValuesMapper;
 import com.bandito.folksets.util.IoUtilities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,30 +33,30 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
-    private static final String CREATE_TABLE_SONG =
-            "CREATE TABLE IF NOT EXISTS " + TABLE_SONG + " ("
-                + SONG_ID                       + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                + SONG_TITLES                   + " TEXT NOT NULL, "
-                + SONG_TAGS                     + " TEXT, "
-                + SONG_FILE_PATH                + " TEXT NOT NULL, "
-                + SONG_FILE_TYPE                + " TEXT NOT NULL, "
-                + SONG_COMPOSER                 + " TEXT, "
-                + SONG_REGION_OF_ORIGIN         + " TEXT, "
-                + SONG_KEY                      + " TEXT, "
-                + SONG_INCIPIT                  + " TEXT, "
-                + SONG_FORM                     + " TEXT, "
-                + SONG_PLAYED_BY                + " TEXT, "
-                + SONG_NOTE                     + " TEXT, "
-                + SONG_FILE_CREATION_DATE       + " TEXT NOT NULL, "
-                + SONG_LAST_CONSULTATION_DATE   + " TEXT, "
-                + SONG_CONSULTATION_NUMBER      + " INTEGER NOT NULL"
+    private static final String CREATE_TABLE_TUNE =
+            "CREATE TABLE IF NOT EXISTS " + TABLE_TUNE + " ("
+                + TUNE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + TUNE_TITLES + " TEXT NOT NULL, "
+                + TUNE_TAGS + " TEXT, "
+                + TUNE_FILE_PATH + " TEXT NOT NULL, "
+                + TUNE_FILE_TYPE + " TEXT NOT NULL, "
+                + TUNE_COMPOSER + " TEXT, "
+                + TUNE_REGION_OF_ORIGIN + " TEXT, "
+                + TUNE_KEY + " TEXT, "
+                + TUNE_INCIPIT + " TEXT, "
+                + TUNE_FORM + " TEXT, "
+                + TUNE_PLAYED_BY + " TEXT, "
+                + TUNE_NOTE + " TEXT, "
+                + TUNE_FILE_CREATION_DATE + " TEXT NOT NULL, "
+                + TUNE_LAST_CONSULTATION_DATE + " TEXT, "
+                + TUNE_CONSULTATION_NUMBER + " INTEGER NOT NULL"
                 + ")";
 
     private static final String CREATE_TABLE_SET =
             "CREATE TABLE IF NOT EXISTS " + TABLE_SET + " ("
                 + SET_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + SET_NAME  + " TEXT NOT NULL, "
-                + SET_SONGS + " TEXT"
+                + SET_TUNES + " TEXT"
                 + ")";
 
     public DatabaseHelper(@Nullable Context context) {
@@ -81,7 +81,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public void initializeDatabase(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(CREATE_TABLE_SET);
-        sqLiteDatabase.execSQL(CREATE_TABLE_SONG);
+        sqLiteDatabase.execSQL(CREATE_TABLE_TUNE);
     }
 
     public void exportDatabase(Context context, String destinationFolder) throws FolkSetsException {
@@ -104,19 +104,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         IoUtilities.copySourceToDestinationFile(context, sourceFolder, databaseFile, DATABASE_NAME, "application/x-sqlite3");
     }
 
-    public long insertSongInDatabase(SQLiteDatabase sqLiteDatabase, SongEntity songEntity) {
-        ContentValues contentValues = SongEntityToContentValuesMapper.mapSongEntityToContentValues(songEntity);
-        if (contentValues.containsKey(SONG_ID)) {
-            contentValues.remove(SONG_ID);
+    public long insertTuneInDatabase(SQLiteDatabase sqLiteDatabase, TuneEntity tuneEntity) {
+        ContentValues contentValues = TuneEntityToContentValuesMapper.mapTuneEntityToContentValues(tuneEntity);
+        if (contentValues.containsKey(TUNE_ID)) {
+            contentValues.remove(TUNE_ID);
         }
-        return sqLiteDatabase.insert(TABLE_SONG, null, contentValues);
+        return sqLiteDatabase.insert(TABLE_TUNE, null, contentValues);
     }
 
-    public void insertSongsInDatabase(SQLiteDatabase sqLiteDatabase, List<SongEntity> songEntityList) {
+    public void insertTunesInDatabase(SQLiteDatabase sqLiteDatabase, List<TuneEntity> tuneEntityList) {
         sqLiteDatabase.beginTransaction();
         try {
-            for (SongEntity songEntity : songEntityList) {
-                sqLiteDatabase.insert(TABLE_SONG, null, SongEntityToContentValuesMapper.mapSongEntityToContentValues(songEntity));
+            for (TuneEntity tuneEntity : tuneEntityList) {
+                sqLiteDatabase.insert(TABLE_TUNE, null, TuneEntityToContentValuesMapper.mapTuneEntityToContentValues(tuneEntity));
             }
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
@@ -124,19 +124,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int removeSongFromDatabase(SQLiteDatabase sqLiteDatabase, long songId) {
-        removeSongFromSets(sqLiteDatabase, songId);
-        return sqLiteDatabase.delete(TABLE_SONG, SONG_ID + " LIKE '%" + songId + "%'", new String[0]);
+    public int removeTuneFromDatabase(SQLiteDatabase sqLiteDatabase, long tuneId) {
+        removeTuneFromSets(sqLiteDatabase, tuneId);
+        return sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + " LIKE '%" + tuneId + "%'", new String[0]);
     }
 
-    public void removeSongsFromDatabase(SQLiteDatabase sqLiteDatabase, List<Long> songIds) {
-        for (Long songId : songIds) {
-            removeSongFromSets(sqLiteDatabase, songId);
+    public void removeTunesFromDatabase(SQLiteDatabase sqLiteDatabase, List<Long> tuneIds) {
+        for (Long tuneId : tuneIds) {
+            removeTuneFromSets(sqLiteDatabase, tuneId);
         }
         sqLiteDatabase.beginTransaction();
         try {
-            for (Long songId : songIds) {
-                sqLiteDatabase.delete(TABLE_SONG, SONG_ID + " LIKE '%" + songId + "%'", new String[0]);
+            for (Long tuneId : tuneIds) {
+                sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + " LIKE '%" + tuneId + "%'", new String[0]);
             }
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
@@ -144,11 +144,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public int updateSongInDatabase(SQLiteDatabase sqLiteDatabase, SongEntity songEntity) {
-        String whereClause = SONG_ID + " LIKE '%" + songEntity.songId + "%'";
-        ContentValues contentValues = SongEntityToContentValuesMapper.mapSongEntityToContentValues(songEntity);
-        contentValues.remove(SONG_ID);
-        return sqLiteDatabase.update(TABLE_SONG, contentValues, whereClause, new String[0]);
+    public int updateTuneInDatabase(SQLiteDatabase sqLiteDatabase, TuneEntity tuneEntity) {
+        String whereClause = TUNE_ID + " LIKE '%" + tuneEntity.tuneId + "%'";
+        ContentValues contentValues = TuneEntityToContentValuesMapper.mapTuneEntityToContentValues(tuneEntity);
+        contentValues.remove(TUNE_ID);
+        return sqLiteDatabase.update(TABLE_TUNE, contentValues, whereClause, new String[0]);
     }
 
     public long insertSetInDatabase(SQLiteDatabase sqLiteDatabase, SetEntity setEntity) {
@@ -169,24 +169,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
-    public List<SongEntity> findSongsByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String[] songIdArray, String sortOnField, String sortDirection) {
+    public List<TuneEntity> findTunesByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String[] tuneIdArray, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
-        StringBuilder query = new StringBuilder("SELECT " + fieldsNames + " FROM " + TABLE_SONG + " WHERE ");
-        for (int i = 0, max = songIdArray.length; i < max; i++) {
-            query.append(SONG_ID + " = ").append(songIdArray[i]);
+        StringBuilder query = new StringBuilder("SELECT " + fieldsNames + " FROM " + TABLE_TUNE + " WHERE ");
+        for (int i = 0, max = tuneIdArray.length; i < max; i++) {
+            query.append(TUNE_ID + " = ").append(tuneIdArray[i]);
             if (i < max - 1) {
                 query.append(" OR ");
             }
         }
         query.append(getSortOptionString(sortOnField, sortDirection));
         Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
-        return convertCursorToSongEntityList(cursor);
+        return convertCursorToTuneEntityList(cursor);
     }
 
-    public List<SongEntity> findSongsWithValueInListInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String fieldListName, String[] valueArray, String sortOnField, String sortDirection) {
+    public List<TuneEntity> findTunesWithValueInListInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String fieldListName, String[] valueArray, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder();
-        query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_SONG);
+        query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_TUNE);
         if (!isNull(fieldListName) && !isNull(valueArray)) {
             for (int i = 0, max = valueArray.length; i < max; i++) {
                 if (i == 0) {
@@ -200,7 +200,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         query.append(getSortOptionString(sortOnField, sortDirection));
         Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
-        return convertCursorToSongEntityList(cursor);
+        return convertCursorToTuneEntityList(cursor);
     }
 
     public List<SetEntity> findSetByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String setId, String sortOnField, String sortDirection) {
@@ -227,21 +227,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return convertCursorToSetEntityList(cursor);
     }
 
-    public Pair<Integer, List<SetEntity>> findSetsWithSongsInDatabase(SQLiteDatabase sqLiteDatabase, String songTitles, String sortOnField, String sortDirection) {
-        String[] songTitlesArray = StringUtils.split(songTitles, DEFAULT_SEPARATOR);
-        List<SongEntity> songEntityList = findSongsWithValueInListInDatabase(sqLiteDatabase, SONG_ID, SONG_TITLES, songTitlesArray, null, null);
-        if (songEntityList.isEmpty()) {
+    public Pair<Integer, List<SetEntity>> findSetsWithTunesInDatabase(SQLiteDatabase sqLiteDatabase, String tuneTitles, String sortOnField, String sortDirection) {
+        String[] tuneTitlesArray = StringUtils.split(tuneTitles, DEFAULT_SEPARATOR);
+        List<TuneEntity> tuneEntityList = findTunesWithValueInListInDatabase(sqLiteDatabase, TUNE_ID, TUNE_TITLES, tuneTitlesArray, null, null);
+        if (tuneEntityList.isEmpty()) {
             return new Pair<>(0, new ArrayList<>());
         } else {
-            Long[] songIdArray = songEntityList.stream().map(songEntity -> songEntity.songId).toArray(Long[]::new);
-            return new Pair<>(songEntityList.size(), findSetsWithSongsInDatabase(sqLiteDatabase, songIdArray, sortOnField, sortDirection));
+            Long[] tuneIdArray = tuneEntityList.stream().map(tuneEntity -> tuneEntity.tuneId).toArray(Long[]::new);
+            return new Pair<>(tuneEntityList.size(), findSetsWithTunesInDatabase(sqLiteDatabase, tuneIdArray, sortOnField, sortDirection));
         }
     }
 
-    public List<SetEntity> findSetsWithSongsInDatabase(SQLiteDatabase sqLiteDatabase, Long[] songIdArray, String sortOnField, String sortDirection) {
+    public List<SetEntity> findSetsWithTunesInDatabase(SQLiteDatabase sqLiteDatabase, Long[] tuneIdArray, String sortOnField, String sortDirection) {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_SET + " WHERE");
-        for (int i = 0, max = songIdArray.length; i < max; i++) {
-            query.append(" ").append(SET_SONGS).append(" LIKE '%").append(songIdArray[i]).append("%'");
+        for (int i = 0, max = tuneIdArray.length; i < max; i++) {
+            query.append(" ").append(SET_TUNES).append(" LIKE '%").append(tuneIdArray[i]).append("%'");
             if (i < max - 1) {
                 query.append(" OR");
             }
@@ -250,10 +250,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
         List<SetEntity> setEntityList = convertCursorToSetEntityList(cursor);
         for (int i = setEntityList.size() - 1; i >= 0; i--) {
-            String[] setSongArray = StringUtils.split(setEntityList.get(i).setSongs, DEFAULT_SEPARATOR);
-            if (Arrays.stream(setSongArray)
-                    .map(setSong -> Long.valueOf(setSong))
-                    .noneMatch(setSongLong -> Arrays.asList(songIdArray).contains(setSongLong))) {
+            String[] setTuneArray = StringUtils.split(setEntityList.get(i).setTunes, DEFAULT_SEPARATOR);
+            if (Arrays.stream(setTuneArray)
+                    .map(setTune -> Long.valueOf(setTune))
+                    .noneMatch(setTuneLong -> Arrays.asList(tuneIdArray).contains(setTuneLong))) {
                 setEntityList.remove(i);
             }
         }
@@ -275,12 +275,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sortOption;
     }
 
-    private List<SongEntity> convertCursorToSongEntityList(Cursor cursor) {
-        List<SongEntity> songEntityList = new ArrayList<>();
+    private List<TuneEntity> convertCursorToTuneEntityList(Cursor cursor) {
+        List<TuneEntity> tuneEntityList = new ArrayList<>();
         while(cursor.moveToNext()) {
-            songEntityList.add(CursorToSongEntityMapper.mapCursorToSongEntity(cursor));
+            tuneEntityList.add(CursorToTuneEntityMapper.mapCursorToTuneEntity(cursor));
         }
-        return songEntityList;
+        return tuneEntityList;
     }
 
     private List<SetEntity> convertCursorToSetEntityList(Cursor cursor) {
@@ -303,32 +303,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return stringList;
     }
 
-    public void removeSongFromSets(SQLiteDatabase sqLiteDatabase, long songId) {
-        List<SetEntity> setEntityList = findSetsWithSongsInDatabase(sqLiteDatabase, new Long[]{songId}, null, null);
+    public void removeTuneFromSets(SQLiteDatabase sqLiteDatabase, long tuneId) {
+        List<SetEntity> setEntityList = findSetsWithTunesInDatabase(sqLiteDatabase, new Long[]{tuneId}, null, null);
         for (SetEntity setEntity : setEntityList) {
-            List<String> setSongsList = Arrays.asList(StringUtils.split(setEntity.setSongs, DEFAULT_SEPARATOR));
-            setSongsList = setSongsList.stream().filter(songIdInSet -> !songIdInSet.equals(String.valueOf(songId))).collect(Collectors.toList());
-            if (setSongsList.isEmpty()) {
+            List<String> setTunesList = Arrays.asList(StringUtils.split(setEntity.setTunes, DEFAULT_SEPARATOR));
+            setTunesList = setTunesList.stream().filter(tuneIdInSet -> !tuneIdInSet.equals(String.valueOf(tuneId))).collect(Collectors.toList());
+            if (setTunesList.isEmpty()) {
                 removeSetFromDatabase(sqLiteDatabase, setEntity.setId);
             } else {
-                setEntity.setSongs = String.join(",", setSongsList);
+                setEntity.setTunes = String.join(",", setTunesList);
                 updateSetInDatabase(sqLiteDatabase, setEntity);
             }
         }
     }
 
-    private String[] getAllUniqueValueInSongTable(SQLiteDatabase sqLiteDatabase, String table, String field) {
+    private String[] getAllUniqueValueInTuneTable(SQLiteDatabase sqLiteDatabase, String table, String field) {
         String query = "SELECT DISTINCT " + field + " FROM " + table + " WHERE " + field + " IS NOT NULL";
         query += getSortOptionString(field, null);
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
         return convertCursorToStringList(cursor, field).toArray(new String[0]);
     }
 
-    public String[] getAllUniqueTitleInSongTable(SQLiteDatabase sqLiteDatabase) {
-        String[] songTitlesArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_TITLES);
+    public String[] getAllUniqueTitleInTuneTable(SQLiteDatabase sqLiteDatabase) {
+        String[] tuneTitlesArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_TITLES);
         Set<String> uniqueTitleSet = new HashSet<>();
-        for (String songTitles : songTitlesArray) {
-            String[] titleArray = StringUtils.split(songTitles, DEFAULT_SEPARATOR);
+        for (String tuneTitles : tuneTitlesArray) {
+            String[] titleArray = StringUtils.split(tuneTitles, DEFAULT_SEPARATOR);
             if (!isNull(titleArray)) {
                 uniqueTitleSet.addAll(Arrays.asList(titleArray));
             }
@@ -336,8 +336,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return uniqueTitleSet.toArray(new String[0]);
     }
 
-    public String[] getAllUniqueTagInSongTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tagsArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_TAGS);
+    public String[] getAllUniqueTagInTuneTable(SQLiteDatabase sqLiteDatabase) {
+        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_TAGS);
         Set<String> uniqueTagSet = new HashSet<>();
         for (String tags : tagsArray) {
             String[] tagArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
@@ -348,8 +348,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return uniqueTagSet.toArray(new String[0]);
     }
 
-    public String[] getAllUniquePlayedByInSongTable(SQLiteDatabase sqLiteDatabase) {
-        String[] playersArray = getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, SONG_PLAYED_BY);
+    public String[] getAllUniquePlayedByInTuneTable(SQLiteDatabase sqLiteDatabase) {
+        String[] playersArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_PLAYED_BY);
         Set<String> uniquePlayerSet = new HashSet<>();
         for (String players : playersArray) {
             String[] playerArray = StringUtils.split(players, DEFAULT_SEPARATOR);
@@ -360,8 +360,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return uniquePlayerSet.toArray(new String[0]);
     }
 
-    public String[] getAllUniqueValueInSongTable(SQLiteDatabase sqLiteDatabase, String field) {
-        return getAllUniqueValueInSongTable(sqLiteDatabase, TABLE_SONG, field);
+    public String[] getAllUniqueValueInTuneTable(SQLiteDatabase sqLiteDatabase, String field) {
+        return getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, field);
     }
 
     public String[] getAllUniqueNameInSetTable(SQLiteDatabase sqLiteDatabase) {

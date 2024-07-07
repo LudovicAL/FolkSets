@@ -75,12 +75,12 @@
             android:text="@string/set_name" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonSongInSet"
+            android:id="@+id/toggleButtonTuneInSet"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/song_in_set" />
+            android:text="@string/tune_in_set" />
 
     </com.google.android.material.button.MaterialButtonToggleGroup>
 

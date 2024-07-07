@@ -13,8 +13,8 @@ public class CursorToSetEntityMapper {
         setEntity.setId = columnIndex >= 0 ? cursor.getLong(columnIndex) : null;
         columnIndex = cursor.getColumnIndex(SET_NAME);
         setEntity.setName = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
-        columnIndex = cursor.getColumnIndex(SET_SONGS);
-        setEntity.setSongs = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
+        columnIndex = cursor.getColumnIndex(SET_TUNES);
+        setEntity.setTunes = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
         return setEntity;
     }
 }
