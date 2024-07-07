@@ -5,7 +5,6 @@ import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
-import static com.bandito.folksets.util.Constants.SET_ID;
 import static com.bandito.folksets.util.Constants.SET_NAME;
 import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
 import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
@@ -97,7 +96,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         editText.addTextChangedListener(textWatcher);
         RecyclerView recyclerView = view.findViewById(R.id.setListRecyclerView);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        setListRecyclerViewAdapter = new SetListRecyclerViewAdapter();
+        setListRecyclerViewAdapter = new SetListRecyclerViewAdapter(requireActivity(), requireContext());
         setListRecyclerViewAdapter.setClickListener(this);
         recyclerView.setAdapter(setListRecyclerViewAdapter);
         setMatchNumberTextview = view.findViewById(R.id.set_match_number_textview);
@@ -141,12 +140,12 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         try {
             String textToSearch = editText.getText().toString();
             if (textToSearch.isEmpty()) {
-                setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase(SET_ID + "," + SET_NAME, SET_NAME, null));
+                setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null));
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
                 if (i == R.id.toggleButtonSetName) {
                     Log.i(TAG, "Seaching name: " + textToSearch);
-                    setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase(SET_ID + "," + SET_NAME, textToSearch, SET_NAME, null));
+                    setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase("*", textToSearch, SET_NAME, null));
                 } else if (i == R.id.toggleButtonSongInSet) {
                     Log.i(TAG, "Seaching song in set: " + textToSearch);
                     Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithSongsInDatabase(textToSearch, SET_NAME, null);

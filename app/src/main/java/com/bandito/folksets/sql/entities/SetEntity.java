@@ -2,11 +2,15 @@ package com.bandito.folksets.sql.entities;
 
 import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 
+import static java.util.Objects.isNull;
+
 import com.bandito.folksets.exception.FolkSetsException;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.List;
 
 public class SetEntity implements Serializable {
     public Long setId;

@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.PROGRESS_HINT;
 import static com.bandito.folksets.util.Constants.PROGRESS_UPDATE;
 import static com.bandito.folksets.util.Constants.PROGRESS_VALUE;
 import static com.bandito.folksets.util.Constants.PROGRESS_VISIBILITY;
@@ -155,8 +156,9 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent( event );
     }
 
-    private void updateProgressBar(int value) {
-        progressBar.setProgress(value);
+    private void updateProgressBar(int progressNumericValue, String progressTextHint) {
+        progressBar.setProgress(progressNumericValue);
+        progressBarHintTextView.setText(progressTextHint);
     }
 
     private void displayProgressBar(int visibility) {
@@ -168,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             if (intent.getExtras().containsKey(PROGRESS_VALUE)) {
-                updateProgressBar(intent.getExtras().getInt(PROGRESS_VALUE));
+                updateProgressBar(intent.getExtras().getInt(PROGRESS_VALUE), intent.getExtras().getString(PROGRESS_HINT));
             } else if (intent.getExtras().containsKey(PROGRESS_VISIBILITY)) {
                 displayProgressBar(intent.getExtras().getInt(PROGRESS_VISIBILITY));
             }

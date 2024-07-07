@@ -12,8 +12,11 @@ import android.os.Bundle;
 import androidx.core.util.Pair;
 
 import com.bandito.folksets.exception.FolkSetsException;
+import com.bandito.folksets.sql.entities.SongEntity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utilities {
 
@@ -45,5 +48,13 @@ public class Utilities {
         }
         intent.putExtras(bundle);
         callingActivity.startActivity(intent);
+    }
+
+    public static List<SongEntity> rearangeSongInSetOrder(List<SongEntity> unorderedSetSongEntityList, String[] songIdsInSetOrder) {
+        List<SongEntity> orderedSetSongEntityList = new ArrayList<>();
+        for (String songId : songIdsInSetOrder) {
+            orderedSetSongEntityList.add(unorderedSetSongEntityList.stream().filter(songEntity -> songEntity.songId.equals(Long.valueOf(songId))).findFirst().get());
+        }
+        return orderedSetSongEntityList;
     }
 }
