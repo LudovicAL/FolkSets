@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.core.util.Pair;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.TuneEntity;
@@ -56,5 +57,13 @@ public class Utilities {
             orderedSetTuneEntityList.add(unorderedSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
         }
         return orderedSetTuneEntityList;
+    }
+
+    public static void broadcastMessage(Context context, Constants.BroadcastName intentName, Constants.BroadcastKey[] messageKey, Serializable[] messageValue) {
+        Intent intent = new Intent(intentName.toString());
+        for (int i = 0, max = messageKey.length; i < max; i++) {
+            intent.putExtra(messageKey[i].toString(), messageValue[i]);
+        }
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 }

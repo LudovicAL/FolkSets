@@ -3,13 +3,6 @@ package com.bandito.folksets.util;
 import java.util.regex.Pattern;
 
 public class Constants {
-
-    public static final String STATICDATA_UPDATE = "StaticData update";
-    public static final String VALUE_UPDATED = "Value updated";
-    public static final String PROGRESS_UPDATE = "Progress update";
-    public static final String PROGRESS_VALUE = "Progress value";
-    public static final String PROGRESS_HINT = "Progress hint";
-    public static final String PROGRESS_VISIBILITY = "Progress visibility";
     public static final String UNIQUE_VALUES = "Unique values";
     public static final String TUNE_ENTITY_LIST = "tuneEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
@@ -47,7 +40,7 @@ public class Constants {
     public static final String SORT_ASC = "ASC";
     public static final String SORT_DESC = "DESC";
     public static final String POSITION = "Position";
-    public static final Pattern DELIMITER_INPUT_PATTERN = Pattern.compile("(\\n|;)$", Pattern.CASE_INSENSITIVE);
+    public static final Pattern DELIMITER_INPUT_PATTERN = Pattern.compile("([\\n;])$", Pattern.CASE_INSENSITIVE);
     public enum ClickType {
         shortClick,
         longClick
@@ -61,5 +54,17 @@ public class Constants {
     public enum TuneOrSet {
         tune,
         set
+    }
+
+    public enum BroadcastName {
+        progressUpdate,
+        staticDataUpdate
+    }
+
+    public enum BroadcastKey {
+        progressVisibility,
+        progressHint,
+        progressValue,
+        valueUpdated
     }
 }

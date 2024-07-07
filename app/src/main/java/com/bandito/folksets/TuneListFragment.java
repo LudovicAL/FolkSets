@@ -101,7 +101,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(STATICDATA_UPDATE));
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(BroadcastName.staticDataUpdate.toString()));
         demandNewSearch(false);
     }
 
@@ -231,7 +231,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (TUNE_ENTITY_LIST.equals(intent.getExtras().getString(VALUE_UPDATED))) {
+            if (TUNE_ENTITY_LIST.equals(intent.getExtras().getString(BroadcastKey.valueUpdated.toString()))) {
                 tuneListRecyclerViewAdapter.setTuneEntityList(StaticData.tuneEntityList);
                 tuneListRecyclerViewAdapter.notifyDataSetChanged();
             }

@@ -1,9 +1,5 @@
 package com.bandito.folksets;
 
-import static com.bandito.folksets.util.Constants.PROGRESS_HINT;
-import static com.bandito.folksets.util.Constants.PROGRESS_UPDATE;
-import static com.bandito.folksets.util.Constants.PROGRESS_VALUE;
-import static com.bandito.folksets.util.Constants.PROGRESS_VISIBILITY;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static java.util.Objects.isNull;
 
@@ -33,6 +29,7 @@ import com.bandito.folksets.adapters.TabAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.services.UpdateDatabaseThread;
 import com.bandito.folksets.sql.DatabaseManager;
+import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(PROGRESS_UPDATE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.progressUpdate.toString()));
         try {
             String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
             if (!isNull(selectedDirectoryUri)) {
@@ -169,10 +166,10 @@ public class MainActivity extends AppCompatActivity {
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getExtras().containsKey(PROGRESS_VALUE)) {
-                updateProgressBar(intent.getExtras().getInt(PROGRESS_VALUE), intent.getExtras().getString(PROGRESS_HINT));
-            } else if (intent.getExtras().containsKey(PROGRESS_VISIBILITY)) {
-                displayProgressBar(intent.getExtras().getInt(PROGRESS_VISIBILITY));
+            if (intent.getExtras().containsKey(Constants.BroadcastKey.progressValue.toString())) {
+                updateProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressValue.toString()), intent.getExtras().getString(Constants.BroadcastKey.progressHint.toString()));
+            } else if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
+                displayProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressVisibility.toString()));
             }
         }
     }

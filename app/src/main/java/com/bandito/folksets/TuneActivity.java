@@ -7,9 +7,7 @@ import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.TUNE_ENTITY;
-import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
 import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
-import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
 
 import static java.util.Objects.isNull;
 
@@ -256,7 +254,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(STATICDATA_UPDATE));
+        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
     }
 
     @Override
@@ -312,7 +310,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UNIQUE_VALUES.equals(intent.getExtras().getString(VALUE_UPDATED))) {
+            if (UNIQUE_VALUES.equals(intent.getExtras().getString(Constants.BroadcastKey.valueUpdated.toString()))) {
                 prepareAutocompleteAdapters();
             }
         }

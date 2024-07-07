@@ -6,8 +6,7 @@ import static com.bandito.folksets.util.Constants.POSITION;
 import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
 import static com.bandito.folksets.util.Constants.SET_NAME;
-import static com.bandito.folksets.util.Constants.STATICDATA_UPDATE;
-import static com.bandito.folksets.util.Constants.VALUE_UPDATED;
+
 import static java.util.Objects.isNull;
 
 import android.content.BroadcastReceiver;
@@ -107,7 +106,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(STATICDATA_UPDATE));
+        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
         demandNewSearch(false);
     }
 
@@ -209,7 +208,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(VALUE_UPDATED))) {
+            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.valueUpdated.toString()))) {
                 setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
                 setListRecyclerViewAdapter.notifyDataSetChanged();
             }
