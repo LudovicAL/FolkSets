@@ -41,8 +41,12 @@ public class DatabaseManager {
         }
     }
 
-    public static void closeDatabase() {
-        databaseHelper.close();
+    public static void closeDatabase() throws FolkSetsException {
+        try {
+            databaseHelper.close();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while closing the database.", e);
+        }
     }
 
     public static void importDatabase(Context context, Activity activity) throws FolkSetsException {

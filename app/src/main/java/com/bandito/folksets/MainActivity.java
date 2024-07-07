@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -27,15 +26,12 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bandito.folksets.adapters.TabAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
-import com.bandito.folksets.services.UpdateDatabaseThread;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.services.ServiceSingleton;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -43,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ProgressBar progressBar;
     private TextView progressBarHintTextView;
-    private ExecutorService executorService;
-    private UpdateDatabaseThread updateDatabaseThread;
     private final MainActivity.MyBroadcastReceiver myBroadcastReceiver = new MainActivity.MyBroadcastReceiver();
 
     @Override
@@ -59,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         });
         progressBar = findViewById(R.id.progressBar);
         progressBarHintTextView = findViewById(R.id.progressBarHintTextView);
-        executorService = Executors.newFixedThreadPool(2);
         ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
         tabAdapter.addFragment(new TuneListFragment());
@@ -103,9 +96,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         try {
+            ServiceSingleton.getInstance().interruptDatabaseUpdate();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
+        }
+        try {
             DatabaseManager.closeDatabase();
         } catch (Exception e) {
-            Log.e(TAG, "An error occured while closing the database.", e);
+            ExceptionManager.manageException(this, e);
         }
         super.onDestroy();
     }
@@ -113,13 +111,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.progressUpdate.toString()));
+        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
         try {
-            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
-            if (!isNull(selectedDirectoryUri)) {
-                updateDatabaseThread = new UpdateDatabaseThread(this, this);
-                executorService.execute(updateDatabaseThread);
-            }
+            ServiceSingleton.getInstance().UpdateDatabase(this, this);
         } catch (Exception e) {
             ExceptionManager.manageException(this, e);
         }
@@ -129,9 +123,6 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
-        if (!isNull(updateDatabaseThread)) {
-            updateDatabaseThread.interrupt();
-        }
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.
@@ -166,6 +157,9 @@ public class MainActivity extends AppCompatActivity {
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (intent.getExtras() == null) {
+                return;
+            }
             if (intent.getExtras().containsKey(Constants.BroadcastKey.progressValue.toString())) {
                 updateProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressValue.toString()), intent.getExtras().getString(Constants.BroadcastKey.progressHint.toString()));
             } else if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {

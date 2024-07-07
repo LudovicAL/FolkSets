@@ -208,7 +208,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.valueUpdated.toString()))) {
+            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.staticDataValue.toString()))) {
                 setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
                 setListRecyclerViewAdapter.notifyDataSetChanged();
             }

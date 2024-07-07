@@ -42,64 +42,64 @@ public class UpdateDatabaseThread extends Thread {
     @Override
     public void run() {
         try {
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Loading storage directory"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Loading storage directory"});
             DatabaseManager.initializeDatabase(callingActivity.getBaseContext());
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{1, "Loading known tunes"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{1, "Loading known tunes"});
             List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_FILE_PATH, null, null, null, null);
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{2, "Loading deleted tunes"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{2, "Loading deleted tunes"});
             //Remove deprecated tunes
             List<Long> tuneIdToRemoveList = tuneEntityList.stream()
                     .filter(tuneEntity -> documentFileList.stream().
                             noneMatch(documentFile -> documentFile.getUri().toString().equals(tuneEntity.tuneFilePath)))
                     .map(tuneEntity -> tuneEntity.tuneId)
                     .collect(Collectors.toList());
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{3, "Loading tune deletions"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{3, "Loading tune deletions"});
             DatabaseManager.removeTunesFromDatabase(tuneIdToRemoveList);
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{4, "Loading new tunes"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{4, "Loading new tunes"});
             //Insert new tunes
             List<TuneEntity> tuneEntityToAddList = documentFileList.stream()
                     .filter(documentFile -> tuneEntityList.stream()
                             .noneMatch(tuneEntity -> tuneEntity.tuneFilePath.equals(documentFile.getUri().toString())))
                     .map(documentFile -> new TuneEntity(FilenameUtils.getBaseName(documentFile.getName()), documentFile.getUri().toString(), documentFile.getType(), OffsetDateTime.now().toString()))
                     .collect(Collectors.toList());
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{5, "Loading tune insertions"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{5, "Loading tune insertions"});
             DatabaseManager.insertTunesInDatabase(tuneEntityToAddList);
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{6, "Loading final tune list"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{6, "Loading final tune list"});
             //Get tune list
             StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, TUNE_TITLES, null);
-            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.valueUpdated}, new String[]{TUNE_ENTITY_LIST});
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{7, "Loading final set list"});
+            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNE_ENTITY_LIST});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{7, "Loading final set list"});
             //Get set list
             StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
-            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.valueUpdated}, new String[]{SET_ENTITY_LIST});
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{8, "Loading unique tune titles"});
+            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SET_ENTITY_LIST});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{8, "Loading unique tune titles"});
             //Get unique values
             StaticData.uniqueTuneTitleArray = DatabaseManager.getAllUniqueTitleInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{9, "Loading unique tune tags"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{9, "Loading unique tune tags"});
             StaticData.uniqueTuneTagArray = DatabaseManager.getAllUniqueTagInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{10, "Loading unique tune composers"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{10, "Loading unique tune composers"});
             StaticData.uniqueTuneComposerArray = DatabaseManager.getAllUniqueComposerInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{11, "Loading unique tune regions of origin"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{11, "Loading unique tune regions of origin"});
             StaticData.uniqueTuneRegionArray = DatabaseManager.getAllUniqueRegionInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{12, "Loading unique tune keys"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{12, "Loading unique tune keys"});
             StaticData.uniqueTuneKeyArray = DatabaseManager.getAllUniqueKeyInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{13, "Loading unique tune incipits"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{13, "Loading unique tune incipits"});
             StaticData.uniqueTuneIncipitArray = DatabaseManager.getAllUniqueIncipitInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{14, "Loading unique tune forms"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{14, "Loading unique tune forms"});
             StaticData.uniqueTuneFormArray = DatabaseManager.getAllUniqueFormInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{15, "Loading unique tune players"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{15, "Loading unique tune players"});
             StaticData.uniqueTunePlayedByArray = DatabaseManager.getAllUniquePlayedByInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{16, "Loading unique tune notes"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{16, "Loading unique tune notes"});
             StaticData.uniqueTuneNoteArray = DatabaseManager.getAllUniqueNoteInTuneTable();
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{17, "Loading unique set names"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{17, "Loading unique set names"});
             StaticData.uniqueSetNameArray = DatabaseManager.getAllUniqueNameInSetTable();
-            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.valueUpdated}, new String[]{UNIQUE_VALUES});
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
+            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{UNIQUE_VALUES});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
             //Linger a few more seconds
             sleep(3000L);
-            broadcastMessage(context, Constants.BroadcastName.progressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
         } catch (Exception e) {
             ExceptionManager.manageException(context, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
         }

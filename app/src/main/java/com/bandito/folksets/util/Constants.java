@@ -6,6 +6,7 @@ public class Constants {
     public static final String UNIQUE_VALUES = "Unique values";
     public static final String TUNE_ENTITY_LIST = "tuneEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
+    public static final String BITMAP_LIST = "bitmapList";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";
@@ -57,14 +58,16 @@ public class Constants {
     }
 
     public enum BroadcastName {
-        progressUpdate,
+        mainActivityProgressUpdate,
+        tuneActivityProgressUpdate,
         staticDataUpdate
     }
 
     public enum BroadcastKey {
         progressVisibility,
         progressHint,
+        progressStepNumber,
         progressValue,
-        valueUpdated
+        staticDataValue
     }
 }

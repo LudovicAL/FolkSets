@@ -1,5 +1,7 @@
 package com.bandito.folksets.util;
 
+import android.graphics.Bitmap;
+
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 
@@ -19,4 +21,5 @@ public class StaticData {
     public static String[] uniqueTunePlayedByArray = new String[0];
     public static String[] uniqueTuneNoteArray = new String[0];
     public static String[] uniqueSetNameArray = new String[0];
+    public static List<Bitmap> bitmapList = null;
 }

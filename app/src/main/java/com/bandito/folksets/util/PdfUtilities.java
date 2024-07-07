@@ -4,7 +4,6 @@ import static java.util.Objects.isNull;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.pdf.PdfRenderer;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
@@ -37,9 +36,7 @@ public class PdfUtilities {
                 Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
                 page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
                 page.close();
-                bitmapList.add(cropWhiteSpace(bitmap));
-                //https://github.com/AlvaroMenezes/CropTrimTransparentImage/blob/master/Project/app/src/main/java/alvaromenezes/com/trimimage/CropTransparent.java
-                //https://stackoverflow.com/questions/19023689/android-bitmap-remove-white-margin
+                bitmapList.add(bitmap);
             }
         } catch (Exception e) {
             ExceptionManager.manageException(context, new FolkSetsException("An error occured while converting a Pdf file to a list of bitmaps.", e));
@@ -63,60 +60,64 @@ public class PdfUtilities {
         return bitmapList;
     }
 
-    private static Bitmap cropWhiteSpace(Bitmap source) {
-        int width = source.getWidth();
-        int height = source.getHeight();
-        int strideSize = 30;
+    public static Bitmap cropWhiteSpace(Bitmap source) throws FolkSetsException {
+        try {
+            int width = source.getWidth();
+            int height = source.getHeight();
+            int strideSize = 30;
 
-        //Get left bound
-        int leftBound = 0;
-        int[] pixelArray = new int[height];
-        for (int i = strideSize; i < width; i += strideSize) {
-            source.getPixels(pixelArray, 0, 1, i, 0, 1, height);
-            if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
-                break;
-            } else {
-                leftBound = i;
+            //Get left bound
+            int leftBound = 0;
+            int[] pixelArray = new int[height];
+            for (int i = strideSize; i < width; i += strideSize) {
+                source.getPixels(pixelArray, 0, 1, i, 0, 1, height);
+                if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
+                    break;
+                } else {
+                    leftBound = i;
+                }
             }
-        }
 
-        //Get the right bound
-        int rightBound = width;
-        for (int i = width - strideSize; i > leftBound; i -= strideSize) {
-            source.getPixels(pixelArray, 0, 1, i, 0, 1, height);
-            if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
-                break;
-            } else {
-                rightBound = i;
+            //Get the right bound
+            int rightBound = width;
+            for (int i = width - strideSize; i > leftBound; i -= strideSize) {
+                source.getPixels(pixelArray, 0, 1, i, 0, 1, height);
+                if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
+                    break;
+                } else {
+                    rightBound = i;
+                }
             }
-        }
 
-        //Get the top bound
-        int topBound = 0;
-        pixelArray = new int[width];
-        for (int i = strideSize; i < height; i += strideSize) {
-            source.getPixels(pixelArray, 0, width, 0, i, width, 1);
-            if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
-                break;
-            } else {
-                topBound = i;
+            //Get the top bound
+            int topBound = 0;
+            pixelArray = new int[width];
+            for (int i = strideSize; i < height; i += strideSize) {
+                source.getPixels(pixelArray, 0, width, 0, i, width, 1);
+                if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
+                    break;
+                } else {
+                    topBound = i;
+                }
             }
-        }
 
-        //Get the bottom bound
-        int bottomBound = height;
-        for (int i = height - strideSize; i > topBound; i -= strideSize) {
-            source.getPixels(pixelArray, 0, width, 0, i, width, 1);
-            if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
-                break;
-            } else {
-                bottomBound = i;
+            //Get the bottom bound
+            int bottomBound = height;
+            for (int i = height - strideSize; i > topBound; i -= strideSize) {
+                source.getPixels(pixelArray, 0, width, 0, i, width, 1);
+                if (Arrays.stream(pixelArray).anyMatch(pixel -> pixel != -1 && pixel != 0)) {
+                    break;
+                } else {
+                    bottomBound = i;
+                }
             }
-        }
 
-        //Create new cropped bitmap
-        Bitmap bitmap = Bitmap.createBitmap(source, leftBound, topBound, rightBound - leftBound , bottomBound - topBound);
-        source.recycle();
-        return bitmap;
+            //Create new cropped bitmap
+            Bitmap bitmap = Bitmap.createBitmap(source, leftBound, topBound, rightBound - leftBound , bottomBound - topBound);
+            source.recycle();
+            return bitmap;
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while cropping white space for pdf rendering.", e);
+        }
     }
 }

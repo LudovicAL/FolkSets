@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.BITMAP_LIST;
 import static com.bandito.folksets.util.Constants.CLICK_TYPE;
 import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.DELIMITER_INPUT_PATTERN;
@@ -15,7 +16,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
@@ -27,6 +27,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,11 +41,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.adapters.TunePagesRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
+import com.bandito.folksets.services.ServiceSingleton;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
-import com.bandito.folksets.util.PdfUtilities;
 import com.bandito.folksets.util.StaticData;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -53,12 +55,12 @@ import com.google.android.material.navigation.NavigationView;
 import org.apache.commons.lang3.StringUtils;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-
 public class TuneActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = TuneActivity.class.getName();
     private final TuneActivity.MyBroadcastReceiver myBroadcastReceiver = new TuneActivity.MyBroadcastReceiver();
+    private ProgressBar progressBar;
+    private TextView progressBarHint;
     private Constants.TuneOrSet tuneOrSet;
     private int position;
     private SetEntity setEntity;
@@ -101,6 +103,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tune);
+
+        progressBar = findViewById(R.id.tune_activity_progressBar);
+        progressBarHint = findViewById(R.id.tune_activity_progressBarHintTextView);
 
         //Determine what was received: a tune or a set
         String tuneOrSetStr = getIntent().getExtras().getString(OPERATION);
@@ -176,13 +181,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         try {
-            List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(this, TAG, tuneEntity.tuneFilePath);
-            TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(bitmapList);
-            RecyclerView recyclerView = findViewById(R.id.tunePagesRecyclerView);
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-            recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
-            tunePagesRecyclerViewAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
+            ServiceSingleton.getInstance().renderPdf(this, tuneEntity);
+        } catch (FolkSetsException e) {
             ExceptionManager.manageException(this, e);
         }
     }
@@ -248,12 +248,18 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             Log.e(TAG, "And error occured when trying to update the tune last consultation date.", e);
         }
+        try {
+            ServiceSingleton.getInstance().interruptPdfRendering();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
+        }
         super.onDestroy();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
     }
 
@@ -310,9 +316,51 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (UNIQUE_VALUES.equals(intent.getExtras().getString(Constants.BroadcastKey.valueUpdated.toString()))) {
-                prepareAutocompleteAdapters();
+            Bundle bundle = intent.getExtras();
+            if (bundle.containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
+                updateProgressBarVisibility(bundle.getInt(Constants.BroadcastKey.progressVisibility.toString()));
+            }
+            if (bundle.containsKey(Constants.BroadcastKey.progressValue.toString())) {
+                updateProgressBarValue(bundle.getInt(Constants.BroadcastKey.progressValue.toString()));
+            }
+            if (bundle.containsKey(Constants.BroadcastKey.progressHint.toString())) {
+                updateProgressBarHint(bundle.getString(Constants.BroadcastKey.progressHint.toString()));
+            }
+            if (bundle.containsKey(Constants.BroadcastKey.progressStepNumber.toString())) {
+                updateProgressBarStepNumber(bundle.getInt(Constants.BroadcastKey.progressStepNumber.toString()));
+            }
+            if (bundle.containsKey(Constants.BroadcastKey.staticDataValue.toString())) {
+                String broadcastValue = intent.getExtras().getString(Constants.BroadcastKey.staticDataValue.toString());
+                if (BITMAP_LIST.equals(broadcastValue)) {
+                    retrieveBitmaps();
+                } else if (UNIQUE_VALUES.equals(broadcastValue)) {
+                    prepareAutocompleteAdapters();
+                }
             }
         }
+    }
+
+    private void retrieveBitmaps() {
+        TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
+        RecyclerView recyclerView = findViewById(R.id.tunePagesRecyclerView);
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+        recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
+        tunePagesRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    private void updateProgressBarStepNumber(int stepNumber) {
+        progressBar.setMax(stepNumber);
+    }
+
+    private void updateProgressBarHint(String hint) {
+        progressBarHint.setText(hint);
+    }
+
+    private void updateProgressBarValue(int progressValue) {
+        progressBar.setProgress(progressValue);
+    }
+
+    private void updateProgressBarVisibility(int visibility) {
+        progressBar.setVisibility(visibility);
     }
 }

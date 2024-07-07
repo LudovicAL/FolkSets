@@ -231,7 +231,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (TUNE_ENTITY_LIST.equals(intent.getExtras().getString(BroadcastKey.valueUpdated.toString()))) {
+            if (TUNE_ENTITY_LIST.equals(intent.getExtras().getString(BroadcastKey.staticDataValue.toString()))) {
                 tuneListRecyclerViewAdapter.setTuneEntityList(StaticData.tuneEntityList);
                 tuneListRecyclerViewAdapter.notifyDataSetChanged();
             }
