@@ -2,8 +2,6 @@ package com.bandito.folksets.sql;
 
 import static com.bandito.folksets.util.Constants.*;
 
-import static java.util.Objects.isNull;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -89,9 +87,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         File databaseFile = context.getDatabasePath(DATABASE_NAME);
         IoUtilities.assertFileExist(databaseFile);
         IoUtilities.copySourceFileToDestination(context, databaseFile, destinationFolder, DATABASE_NAME, "application/x-sqlite3");
-        //Uri sourceUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", databaseFile);
-        //Uri destinationUri = FileProvider.getUriForFile(context, context.getPackageName() + ".fileprovider", new File(destinationFolder));
-        //DocumentsContract.copyDocument(context.getContentResolver(), sourceUri, destinationUri);
     }
 
     public void importDatabase(Context context, String sourceFolder) throws FolkSetsException {
@@ -101,7 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return;
         }
         File databaseFile = context.getDatabasePath(DATABASE_NAME);
-        IoUtilities.copySourceToDestinationFile(context, sourceFolder, databaseFile, DATABASE_NAME, "application/x-sqlite3");
+        IoUtilities.copySourceToDestinationFile(context, sourceFolder, databaseFile, DATABASE_NAME);
     }
 
     public long insertTuneInDatabase(SQLiteDatabase sqLiteDatabase, TuneEntity tuneEntity) {
@@ -187,7 +182,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder();
         query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_TUNE);
-        if (!isNull(fieldListName) && !isNull(valueArray)) {
+        if (fieldListName != null && valueArray != null) {
             for (int i = 0, max = valueArray.length; i < max; i++) {
                 if (i == 0) {
                     query.append(" WHERE ");
@@ -317,19 +312,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    private String[] getAllUniqueValueInTuneTable(SQLiteDatabase sqLiteDatabase, String table, String field) {
-        String query = "SELECT DISTINCT " + field + " FROM " + table + " WHERE " + field + " IS NOT NULL";
+    public String[] getAllUniqueValueInTuneTable(SQLiteDatabase sqLiteDatabase, String field) {
+        String query = "SELECT DISTINCT " + field + " FROM " + TABLE_TUNE + " WHERE " + field + " IS NOT NULL";
         query += getSortOptionString(field, null);
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
         return convertCursorToStringList(cursor, field).toArray(new String[0]);
     }
 
     public String[] getAllUniqueTitleInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tuneTitlesArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_TITLES);
+        String[] tuneTitlesArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_TITLES);
         Set<String> uniqueTitleSet = new HashSet<>();
         for (String tuneTitles : tuneTitlesArray) {
             String[] titleArray = StringUtils.split(tuneTitles, DEFAULT_SEPARATOR);
-            if (!isNull(titleArray)) {
+            if (titleArray != null) {
                 uniqueTitleSet.addAll(Arrays.asList(titleArray));
             }
         }
@@ -337,11 +332,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public String[] getAllUniqueTagInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_TAGS);
+        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_TAGS);
         Set<String> uniqueTagSet = new HashSet<>();
         for (String tags : tagsArray) {
             String[] tagArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
-            if (!isNull(tagArray)) {
+            if (tagArray != null) {
                 uniqueTagSet.addAll(Arrays.asList(tagArray));
             }
         }
@@ -349,19 +344,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public String[] getAllUniquePlayedByInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] playersArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, TUNE_PLAYED_BY);
+        String[] playersArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_PLAYED_BY);
         Set<String> uniquePlayerSet = new HashSet<>();
         for (String players : playersArray) {
             String[] playerArray = StringUtils.split(players, DEFAULT_SEPARATOR);
-            if (!isNull(playerArray)) {
+            if (playerArray != null) {
                 uniquePlayerSet.addAll(Arrays.asList(playerArray));
             }
         }
         return uniquePlayerSet.toArray(new String[0]);
-    }
-
-    public String[] getAllUniqueValueInTuneTable(SQLiteDatabase sqLiteDatabase, String field) {
-        return getAllUniqueValueInTuneTable(sqLiteDatabase, TABLE_TUNE, field);
     }
 
     public String[] getAllUniqueNameInSetTable(SQLiteDatabase sqLiteDatabase) {

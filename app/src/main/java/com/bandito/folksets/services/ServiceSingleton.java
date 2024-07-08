@@ -45,7 +45,7 @@ public class ServiceSingleton {
 
     public void interruptDatabaseUpdate() throws FolkSetsException {
         try {
-            if (updateDatabaseThread != null) {
+            if (updateDatabaseThread != null && updateDatabaseThread.isAlive()) {
                 updateDatabaseThread.interrupt();
             }
         } catch (Exception e) {
@@ -67,7 +67,7 @@ public class ServiceSingleton {
 
     public void interruptPdfRendering() throws FolkSetsException {
         try {
-            if (renderPdfThread != null) {
+            if (renderPdfThread != null && renderPdfThread.isAlive()) {
                 renderPdfThread.interrupt();
             }
         } catch (Exception e) {

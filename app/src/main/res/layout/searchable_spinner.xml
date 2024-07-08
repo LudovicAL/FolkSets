@@ -5,8 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="16dp"
-    android:background="@android:color/white"
-    >
+    android:background="@android:color/white">
 
     <TextView
         android:layout_width="wrap_content"
@@ -16,18 +15,20 @@
         android:textStyle="bold" />
 
     <EditText
-        android:id="@+id/searchable_spinner_edit_text"
+        android:id="@+id/searchable_spinner_edittext"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Search..."
-        android:padding="12dp"
-        android:singleLine="true"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:background="@android:drawable/editbox_background" />
+        android:background="@android:drawable/editbox_background"
+        android:hint="@string/search_tunes"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:padding="12dp"
+        android:singleLine="true" />
 
     <ListView
-        android:id="@+id/searchable_spinner_list_view"
+        android:id="@+id/searchable_spinner_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

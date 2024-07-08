@@ -46,6 +46,11 @@ public class RenderPdfThread  extends Thread {
         }
         StaticData.bitmapList = croppedBitmapList;
         broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{BITMAP_LIST});
+        try {
+            sleep(3000L);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
     }
 }

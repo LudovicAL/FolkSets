@@ -8,7 +8,7 @@
     android:layout_marginBottom="5sp">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/back_from_edit_tune_fab"
+        android:id="@+id/tune_nav_header_back_floatingactionbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/edit"
@@ -18,18 +18,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/nav_tune_header_textview"
+        android:id="@+id/tune_nav_header_header_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/edit_tune"
         android:textSize="28sp"
         android:textStyle="bold"
-        app:layout_constraintLeft_toRightOf="@+id/back_from_edit_tune_fab"
-        app:layout_constraintRight_toLeftOf="@+id/button_save_tune"
+        app:layout_constraintLeft_toRightOf="@+id/tune_nav_header_back_floatingactionbutton"
+        app:layout_constraintRight_toLeftOf="@+id/tune_nav_header_save_button"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button_save_tune"
+        android:id="@+id/tune_nav_header_save_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/save"
@@ -38,11 +38,11 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/nav_header_barrier"
+        android:id="@+id/tune_nav_header_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="back_from_edit_tune_fab,nav_tune_header_textview,button_save_tune" />
+        app:constraint_referenced_ids="tune_nav_header_back_floatingactionbutton,tune_nav_header_header_textview,tune_nav_header_save_button" />
 
     <GridLayout
         android:layout_width="match_parent"
@@ -53,10 +53,9 @@
         android:padding="3sp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nav_header_barrier">
+        app:layout_constraintTop_toBottomOf="@+id/tune_nav_header_barrier">
 
         <TextView
-            android:id="@+id/nav_tune_titles_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -70,7 +69,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_title_textview"
+            android:id="@+id/tune_nav_header_title_textview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -86,7 +85,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_tags_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="fill|end"
@@ -107,7 +105,7 @@
             android:background="#FFFFFF">
 
             <AutoCompleteTextView
-                android:id="@+id/nav_tune_tags_textview"
+                android:id="@+id/tune_nav_header_tag_autocompletetextview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
@@ -124,19 +122,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.google.android.material.chip.ChipGroup
-                android:id="@+id/nav_tune_tags_chipGroup"
+                android:id="@+id/tune_nav_header_tag_chipgroup"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="#FFFFFF"
                 app:chipSpacingVertical="0dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nav_tune_tags_textview" />
+                app:layout_constraintTop_toBottomOf="@+id/tune_nav_header_tag_autocompletetextview" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/nav_tune_composer_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -150,7 +147,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_composer_textview"
+            android:id="@+id/tune_nav_header_composer_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -166,7 +163,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_region_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -180,7 +176,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_region_textview"
+            android:id="@+id/tune_nav_header_region_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -196,7 +192,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_key_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -210,7 +205,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_key_textview"
+            android:id="@+id/tune_nav_header_key_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -226,7 +221,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_incipit_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -240,7 +234,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_incipit_textview"
+            android:id="@+id/tune_nav_header_incipit_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -256,7 +250,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_form_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -270,7 +263,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_form_textview"
+            android:id="@+id/tune_nav_header_form_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -286,7 +279,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_players_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -300,7 +292,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_players_textview"
+            android:id="@+id/tune_nav_header_players_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -316,7 +308,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_note_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -330,7 +321,7 @@
             android:textStyle="bold" />
 
         <AutoCompleteTextView
-            android:id="@+id/nav_tune_note_textview"
+            android:id="@+id/tune_nav_header_note_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -346,7 +337,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_filePath_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -360,7 +350,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nav_tune_filePath_textview"
+            android:id="@+id/tune_nav_header_filepath_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -373,7 +363,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_fileType_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -387,7 +376,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nav_tune_fileType_textview"
+            android:id="@+id/tune_nav_header_filetype_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -400,7 +389,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_creation_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -414,7 +402,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nav_tune_creation_date_textview"
+            android:id="@+id/tune_nav_header_creationdate_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -428,7 +416,6 @@
 
 
         <TextView
-            android:id="@+id/nav_tune_last_consultation_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -442,7 +429,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nav_tune_consultation_date_textview"
+            android:id="@+id/tune_nav_header_consultationdate_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -455,7 +442,6 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/nav_tune_consultation_number_hint_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
@@ -469,7 +455,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/nav_tune_consultation_number_textview"
+            android:id="@+id/tune_nav_header_consultationnumber_autocompletetextview"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"

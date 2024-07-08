@@ -1,7 +1,6 @@
 package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
-import static java.util.Objects.isNull;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -25,7 +24,7 @@ import com.bandito.folksets.util.Utilities;
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = SettingsFragment.class.getName();
-    private TextView storageDirectorySelectionTextView;
+    private TextView selectStorageDirectoryTextView;
 
     protected final IntentLauncher<Intent, ActivityResult> intentLauncher = IntentLauncher.registerActivityForResult(this);
 
@@ -40,19 +39,19 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        view.findViewById(R.id.settingsSelectStorageDirectoryButton).setOnClickListener(this);
-        view.findViewById(R.id.settingExportDatabaseButton).setOnClickListener(this);
-        view.findViewById(R.id.settingImportDatabaseButton).setOnClickListener(this);
-        storageDirectorySelectionTextView = view.findViewById(R.id.settingStorageDirectoryTextView);
+        view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
+        view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
+        view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
+        selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
         updateSelectStorageDirectoryTextView(null);
         return view;
     }
 
     private void updateSelectStorageDirectoryTextView(String text) {
-        if (isNull(text)) {
-            text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString (R.string.selectStorageDirectory));
+        if (text == null) {
+            text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString (R.string.select_storage_directory));
         }
-        storageDirectorySelectionTextView.setText(text);
+        selectStorageDirectoryTextView.setText(text);
     }
 
     public void selectStorageDirectory() {
@@ -69,7 +68,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         if (activityResult.getResultCode() == Activity.RESULT_OK && activityResult.getData() != null) {
             Intent resultData = activityResult.getData();
             Uri uriTree = resultData.getData();
-            if (isNull(uriTree)) {
+            if (uriTree == null) {
                 Log.e(TAG, "The folder picking intent returned a null object.");
             } else {
                 final int modeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -104,11 +103,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if (view.getId() ==  R.id.settingsSelectStorageDirectoryButton) {
+        if (view.getId() ==  R.id.fragment_settings_selectstoragedirectory_button) {
             selectStorageDirectory();
-        } else if (view.getId() ==  R.id.settingExportDatabaseButton) {
+        } else if (view.getId() ==  R.id.fragment_settings_exportdatabase_button) {
             exportDatabaseToStorage();
-        } else if (view.getId() ==  R.id.settingImportDatabaseButton) {
+        } else if (view.getId() ==  R.id.fragment_settings_importdatabase_button) {
             importDatabaseFromStorage();
         }
     }

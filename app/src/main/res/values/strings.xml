@@ -1,16 +1,14 @@
 <resources>
     <string name="app_name">FolkSets</string>
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
     <string name="loading_data">Loading data</string>
-    <string name="tune_file_content">Tune file content</string>
 
-    <string name="selectStorageDirectory">Select a storage directory</string>
-    <string name="exportDatabaseToStorage">Export database to storage</string>
-    <string name="importDatabaseFromStorage">Import database from storage</string>
+    <string name="select_storage_directory">Select a storage directory</string>
+    <string name="export_database_to_storage">Export database to storage</string>
+    <string name="import_database_from_storage">Import database from storage</string>
     <string name="tab_tunes">TUNES</string>
     <string name="tab_sets">SETS</string>
     <string name="tab_settings">SETTINGS</string>
+    <string name="set_songs_dropdown">Set songs drop down</string>
 
     <string name="title">Title</string>
     <string name="titles">Titles</string>
@@ -52,16 +50,13 @@
     <string name="create_new_set">Create new set</string>
     <string name="edit_set">Edit set</string>
     <string name="set_name">Set name</string>
-    <string name="tune_in_set">Tune in set</string>
+    <string name="tune_in_sets">Tune in sets</string>
 
     <string name="sort_by_title">Sort by title</string>
     <string name="sort_by_last_created">Sort by last created</string>
     <string name="sort_by_last_consulted">Sort by last consulted</string>
     <string name="sort_by_most_consulted">Sort by most consulted</string>
 
-    <string name="available_tunes">Available tunes</string>
-    <string name="selected_tunes">Selected tunes</string>
-    <string name="select_tune">Select tune</string>
     <string name="deselect_tune">Deselect tune</string>
     <string name="move_tune_up">Move tune up</string>
     <string name="move_tune_down">Move tune down</string>

@@ -2,14 +2,14 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+    android:id="@+id/activity_main_constraintlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5sp"
     tools:context=".MainActivity">
 
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appBarLayout"
+        android:id="@+id/activity_main_appbarlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/Theme.FolkSets.AppBarOverlay"
@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabsLayout"
+            android:id="@+id/activity_main_tablayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -31,29 +31,29 @@
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewpager2"
+        android:id="@+id/activity_main_viewpager2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/progressBarHintTextView"
+        app:layout_constraintBottom_toTopOf="@+id/activity_main_progressbar_hint_textView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" >
+        app:layout_constraintTop_toBottomOf="@+id/activity_main_appbarlayout" >
     </androidx.viewpager2.widget.ViewPager2>
 
     <TextView
-        android:id="@+id/progressBarHintTextView"
+        android:id="@+id/activity_main_progressbar_hint_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/loading_data"
         android:textAlignment="viewStart"
         android:textSize="24sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
+        app:layout_constraintBottom_toTopOf="@+id/activity_main_progressbar"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/activity_main_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

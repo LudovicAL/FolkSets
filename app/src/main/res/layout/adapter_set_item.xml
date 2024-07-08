@@ -9,7 +9,7 @@
     app:cardElevation="5sp">
 
     <TextView
-        android:id="@+id/item_set_name_textview"
+        android:id="@+id/adapter_set_item_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start|center_vertical"
@@ -20,10 +20,11 @@
         android:textSize="24sp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/item_set_floatingActionButton"
+        android:id="@+id/adapter_set_item_floatingactionbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:contentDescription="@string/set_songs_dropdown"
         android:layout_gravity="end|center_vertical"
         android:layout_marginHorizontal="15sp"
         android:layout_marginVertical="25sp"

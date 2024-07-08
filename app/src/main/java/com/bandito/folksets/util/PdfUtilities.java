@@ -1,7 +1,5 @@
 package com.bandito.folksets.util;
 
-import static java.util.Objects.isNull;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
@@ -25,7 +23,7 @@ public class PdfUtilities {
         PdfRenderer.Page page = null;
         try {
             parcelFileDescriptor = context.getContentResolver().openFileDescriptor(Uri.parse(filePath), "r");
-            if (isNull(parcelFileDescriptor)) {
+            if (parcelFileDescriptor == null) {
                 throw new FolkSetsException("Unable to create the ParcelFileDescriptor object.", null);
             }
             pdfRenderer = new PdfRenderer(parcelFileDescriptor);

@@ -1,7 +1,6 @@
 package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
-import static java.util.Objects.isNull;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,7 +34,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getName();
     private TabLayout tabLayout;
     private ProgressBar progressBar;
     private TextView progressBarHintTextView;
@@ -46,14 +44,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.activity_main_constraintlayout), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        progressBar = findViewById(R.id.progressBar);
-        progressBarHintTextView = findViewById(R.id.progressBarHintTextView);
-        ViewPager2 viewPager2 = findViewById(R.id.viewpager2);
+        progressBar = findViewById(R.id.activity_main_progressbar);
+        progressBarHintTextView = findViewById(R.id.activity_main_progressbar_hint_textView);
+        ViewPager2 viewPager2 = findViewById(R.id.activity_main_viewpager2);
         TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
         tabAdapter.addFragment(new TuneListFragment());
         tabAdapter.addFragment(new SetListFragment());
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
         viewPager2.setUserInputEnabled(false);
         viewPager2.setAdapter(tabAdapter);
-        tabLayout = findViewById(R.id.tabsLayout);
+        tabLayout = findViewById(R.id.activity_main_tablayout);
         new TabLayoutMediator(tabLayout, viewPager2,
                 (tab, position) -> {
             switch (position) {
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void checkStorageDirectory() {
         String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
-        if (isNull(selectedDirectoryUri) && tabLayout.getSelectedTabPosition() != 2) {
+        if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
             tabLayout.selectTab(tabLayout.getTabAt(2));
         }
     }

@@ -1,7 +1,6 @@
 package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.*;
-import static java.util.Objects.isNull;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -23,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.bandito.folksets.adapters.TuneListRecyclerViewAdapter;
@@ -35,6 +33,7 @@ import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -54,7 +53,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
         }
     };
     private Timer timer;
-    private EditText editText;
+    private TextInputEditText textInputEditText;
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -75,16 +74,16 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tune_list, container, false);
-        materialButtonToggleGroup = view.findViewById(R.id.tuneToggleButtonGroup);
+        materialButtonToggleGroup = view.findViewById(R.id.fragment_tune_list_materialbuttontogglegroup);
         materialButtonToggleGroup.addOnButtonCheckedListener(materialButtonToggleGroupCheckedListener);
-        editText = view.findViewById(R.id.tuneListEditText);
-        editText.addTextChangedListener(textWatcher);
-        RecyclerView recyclerView = view.findViewById(R.id.tuneListRecyclerView);
+        textInputEditText = view.findViewById(R.id.fragment_tune_list_textinputedittext);
+        textInputEditText.addTextChangedListener(textWatcher);
+        RecyclerView recyclerView = view.findViewById(R.id.fragment_tune_list_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         tuneListRecyclerViewAdapter = new TuneListRecyclerViewAdapter();
         tuneListRecyclerViewAdapter.setClickListener(this);
         recyclerView.setAdapter(tuneListRecyclerViewAdapter);
-        sortSpinner = view.findViewById(R.id.tune_sort_spinner);
+        sortSpinner = view.findViewById(R.id.fragment_tune_list_spinner);
         ArrayAdapter<CharSequence> sortAdapter = ArrayAdapter.createFromResource(
                 requireContext(),
                 R.array.tune_sort_array,
@@ -112,7 +111,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void demandNewSearch(boolean userIsTyping) {
-        if (!isNull(timer)) {
+        if (timer != null) {
             timer.cancel();
         }
         if (userIsTyping) {
@@ -148,30 +147,30 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     private void performSearch() {
         try {
             DatabaseManager.initializeDatabase(requireContext());
-            String textToSearch = editText.getText().toString();
+            String textToSearch = textInputEditText.getText().toString();
             Pair<String, String> sortParameters = getSortParameters();
             if (textToSearch.isEmpty()) {
                 tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, sortParameters.first, sortParameters.second));
             } else {
                 int i = materialButtonToggleGroup.getCheckedButtonId();
-                if (i == R.id.toggleButtonTitle) {
+                if (i == R.id.fragment_tune_title_materialbutton) {
                     Log.i(TAG, "Seaching title: " + textToSearch);
                     String[] titleArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TITLES, titleArray, sortParameters.first, sortParameters.second));
-                } else if (i == R.id.toggleButtonTag) {
+                } else if (i == R.id.fragment_tune_tag_materialbutton) {
                     Log.i(TAG, "Seaching tag: " + textToSearch);
                     String[] tagArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TAGS, tagArray, sortParameters.first, sortParameters.second));
-                } else if (i == R.id.toggleButtonComposer) {
+                } else if (i == R.id.fragment_tune_composer_materialbutton) {
                     Log.i(TAG, "Seaching composer: " + textToSearch);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_COMPOSER, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
-                } else if (i == R.id.toggleButtonRegion) {
+                } else if (i == R.id.fragment_tune_region_materialbutton) {
                     Log.i(TAG, "Seaching region: " + textToSearch);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_REGION_OF_ORIGIN, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
-                } else if (i == R.id.toggleButtonKey) {
+                } else if (i == R.id.fragment_tune_key_materialbutton) {
                     Log.i(TAG, "Seaching key: " + textToSearch);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_KEY, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
-                } else if (i == R.id.toggleButtonPlayedBy) {
+                } else if (i == R.id.fragment_tune_playedby_materialbutton) {
                     Log.i(TAG, "Seaching played by: " + textToSearch);
                     String[] playedByArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
                     tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second));
@@ -217,7 +216,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (parent.getId() == R.id.tune_sort_spinner) {
+        if (parent.getId() == R.id.fragment_tune_list_spinner) {
             Log.i(TAG, "You clicked " + sortSpinner.getSelectedItem().toString());
             demandNewSearch(false);
         }

@@ -1,7 +1,6 @@
 package com.bandito.folksets.util;
 
 import static com.bandito.folksets.util.Constants.PREFERENCES_NAME;
-import static java.util.Objects.isNull;
 
 import android.app.Activity;
 import android.content.Context;
@@ -34,7 +33,7 @@ public class Utilities {
     }
 
     public static void assertObjectIsNotNull(String objectName, Object object) throws FolkSetsException {
-        if (isNull(object)) {
+        if (object == null) {
             throw new FolkSetsException("The object " + objectName + " passed as parameter is null.", null);
         }
     }
@@ -42,7 +41,7 @@ public class Utilities {
     public static void loadActivity(Activity callingActivity, Context context, Class<?> calledActivityClass, Pair<String, ? extends Serializable>[] messages) {
         Intent intent = new Intent(context, calledActivityClass);
         Bundle bundle = new Bundle();
-        if (!isNull(messages)) {
+        if (messages != null) {
             for (Pair<String, ? extends Serializable> pair : messages) {
                 bundle.putSerializable(pair.first, pair.second);
             }

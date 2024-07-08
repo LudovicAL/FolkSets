@@ -14,7 +14,7 @@ import com.bandito.folksets.R;
 import java.util.List;
 
 public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePagesRecyclerViewAdapter.PageViewHolder> {
-    private List<Bitmap> bitmapList;
+    private final List<Bitmap> bitmapList;
 
     public TunePagesRecyclerViewAdapter(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
@@ -43,7 +43,7 @@ public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePages
         private final ImageView imageView;
         public PageViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.item_image);
+            imageView = itemView.findViewById(R.id.adapter_imageview_item_imageview);
         }
 
         public ImageView getImageView() {

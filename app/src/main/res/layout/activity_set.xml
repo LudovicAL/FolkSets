@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/set"
+    android:id="@+id/activity_set_constraintlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="5sp"
     tools:context=".SetActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/headerGroup"
+        android:id="@+id/activity_set_inner_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -18,18 +18,18 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
-            android:id="@+id/set_activity_header"
+            android:id="@+id/activity_set_header_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/placeholder"
             android:textSize="28sp"
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="@+id/back_set_fab"
-            app:layout_constraintRight_toRightOf="@+id/button_save_set" />
+            app:layout_constraintLeft_toLeftOf="@+id/activty_set_back_floatingactionbutton"
+            app:layout_constraintRight_toRightOf="@+id/activity_set_save_button" />
 
         <Button
-            android:id="@+id/button_save_set"
+            android:id="@+id/activity_set_save_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/save"
@@ -39,7 +39,7 @@
             app:layout_constraintRight_toRightOf="parent" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/back_set_fab"
+            android:id="@+id/activty_set_back_floatingactionbutton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/back"
@@ -52,15 +52,15 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/set_name_edittext_input_layout"
+        android:id="@+id/activity_set_search_textinputlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/headerGroup">
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_inner_constraintlayout">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/set_name_edittext"
+            android:id="@+id/activity_set_name_textinputedittext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/set_name"
@@ -77,38 +77,38 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
-        android:id="@+id/available_tune_titles_textview"
+        android:id="@+id/activity_set_search_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:background="@android:drawable/editbox_background"
-        android:drawableEnd="@drawable/ic_arrow_drop_down"
         android:hint="@string/select_a_tune"
         android:textAlignment="viewStart"
         android:textSize="24sp"
         android:onClick="openSelectTuneDialog"
+        app:drawableEndCompat="@drawable/ic_arrow_drop_down"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/set_name_edittext_input_layout" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_search_textinputlayout" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/selected_tunes_recyclerview"
+        android:id="@+id/activity_set_recyclerview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/set_activity_barrier"
-        app:layout_constraintTop_toBottomOf="@+id/available_tune_titles_textview"
-        app:layout_constraintBottom_toTopOf="@+id/button_delete_set"/>
+        app:layout_constraintRight_toLeftOf="@+id/activity_set_barrier"
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_search_textview"
+        app:layout_constraintBottom_toTopOf="@+id/activity_set_delete_button"/>
 
     <androidx.constraintlayout.widget.Barrier
-        android:id="@+id/set_activity_barrier"
+        android:id="@+id/activity_set_barrier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:barrierDirection="left"
-        app:constraint_referenced_ids="move_up_tune_button,move_down_tune_button,deselect_tune_button" />
+        app:constraint_referenced_ids="activity_set_moveup_imagebutton,activity_set_movedown_imagebutton,activity_set_deselect_imagebutton" />
 
     <ImageButton
-        android:id="@+id/move_up_tune_button"
+        android:id="@+id/activity_set_moveup_imagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
@@ -116,30 +116,30 @@
         android:onClick="moveTuneUp"
         android:src="@drawable/ic_arrow_up"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/available_tune_titles_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_search_textview" />
 
     <ImageButton
-        android:id="@+id/move_down_tune_button"
+        android:id="@+id/activity_set_movedown_imagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/move_tune_down"
         android:onClick="moveTuneDown"
         android:src="@drawable/ic_arrow_down"
-        app:layout_constraintTop_toBottomOf="@+id/move_up_tune_button"
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_moveup_imagebutton"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <ImageButton
-        android:id="@+id/deselect_tune_button"
+        android:id="@+id/activity_set_deselect_imagebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/deselect_tune"
         android:onClick="deselectTune"
         android:src="@drawable/ic_clear"
-        app:layout_constraintTop_toBottomOf="@+id/move_down_tune_button"
+        app:layout_constraintTop_toBottomOf="@+id/activity_set_movedown_imagebutton"
         app:layout_constraintRight_toRightOf="parent"/>
 
     <Button
-        android:id="@+id/button_delete_set"
+        android:id="@+id/activity_set_delete_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/delete_set"

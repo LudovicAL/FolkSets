@@ -88,7 +88,7 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
 
         public TuneViewHolder(View view) {
             super(view);
-            tuneTitleTextView = view.findViewById(R.id.item_text);
+            tuneTitleTextView = view.findViewById(R.id.adapter_textview_item_textview);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }

@@ -1,7 +1,6 @@
 package com.bandito.folksets.util;
 
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
-import static java.util.Objects.isNull;
 
 import android.app.Activity;
 import android.content.Context;
@@ -31,7 +30,7 @@ public class IoUtilities {
     public static void assertDirectoryExist(Context context, String uriFromTreeAsString) throws FolkSetsException {
         Utilities.assertObjectIsNotNull("uriFromTreeAsString", uriFromTreeAsString);
         DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(uriFromTreeAsString));
-        if (isNull(documentFile) || !documentFile.exists()) {
+        if (documentFile == null || !documentFile.exists()) {
             throw new FolkSetsException("The directory does not exist: " + uriFromTreeAsString, null);
         }
     }
@@ -43,7 +42,7 @@ public class IoUtilities {
         }
     }
 
-    public static void copySourceToDestinationFile(Context context, String sourceDirectoryName, File destinationFile, String sourceFileName, String destinationFileMimeType) throws FolkSetsException {
+    public static void copySourceToDestinationFile(Context context, String sourceDirectoryName, File destinationFile, String sourceFileName) throws FolkSetsException {
         InputStream inputStream = null;
         FileChannel destinationFileChannel = null;
         try {
@@ -93,7 +92,7 @@ public class IoUtilities {
 
     public static void flushFlushable(Flushable flushable) {
         try {
-            if(!isNull(flushable)) {
+            if(flushable != null) {
                 flushable.flush();
             }
         } catch (Exception e) {
@@ -104,7 +103,7 @@ public class IoUtilities {
 
     public static void closeCloseable(Closeable closeable) {
         try {
-            if(!isNull(closeable)) {
+            if(closeable != null) {
                 closeable.close();
             }
         } catch (Exception e) {

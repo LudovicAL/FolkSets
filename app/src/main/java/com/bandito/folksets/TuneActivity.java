@@ -10,8 +10,6 @@ import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.TUNE_ENTITY;
 import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
 
-import static java.util.Objects.isNull;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -104,8 +102,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tune);
 
-        progressBar = findViewById(R.id.tune_activity_progressBar);
-        progressBarHint = findViewById(R.id.tune_activity_progressBarHintTextView);
+        progressBar = findViewById(R.id.activity_tune_progressbar);
+        progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
 
         //Determine what was received: a tune or a set
         String tuneOrSetStr = getIntent().getExtras().getString(OPERATION);
@@ -124,33 +122,33 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        View headerView = ((NavigationView)findViewById(R.id.tune_nav_view)).getHeaderView(0);
+        View headerView = ((NavigationView)findViewById(R.id.activity_tune_navigationview)).getHeaderView(0);
         //Set listeners
-        headerView.findViewById(R.id.back_from_edit_tune_fab).setOnClickListener(this);
-        headerView.findViewById(R.id.button_save_tune).setOnClickListener(this);
-        findViewById(R.id.edit_tune_fab).setOnClickListener(this);
-        findViewById(R.id.back_tune_fab).setOnClickListener(this);
+        headerView.findViewById(R.id.tune_nav_header_back_floatingactionbutton).setOnClickListener(this);
+        headerView.findViewById(R.id.tune_nav_header_save_button).setOnClickListener(this);
+        findViewById(R.id.activity_tune_edit_floatingactionbutton).setOnClickListener(this);
+        findViewById(R.id.activity_tune_back_floatingactionbutton).setOnClickListener(this);
 
-        tuneTagsChipGroup = headerView.findViewById(R.id.nav_tune_tags_chipGroup);
+        tuneTagsChipGroup = headerView.findViewById(R.id.tune_nav_header_tag_chipgroup);
         //Prepare the autocompletes
-        tuneTitlesAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_title_textview);
+        tuneTitlesAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_title_textview);
         tuneTitlesAutoCompleteTextView.setThreshold(0);
-        tuneTagsAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_tags_textview);
+        tuneTagsAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_tag_autocompletetextview);
         tuneTagsAutoCompleteTextView.setThreshold(0);
         tuneTagsAutoCompleteTextView.addTextChangedListener(tagTextWatcher);
-        tuneComposerAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_composer_textview);
+        tuneComposerAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_composer_autocompletetextview);
         tuneComposerAutoCompleteTextView.setThreshold(0);
-        tuneRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_region_textview);
+        tuneRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_region_autocompletetextview);
         tuneRegionOfOriginAutoCompleteTextView.setThreshold(0);
-        tuneKeyAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_key_textview);
+        tuneKeyAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_key_autocompletetextview);
         tuneKeyAutoCompleteTextView.setThreshold(0);
-        tuneIncipitAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_incipit_textview);
+        tuneIncipitAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_incipit_autocompletetextview);
         tuneIncipitAutoCompleteTextView.setThreshold(0);
-        tuneFormAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_form_textview);
+        tuneFormAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_form_autocompletetextview);
         tuneFormAutoCompleteTextView.setThreshold(0);
-        tunePlayedByAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_players_textview);
+        tunePlayedByAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_players_autocompletetextview);
         tunePlayedByAutoCompleteTextView.setThreshold(0);
-        tuneNoteAutoCompleteTextView = headerView.findViewById(R.id.nav_tune_note_textview);
+        tuneNoteAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_note_autocompletetextview);
         tuneNoteAutoCompleteTextView.setThreshold(0);
         prepareAutocompleteAdapters();
 
@@ -165,30 +163,24 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             tuneFormAutoCompleteTextView.setText(tuneEntity.tuneForm);
             tunePlayedByAutoCompleteTextView.setText(tuneEntity.tunePlayedBy);
             tuneNoteAutoCompleteTextView.setText(tuneEntity.tuneNote);
-            ((TextView)headerView.findViewById(R.id.nav_tune_filePath_textview)).setText(tuneEntity.tuneFilePath);
-            ((TextView)headerView.findViewById(R.id.nav_tune_fileType_textview)).setText(tuneEntity.tuneFileType);
-            ((TextView)headerView.findViewById(R.id.nav_tune_creation_date_textview)).setText(tuneEntity.tuneFileCreationDate);
-            ((TextView)headerView.findViewById(R.id.nav_tune_consultation_date_textview)).setText(tuneEntity.tuneLastConsultationDate);
-            ((TextView)headerView.findViewById(R.id.nav_tune_consultation_number_textview)).setText(tuneEntity.tuneConsultationNumber.toString());
+            ((TextView)headerView.findViewById(R.id.tune_nav_header_filepath_autocompletetextview)).setText(tuneEntity.tuneFilePath);
+            ((TextView)headerView.findViewById(R.id.tune_nav_header_filetype_autocompletetextview)).setText(tuneEntity.tuneFileType);
+            ((TextView)headerView.findViewById(R.id.tune_nav_header_creationdate_autocompletetextview)).setText(tuneEntity.tuneFileCreationDate);
+            ((TextView)headerView.findViewById(R.id.tune_nav_header_consultationdate_autocompletetextview)).setText(tuneEntity.tuneLastConsultationDate);
+            ((TextView)headerView.findViewById(R.id.tune_nav_header_consultationnumber_autocompletetextview)).setText(tuneEntity.tuneConsultationNumber.toString());
         } catch (Exception e) {
             ExceptionManager.manageException(this, e);
         }
 
-        drawerLayout = findViewById(R.id.drawer_layout_tune);
+        drawerLayout = findViewById(R.id.activity_tune_drawerlayout);
         String clickType = getIntent().getExtras().getString(CLICK_TYPE);
         if (Constants.ClickType.longClick.toString().equals(clickType)) {
             drawerLayout.openDrawer(GravityCompat.END);
         }
-
-        try {
-            ServiceSingleton.getInstance().renderPdf(this, tuneEntity);
-        } catch (FolkSetsException e) {
-            ExceptionManager.manageException(this, e);
-        }
     }
 
     private void addChipToChipGroup(String[] chipContentArray, ChipGroup chipGroup) {
-        if (isNull(chipContentArray)) {
+        if (chipContentArray == null) {
             return;
         }
         for (String chipContent : chipContentArray) {
@@ -253,6 +245,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         } catch (Exception e) {
             ExceptionManager.manageException(this, e);
         }
+        StaticData.bitmapList = null;
         super.onDestroy();
     }
 
@@ -261,6 +254,11 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
+        try {
+            ServiceSingleton.getInstance().renderPdf(this, tuneEntity);
+        } catch (FolkSetsException e) {
+            ExceptionManager.manageException(this, e);
+        }
     }
 
     @Override
@@ -271,14 +269,14 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.edit_tune_fab) {
+        if (view.getId() == R.id.activity_tune_edit_floatingactionbutton) {
             drawerLayout.openDrawer(GravityCompat.END);
-        } else if (view.getId() == R.id.back_from_edit_tune_fab) {
-            drawerLayout.closeDrawer(GravityCompat.END);
-        } else if (view.getId() == R.id.button_save_tune) {
-            saveTune();
-        } else if (view.getId() == R.id.back_tune_fab) {
+        } else if (view.getId() == R.id.activity_tune_back_floatingactionbutton) {
             this.finish();
+        } else if (view.getId() == R.id.tune_nav_header_save_button) {
+            saveTune();
+        } else if (view.getId() == R.id.tune_nav_header_back_floatingactionbutton) {
+            drawerLayout.closeDrawer(GravityCompat.END);
         }
     }
 
@@ -317,6 +315,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
+            if (bundle == null) {
+                ExceptionManager.manageException(context, new FolkSetsException("The activity receive à broadcast with not extras.", null));
+            }
             if (bundle.containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
                 updateProgressBarVisibility(bundle.getInt(Constants.BroadcastKey.progressVisibility.toString()));
             }
@@ -341,11 +342,15 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void retrieveBitmaps() {
-        TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
-        RecyclerView recyclerView = findViewById(R.id.tunePagesRecyclerView);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
-        tunePagesRecyclerViewAdapter.notifyDataSetChanged();
+        if (StaticData.bitmapList != null) {
+            TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
+            RecyclerView recyclerView = findViewById(R.id.activity_tune_recyclerview);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
+            tunePagesRecyclerViewAdapter.notifyDataSetChanged();
+            StaticData.bitmapList = null;
+            updateProgressBarVisibility(View.GONE);
+        }
     }
 
     private void updateProgressBarStepNumber(int stepNumber) {
@@ -362,5 +367,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateProgressBarVisibility(int visibility) {
         progressBar.setVisibility(visibility);
+        progressBarHint.setVisibility(visibility);
     }
 }

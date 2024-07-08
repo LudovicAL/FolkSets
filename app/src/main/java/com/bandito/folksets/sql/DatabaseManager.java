@@ -7,7 +7,6 @@ import static com.bandito.folksets.util.Constants.TUNE_KEY;
 import static com.bandito.folksets.util.Constants.TUNE_NOTE;
 import static com.bandito.folksets.util.Constants.TUNE_REGION_OF_ORIGIN;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
-import static java.util.Objects.isNull;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,10 +28,10 @@ public class DatabaseManager {
 
     public static void initializeDatabase(Context context) throws FolkSetsException {
         try {
-            if (isNull(databaseHelper)) {
+            if (databaseHelper == null) {
                 databaseHelper = new DatabaseHelper(context);
             }
-            if (isNull(sqLiteDatabase) || !sqLiteDatabase.isOpen()) {
+            if (sqLiteDatabase == null || !sqLiteDatabase.isOpen()) {
                 sqLiteDatabase = databaseHelper.getWritableDatabase();
                 databaseHelper.initializeDatabase(sqLiteDatabase);
             }
@@ -52,7 +51,7 @@ public class DatabaseManager {
     public static void importDatabase(Context context, Activity activity) throws FolkSetsException {
         try {
             String selectedFolder = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
-            if (!isNull(selectedFolder)) {
+            if (selectedFolder != null) {
                 databaseHelper.importDatabase(context, selectedFolder);
             }
         } catch (Exception e) {
@@ -63,7 +62,7 @@ public class DatabaseManager {
     public static void exportDatabase(Context context, Activity activity) throws FolkSetsException {
         try {
             String selectedFolder = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
-            if (!isNull(selectedFolder)) {
+            if (selectedFolder != null) {
                 databaseHelper.exportDatabase(context, selectedFolder);
             }
         } catch (Exception e) {

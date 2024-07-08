@@ -8,42 +8,42 @@
     tools:context=".SettingsFragment">
 
     <Button
-        android:id="@+id/settingsSelectStorageDirectoryButton"
+        android:id="@+id/fragment_settings_selectstoragedirectory_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/selectStorageDirectory"
+        android:text="@string/select_storage_directory"
         android:textSize="24sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/settingStorageDirectoryTextView"
+        android:id="@+id/fragment_settings_selectstoragedirectory_textview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/selectStorageDirectory"
+        android:text="@string/select_storage_directory"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/settingsSelectStorageDirectoryButton"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_selectstoragedirectory_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/settingExportDatabaseButton"
+        android:id="@+id/fragment_settings_exportdatabase_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/exportDatabaseToStorage"
+        android:text="@string/export_database_to_storage"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/settingStorageDirectoryTextView"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_selectstoragedirectory_textview"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <Button
-        android:id="@+id/settingImportDatabaseButton"
+        android:id="@+id/fragment_settings_importdatabase_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/importDatabaseFromStorage"
+        android:text="@string/import_database_from_storage"
         android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/settingExportDatabaseButton"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_exportdatabase_button"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 

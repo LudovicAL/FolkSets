@@ -98,12 +98,11 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
     public class SetViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         private final TextView setNameTextView;
-        private List<TuneEntity> setTuneEntityList;
 
         public SetViewHolder(View view) {
             super(view);
-            setNameTextView = view.findViewById(R.id.item_set_name_textview);
-            view.findViewById(R.id.item_set_floatingActionButton).setOnClickListener(this);
+            setNameTextView = view.findViewById(R.id.adapter_set_item_textview);
+            view.findViewById(R.id.adapter_set_item_floatingactionbutton).setOnClickListener(this);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
@@ -114,7 +113,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.item_set_floatingActionButton) {
+            if (view.getId() == R.id.adapter_set_item_floatingactionbutton) {
                 displayPopupMenuOfTunesInSet(view);
             } else if (itemClickListener != null) {
                 itemClickListener.onItemClick(view, getAdapterPosition());
@@ -139,7 +138,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                         tuneIdArray,
                         null,
                         null);
-                setTuneEntityList = Utilities.rearangeTuneInSetOrder(unorderedTuneEntityList, tuneIdArray);
+                List<TuneEntity> setTuneEntityList = Utilities.rearangeTuneInSetOrder(unorderedTuneEntityList, tuneIdArray);
                 PopupMenu popupMenu = new PopupMenu(context, view);
                 for (int i = 0, max = setTuneEntityList.size(); i < max; i++) {
                     popupMenu.getMenu().add(NONE, i, NONE, setTuneEntityList.get(i).getFirstTitle());

@@ -8,15 +8,15 @@
     tools:context=".TuneListFragment">
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tuneListEditText_input_layout"
+        android:id="@+id/fragment_tune_list_textinputlayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/tune_sort_spinner"
+        app:layout_constraintRight_toLeftOf="@+id/fragment_tune_list_spinner"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/tuneListEditText"
+            android:id="@+id/fragment_tune_list_textinputedittext"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="@string/search_tunes"
@@ -33,28 +33,28 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Spinner
-        android:id="@+id/tune_sort_spinner"
+        android:id="@+id/fragment_tune_list_spinner"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/tuneListEditText_input_layout"
+        app:layout_constraintBottom_toBottomOf="@+id/fragment_tune_list_textinputlayout"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/tuneToggleButtonGroup"
+        android:id="@+id/fragment_tune_list_materialbuttontogglegroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:soundEffectsEnabled="true"
-        app:checkedButton="@id/toggleButtonTitle"
+        app:checkedButton="@id/fragment_tune_title_materialbutton"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tuneListEditText_input_layout"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_tune_list_textinputlayout"
         app:selectionRequired="true"
         app:singleSelection="true">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonTitle"
+            android:id="@+id/fragment_tune_title_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:text="@string/title" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonTag"
+            android:id="@+id/fragment_tune_tag_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
             android:text="@string/tag" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonComposer"
+            android:id="@+id/fragment_tune_composer_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -78,7 +78,7 @@
             android:text="@string/composer" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonRegion"
+            android:id="@+id/fragment_tune_region_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -86,7 +86,7 @@
             android:text="@string/region" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonKey"
+            android:id="@+id/fragment_tune_key_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -94,7 +94,7 @@
             android:text="@string/key" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/toggleButtonPlayedBy"
+            android:id="@+id/fragment_tune_playedby_materialbutton"
             style="?attr/materialButtonOutlinedStyle"
             android:textSize="24sp"
             android:layout_width="match_parent"
@@ -103,10 +103,10 @@
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tuneListRecyclerView"
+        android:id="@+id/fragment_tune_list_recyclerview"
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/tuneToggleButtonGroup"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_tune_list_materialbuttontogglegroup"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
