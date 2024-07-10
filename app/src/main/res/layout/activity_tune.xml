@@ -6,21 +6,20 @@
     android:id="@+id/activity_tune_drawerlayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context=".TuneActivity"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="false"
+    tools:openDrawer="end"
+    tools:context=".TuneActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/activity_tune_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_margin="3sp"
-            app:layout_constraintBottom_toTopOf="@+id/activity_tune_progressbarhint_textview"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -53,26 +52,86 @@
 
         <TextView
             android:id="@+id/activity_tune_progressbarhint_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/loading_data"
             android:textAlignment="viewStart"
             android:textSize="24sp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/activity_tune_progressbar"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
 
         <ProgressBar
             android:id="@+id/activity_tune_progressbar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:progress="0"
             android:max="2"
+            android:progress="0"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/activity_tune_linearlayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/activity_tune_linearlayout"
+            style="?android:attr/buttonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="fill_horizontal"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <Button
+                android:id="@+id/activity_tune_previous_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:clickable="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:singleLine="false"
+                android:text="@string/placeholder"
+                android:textAlignment="viewStart"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:cornerRadius="4dp"
+                app:icon="@drawable/ic_half_arrow_left"
+                app:iconPadding="0dp"
+                app:iconTint="#000000" />
+
+            <Button
+                android:id="@+id/activity_tune_next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="0dp"
+                android:layout_weight="1"
+                android:background="#00FFFFFF"
+                android:clickable="true"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:singleLine="false"
+                android:text="@string/placeholder"
+                android:textAlignment="viewEnd"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:visibility="gone"
+                app:cornerRadius="4dp"
+                app:icon="@drawable/ic_half_arrow_right"
+                app:iconGravity="end"
+                app:iconPadding="0dp"
+                app:iconTint="#000000" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

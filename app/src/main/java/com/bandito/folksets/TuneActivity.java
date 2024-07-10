@@ -1,14 +1,6 @@
 package com.bandito.folksets;
 
-import static com.bandito.folksets.util.Constants.BITMAP_LIST;
-import static com.bandito.folksets.util.Constants.CLICK_TYPE;
-import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
-import static com.bandito.folksets.util.Constants.DELIMITER_INPUT_PATTERN;
-import static com.bandito.folksets.util.Constants.OPERATION;
-import static com.bandito.folksets.util.Constants.POSITION;
-import static com.bandito.folksets.util.Constants.SET_ENTITY;
-import static com.bandito.folksets.util.Constants.TUNE_ENTITY;
-import static com.bandito.folksets.util.Constants.UNIQUE_VALUES;
+import static com.bandito.folksets.util.Constants.*;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,9 +13,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,7 +26,11 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -46,12 +45,14 @@ import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
+import com.bandito.folksets.util.Utilities;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationView;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
 import java.time.OffsetDateTime;
 public class TuneActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -101,7 +102,12 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tune);
-
+        getWindow().setDecorFitsSystemWindows(false);
+        WindowInsetsController controller = getWindow().getInsetsController();
+        if(controller != null) {
+            controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+            controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+        }
         progressBar = findViewById(R.id.activity_tune_progressbar);
         progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
 
@@ -255,7 +261,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
         try {
-            ServiceSingleton.getInstance().renderPdf(this, tuneEntity);
+            ServiceSingleton.getInstance().renderPdfAndGetPreviousAndNextTune(this, tuneEntity, setEntity, position, tuneOrSet);
         } catch (FolkSetsException e) {
             ExceptionManager.manageException(this, e);
         }
@@ -277,7 +283,45 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             saveTune();
         } else if (view.getId() == R.id.tune_nav_header_back_floatingactionbutton) {
             drawerLayout.closeDrawer(GravityCompat.END);
+        } else if (view.getId() == R.id.activity_tune_previous_button) {
+            loadPreviousTune();
+        } else if (view.getId() == R.id.activity_tune_next_button) {
+            loadNextTune();
         }
+    }
+
+    private void loadPreviousTune() {
+        Pair<String, ? extends Serializable>[] messages;
+        if (tuneOrSet == Constants.TuneOrSet.set) {
+            messages = new Pair[]{
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                    new Pair<>(POSITION, position - 1),
+                    new Pair<>(SET_ENTITY, setEntity)
+            };
+        } else {
+            messages = new Pair[]{
+                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(TUNE_ENTITY, StaticData.previousTune)
+            };
+        }
+        Utilities.loadActivity(this, this, TuneActivity.class, messages);
+    }
+
+    private void loadNextTune() {
+        Pair<String, ? extends Serializable>[] messages;
+        if (tuneOrSet == Constants.TuneOrSet.set) {
+            messages = new Pair[]{
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                    new Pair<>(POSITION, position + 1),
+                    new Pair<>(SET_ENTITY, setEntity)
+            };
+        } else {
+            messages = new Pair[]{
+                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(TUNE_ENTITY, StaticData.nextTune)
+            };
+        }
+        Utilities.loadActivity(this, this, TuneActivity.class, messages);
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.
@@ -336,8 +380,29 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                     retrieveBitmaps();
                 } else if (UNIQUE_VALUES.equals(broadcastValue)) {
                     prepareAutocompleteAdapters();
+                } else if (PREVIOUS_AND_NEXT_TUNE.equals(broadcastValue)) {
+                    displayPreviousAndNextTune();
                 }
             }
+        }
+    }
+
+    private void displayPreviousAndNextTune() {
+        try {
+            if (StaticData.previousTune != null) {
+                Button previousTuneButton = findViewById(R.id.activity_tune_previous_button);
+                previousTuneButton.setVisibility(View.VISIBLE);
+                previousTuneButton.setText(StaticData.previousTune.getFirstTitle());
+                previousTuneButton.setOnClickListener(this);
+            }
+            if (StaticData.nextTune != null) {
+                Button nextTuneButton = findViewById(R.id.activity_tune_next_button);
+                nextTuneButton.setVisibility(View.VISIBLE);
+                nextTuneButton.setText(StaticData.nextTune.getFirstTitle());
+                nextTuneButton.setOnClickListener(this);
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, e);
         }
     }
 
@@ -349,7 +414,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
             tunePagesRecyclerViewAdapter.notifyDataSetChanged();
             StaticData.bitmapList = null;
-            updateProgressBarVisibility(View.GONE);
         }
     }
 

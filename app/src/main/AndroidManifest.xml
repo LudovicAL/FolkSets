@@ -21,7 +21,8 @@
             android:exported="false" />
         <activity
             android:name=".TuneActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:noHistory="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

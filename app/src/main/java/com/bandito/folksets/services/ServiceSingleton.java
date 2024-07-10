@@ -6,7 +6,9 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bandito.folksets.exception.FolkSetsException;
+import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
+import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 
 import java.util.concurrent.ExecutorService;
@@ -17,7 +19,7 @@ public class ServiceSingleton {
     private static ServiceSingleton INSTANCE;
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
     private UpdateDatabaseThread updateDatabaseThread;
-    private RenderPdfThread renderPdfThread;
+    private RenderPdfAndGetPreviousAndNextTuneThread renderPdfAndGetPreviousAndNextTuneThread;
 
     private ServiceSingleton() {
     }
@@ -53,11 +55,11 @@ public class ServiceSingleton {
         }
     }
 
-    public void renderPdf(Context context, TuneEntity tuneEntity) throws FolkSetsException {
+    public void renderPdfAndGetPreviousAndNextTune(Context context, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
         try {
-            if (renderPdfThread == null || !renderPdfThread.isAlive()) {
-                renderPdfThread = new RenderPdfThread(context, tuneEntity);
-                executorService.execute(renderPdfThread);
+            if (renderPdfAndGetPreviousAndNextTuneThread == null || !renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
+                renderPdfAndGetPreviousAndNextTuneThread = new RenderPdfAndGetPreviousAndNextTuneThread(context, tuneEntity, setEntity, position, tuneOrSet);
+                executorService.execute(renderPdfAndGetPreviousAndNextTuneThread);
 
             }
         } catch (Exception e) {
@@ -67,8 +69,8 @@ public class ServiceSingleton {
 
     public void interruptPdfRendering() throws FolkSetsException {
         try {
-            if (renderPdfThread != null && renderPdfThread.isAlive()) {
-                renderPdfThread.interrupt();
+            if (renderPdfAndGetPreviousAndNextTuneThread != null && renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
+                renderPdfAndGetPreviousAndNextTuneThread.interrupt();
             }
         } catch (Exception e) {
             throw new FolkSetsException("An error occured while interrupting the pdf rendering thread.", e);

@@ -17,7 +17,15 @@ public class SetEntity implements Serializable {
         try {
             return StringUtils.split(this.setTunes, DEFAULT_SEPARATOR)[index];
         } catch (Exception e) {
-            throw new FolkSetsException("An error occured while trying to retrieve tune id at index " + index + " from set.", null);
+            throw new FolkSetsException("An error occured while trying to retrieve tune id at index " + index + " from set.", e);
+        }
+    }
+
+    public int getTuneCount() throws FolkSetsException {
+        try {
+            return StringUtils.split(this.setTunes, DEFAULT_SEPARATOR).length;
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while computing the tune count in a set.", e);
         }
     }
 }

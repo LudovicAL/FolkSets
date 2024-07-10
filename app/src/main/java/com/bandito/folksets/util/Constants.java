@@ -7,6 +7,7 @@ public class Constants {
     public static final String TUNE_ENTITY_LIST = "tuneEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String BITMAP_LIST = "bitmapList";
+    public static final String PREVIOUS_AND_NEXT_TUNE = "Previous and next tune";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";

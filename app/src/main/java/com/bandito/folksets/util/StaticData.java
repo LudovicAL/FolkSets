@@ -22,4 +22,6 @@ public class StaticData {
     public static String[] uniqueTuneNoteArray = new String[0];
     public static String[] uniqueSetNameArray = new String[0];
     public static List<Bitmap> bitmapList = null;
+    public static TuneEntity nextTune = null;
+    public static TuneEntity previousTune = null;
 }
