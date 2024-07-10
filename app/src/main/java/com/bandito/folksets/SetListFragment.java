@@ -34,8 +34,10 @@ import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.List;
 import java.util.Timer;
@@ -56,6 +58,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     setMatchNumberTextview.setVisibility(View.GONE);
                 }
             }
+            updateSearchBarHint();
             demandNewSearch(false);
         }
     };
@@ -105,6 +108,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
+        updateSearchBarHint();
         demandNewSearch(false);
     }
 
@@ -154,6 +158,12 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         } catch (Exception e) {
             ExceptionManager.manageException(requireContext(), e);
         }
+    }
+
+    private void updateSearchBarHint() {
+        String searchMethod = ((MaterialButton)getActivity().findViewById(materialButtonToggleGroup.getCheckedButtonId())).getText().toString().toLowerCase();
+        String hint = "Search by " + searchMethod;
+        ((TextInputLayout)getActivity().findViewById((R.id.fragment_set_list_textinputlayout))).setHint(hint);
     }
 
     private void setMatchNumber(int matchNumber) {

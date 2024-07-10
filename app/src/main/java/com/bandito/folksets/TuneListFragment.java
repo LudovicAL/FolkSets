@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 
 import com.bandito.folksets.adapters.TuneListRecyclerViewAdapter;
@@ -32,8 +33,10 @@ import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -49,6 +52,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     private MaterialButtonToggleGroup materialButtonToggleGroup;
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
         if (isChecked) {
+            updateSearchBarHint();
             demandNewSearch(false);
         }
     };
@@ -101,6 +105,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     public void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(BroadcastName.staticDataUpdate.toString()));
+        updateSearchBarHint();
         demandNewSearch(false);
     }
 
@@ -182,6 +187,14 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
         }
     }
 
+    private void updateSearchBarHint() {
+        String searchMethod = ((MaterialButton)getActivity().findViewById(materialButtonToggleGroup.getCheckedButtonId())).getText().toString().toLowerCase();
+        searchMethod = getResources().getString(R.string.played_by).equalsIgnoreCase(searchMethod) ? "player" : searchMethod;
+        String sortMethod = sortSpinner.getSelectedItem().toString().toLowerCase();
+        String hint = "Search by " + searchMethod + ", " + sortMethod;
+        ((TextInputLayout)getActivity().findViewById((R.id.fragment_tune_list_textinputlayout))).setHint(hint);
+    }
+
     @Override
     public void onItemClick(View view, int position) {
         try {
@@ -218,6 +231,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (parent.getId() == R.id.fragment_tune_list_spinner) {
             Log.i(TAG, "You clicked " + sortSpinner.getSelectedItem().toString());
+            updateSearchBarHint();
             demandNewSearch(false);
         }
     }
