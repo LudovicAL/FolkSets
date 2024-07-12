@@ -34,6 +34,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getName();
     private TabLayout tabLayout;
     private ProgressBar progressBar;
     private TextView progressBarHintTextView;
@@ -111,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
         try {
-            ServiceSingleton.getInstance().UpdateDatabase(this, this);
+            ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
         } catch (Exception e) {
             ExceptionManager.manageException(this, e);
         }

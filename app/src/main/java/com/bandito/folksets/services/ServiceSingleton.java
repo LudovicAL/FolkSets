@@ -31,12 +31,12 @@ public class ServiceSingleton {
         return INSTANCE;
     }
 
-    public void UpdateDatabase(Activity activity, Context context) throws FolkSetsException {
+    public void UpdateDatabase(final Activity activity, final Context context, final String tag) throws FolkSetsException {
         try {
             if (updateDatabaseThread == null || !updateDatabaseThread.isAlive()) {
                 String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
                 if (storageDirectoryUri != null) {
-                    updateDatabaseThread = new UpdateDatabaseThread(activity, context);
+                    updateDatabaseThread = new UpdateDatabaseThread(activity, context, tag);
                     executorService.execute(updateDatabaseThread);
                 }
             }

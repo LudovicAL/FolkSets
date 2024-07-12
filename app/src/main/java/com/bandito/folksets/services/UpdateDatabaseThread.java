@@ -2,6 +2,7 @@ package com.bandito.folksets.services;
 
 import static com.bandito.folksets.util.Constants.SET_ENTITY_LIST;
 import static com.bandito.folksets.util.Constants.SET_NAME;
+import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 import static com.bandito.folksets.util.Constants.TUNE_ENTITY_LIST;
 import static com.bandito.folksets.util.Constants.TUNE_FILE_PATH;
 import static com.bandito.folksets.util.Constants.TUNE_ID;
@@ -11,6 +12,7 @@ import static com.bandito.folksets.util.Utilities.broadcastMessage;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 
 import androidx.documentfile.provider.DocumentFile;
@@ -22,8 +24,10 @@ import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.StaticData;
+import com.bandito.folksets.util.Utilities;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
@@ -33,10 +37,12 @@ import java.util.stream.Collectors;
 public class UpdateDatabaseThread extends Thread {
     private final Activity callingActivity;
     private final Context context;
+    private final String tag;
 
-    public UpdateDatabaseThread(Activity callingActivity, Context context){
+    public UpdateDatabaseThread(Activity callingActivity, Context context, String tag){
         this.callingActivity = callingActivity;
         this.context = context;
+        this.tag = tag;
     }
 
     @Override
@@ -45,6 +51,13 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Loading storage directory"});
             DatabaseManager.initializeDatabase(callingActivity.getBaseContext());
+
+            String storageDirectoryUri = Utilities.readStringFromSharedPreferences(callingActivity, STORAGE_DIRECTORY_URI, "");
+            if (StringUtils.isEmpty(storageDirectoryUri)) {
+                throw new FolkSetsException("The preference containing the storage directory uri is null or empty.", null);
+            }
+            IoUtilities.assertDirectoryExist(context, storageDirectoryUri);
+
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{1, "Loading known tunes"});
             List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_FILE_PATH, null, null, null, null);
@@ -98,10 +111,15 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{UNIQUE_VALUES});
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
             //Linger a few more seconds
-            sleep(3000L);
-            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
         } catch (Exception e) {
             ExceptionManager.manageException(context, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
+        } finally {
+            try {
+                sleep(3000L);
+                broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
+            } catch (Exception e2) {
+                Log.e(tag, "An error occured while ending the UpdateDatabase thread.", e2);
+            }
         }
     }
 }
