@@ -17,21 +17,11 @@
     <style name="Theme.FolkSets.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="Theme.FolkSets.Fullscreen" parent="Theme.FolkSets">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
-
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:enforceNavigationBarContrast">false</item>
-
-        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
-
-        <item name="android:statusBarColor">@android:color/transparent</item>
-
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
     </style>
 
     <style name="ThemeOverlay.FolkSets.FullscreenContainer" parent="">

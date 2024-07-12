@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,11 +27,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -104,10 +102,18 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_tune);
         getWindow().setDecorFitsSystemWindows(false);
         WindowInsetsController controller = getWindow().getInsetsController();
-        if(controller != null) {
-            controller.hide(WindowInsets.Type.statusBars() | WindowInsets.Type.navigationBars());
+        if (controller != null) {
+            controller.hide(WindowInsets.Type.statusBars());// | WindowInsets.Type.navigationBars());
             controller.setSystemBarsBehavior(WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
         }
+        getWindow().setNavigationBarContrastEnforced(false);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        int navigationBarHeight = getWindowManager().getCurrentWindowMetrics().getWindowInsets().getInsets(WindowInsets.Type.navigationBars()).bottom;
+        Button previousTuneButton = findViewById(R.id.activity_tune_previous_button);
+        previousTuneButton.setPadding(previousTuneButton.getPaddingLeft(), previousTuneButton.getPaddingTop(), previousTuneButton.getPaddingRight(), navigationBarHeight);
+        Button nextTuneButton = findViewById(R.id.activity_tune_next_button);
+        nextTuneButton.setPadding(nextTuneButton.getPaddingLeft(), nextTuneButton.getPaddingTop(), nextTuneButton.getPaddingRight(), navigationBarHeight);
+
         progressBar = findViewById(R.id.activity_tune_progressbar);
         progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
 
