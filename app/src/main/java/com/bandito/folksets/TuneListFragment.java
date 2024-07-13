@@ -182,7 +182,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             }
             tuneListRecyclerViewAdapter.notifyDataSetChanged();
         } catch (Exception e) {
-            ExceptionManager.manageException(requireContext(), e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
         }
     }
 
@@ -207,7 +207,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(requireContext(), e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
         }
     }
 
@@ -222,7 +222,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
                     new Pair<>(CLICK_TYPE, Constants.ClickType.longClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(requireContext(), e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
         }
     }
 

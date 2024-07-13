@@ -1,5 +1,9 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_ACTIVATION;
+import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_VALUE;
+import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_ACTIVATION_KEY;
+import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_VALUE_KEY;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
 import android.app.Activity;
@@ -8,12 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,8 +33,34 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = SettingsFragment.class.getName();
     private TextView selectStorageDirectoryTextView;
+    private ConstraintLayout innerConstraintLayout;
+    private final CompoundButton.OnCheckedChangeListener cropperActivationSwitchListener = new CompoundButton.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            Utilities.writeBooleanToSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, isChecked);
+            if (innerConstraintLayout != null) {
+                if (isChecked) {
+                    innerConstraintLayout.setVisibility(View.VISIBLE);
+                } else {
+                    innerConstraintLayout.setVisibility(View.GONE);
+                }
+            }
+        }
+    };
+    private final SeekBar.OnSeekBarChangeListener cropperSensitivitySeekBarListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            Utilities.writeIntToSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, progress);
+        }
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+        }
+    };
 
-    protected final IntentLauncher<Intent, ActivityResult> intentLauncher = IntentLauncher.registerActivityForResult(this);
+    private final IntentLauncher<Intent, ActivityResult> intentLauncher = IntentLauncher.registerActivityForResult(this);
 
     public SettingsFragment() {
     }
@@ -43,7 +77,16 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
         view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
         selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
+        innerConstraintLayout = view.findViewById(R.id.fragment_setting_inner_constraintlayout);
         updateSelectStorageDirectoryTextView(null);
+        SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
+        seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
+        seekBar.setOnSeekBarChangeListener(cropperSensitivitySeekBarListener);
+        SwitchCompat switchCompat = view.findViewById(R.id.fragment_setting_croppingactivation_switch);
+        switchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION));
+        switchCompat.setOnCheckedChangeListener(cropperActivationSwitchListener);
+        switchCompat.toggle();
+        switchCompat.toggle();
         return view;
     }
 

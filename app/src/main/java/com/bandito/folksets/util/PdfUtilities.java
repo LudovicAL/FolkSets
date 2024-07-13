@@ -1,5 +1,6 @@
 package com.bandito.folksets.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.pdf.PdfRenderer;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class PdfUtilities {
 
-    public static List<Bitmap> convertPdfToBitmapList(Context context, String tag, String filePath) {
+    public static List<Bitmap> convertPdfToBitmapList(Activity activity, Context context, String tag, String filePath) {
         List<Bitmap> bitmapList = new ArrayList<>();
         PdfRenderer pdfRenderer = null;
         ParcelFileDescriptor parcelFileDescriptor = null;
@@ -37,7 +38,7 @@ public class PdfUtilities {
                 bitmapList.add(bitmap);
             }
         } catch (Exception e) {
-            ExceptionManager.manageException(context, new FolkSetsException("An error occured while converting a Pdf file to a list of bitmaps.", e));
+            ExceptionManager.manageException(activity, context, tag, new FolkSetsException("An error occured while converting a Pdf file to a list of bitmaps.", e));
         } finally {
             try {
                 page.close();
@@ -58,11 +59,10 @@ public class PdfUtilities {
         return bitmapList;
     }
 
-    public static Bitmap cropWhiteSpace(Bitmap source) throws FolkSetsException {
+    public static Bitmap cropWhiteSpace(Bitmap source, int strideSize) throws FolkSetsException {
         try {
             int width = source.getWidth();
             int height = source.getHeight();
-            int strideSize = 30;
 
             //Get left bound
             int leftBound = 0;

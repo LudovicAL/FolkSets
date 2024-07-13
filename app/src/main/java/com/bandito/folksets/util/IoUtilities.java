@@ -11,6 +11,8 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.bandito.folksets.exception.FolkSetsException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
@@ -126,6 +128,50 @@ public class IoUtilities {
             return Arrays.stream(documentFileArray).filter(documentFile -> "application/pdf".equals(documentFile.getType())).collect(Collectors.toList());
         } catch (Exception e) {
             throw new FolkSetsException("An error occured withh listing pdf from storage.", e);
+        }
+    }
+
+    public static void createNewLogFile(Activity activity, Context context, String tag) {
+        try {
+            String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, "");
+            if (!StringUtils.isEmpty(storageDirectoryUri)) {
+                DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
+                DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
+                if (destinationFile != null) {
+                    if (!destinationFile.delete()) {
+                        throw new FolkSetsException("An error occured while deleting the old log file", null);
+                    }
+                }
+                destinationDirectory.createFile("text/plain", Constants.LOG_FILE_NAME);
+            }
+        } catch (Exception e) {
+            Log.e(tag, "An error occured while preparing to delete the old log file", e);
+        }
+    }
+
+    public static void writeExceptionToLogFile(Activity activity, Context context, String tag, Exception exceptionToWrite) {
+        OutputStream outputStream = null;
+        try {
+            String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, "");
+            if (StringUtils.isEmpty(storageDirectoryUri)) {
+                DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
+                DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
+                if (destinationFile == null) {
+
+                }
+                Uri destinationFileUri = destinationFile.getUri();
+                outputStream = context.getContentResolver().openOutputStream(destinationFileUri);
+                outputStream.write((exceptionToWrite.toString() + "\n\n\n").getBytes());
+            }
+        } catch (Exception e) {
+            Log.e(tag, "An error occured while preparing to write to log file", e);
+        } finally {
+            try {
+                flushFlushable(outputStream);
+                closeCloseable(outputStream);
+            } catch (Exception e2) {
+                //Do nothing
+            }
         }
     }
 }

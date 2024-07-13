@@ -55,10 +55,10 @@ public class ServiceSingleton {
         }
     }
 
-    public void renderPdfAndGetPreviousAndNextTune(Context context, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
+    public void renderPdfAndGetPreviousAndNextTune(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
         try {
             if (renderPdfAndGetPreviousAndNextTuneThread == null || !renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
-                renderPdfAndGetPreviousAndNextTuneThread = new RenderPdfAndGetPreviousAndNextTuneThread(context, tuneEntity, setEntity, position, tuneOrSet);
+                renderPdfAndGetPreviousAndNextTuneThread = new RenderPdfAndGetPreviousAndNextTuneThread(context, activity, tuneEntity, setEntity, position, tuneOrSet);
                 executorService.execute(renderPdfAndGetPreviousAndNextTuneThread);
 
             }

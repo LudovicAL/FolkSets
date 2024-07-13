@@ -62,6 +62,13 @@
     <string name="move_tune_down">Move tune down</string>
     <string name="delete_set">Delete set</string>
 
+    <string name="crop_whitespace">Crop whitespace</string>
+    <string name="loading_speed_versus_crop_precision">Loading speed versus crop precision</string>
+    <string name="most_precise_crop">Most precise crop</string>
+    <string name="precise_crop_slower_loading">Precise crop\nSlower loading</string>
+    <string name="imprecise_crop_faster_loading">Imprecise crop\nFaster loading</string>
+    <string name="pdf_cropper_seekbar_explanation">(If loading a tune takes too long, move the seekbar\'s handle left. If the whitespace around loaded tune is cropped with too much imprecision, move the seekbar\'s handle right.)</string>
+
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>
         <item>@string/sort_by_last_created</item>

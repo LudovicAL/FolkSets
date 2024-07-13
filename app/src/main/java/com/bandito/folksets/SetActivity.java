@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 
 public class SetActivity extends AppCompatActivity {
 
+    private static final String TAG = MainActivity.class.getName();
     private Constants.SetOperation currentSetOperation;
     private SetEntity currentSet = new SetEntity();
     private TextInputEditText setNameEditTextInputEditText;
@@ -125,7 +126,7 @@ public class SetActivity extends AppCompatActivity {
                     }
                     recyclerViewAdapter.setTuneEntityList(orderedCurrentSetTuneEntityList);
                 } catch (FolkSetsException e) {
-                    ExceptionManager.manageException(this, e);
+                    ExceptionManager.manageException(this, this, TAG, e);
                 }
             }
         } else {
@@ -152,7 +153,7 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set deleted", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 
@@ -179,7 +180,7 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set saved", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 

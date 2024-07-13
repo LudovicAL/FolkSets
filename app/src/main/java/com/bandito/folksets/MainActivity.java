@@ -28,6 +28,7 @@ import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.services.ServiceSingleton;
+import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -79,16 +80,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             DatabaseManager.initializeDatabase(this);
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
-        }
-
-        checkStorageDirectory();
-    }
-
-    public void checkStorageDirectory() {
-        String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
-        if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
-            tabLayout.selectTab(tabLayout.getTabAt(2));
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 
@@ -97,12 +89,12 @@ public class MainActivity extends AppCompatActivity {
         try {
             ServiceSingleton.getInstance().interruptDatabaseUpdate();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
         try {
             DatabaseManager.closeDatabase();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
         super.onDestroy();
     }
@@ -110,11 +102,17 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
-        try {
-            ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
-        } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+        String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
+        if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
+            tabLayout.selectTab(tabLayout.getTabAt(2));
+        } else {
+            IoUtilities.createNewLogFile(this, this, TAG);
+            LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
+            try {
+                ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
+            } catch (Exception e) {
+                ExceptionManager.manageException(this, this, TAG, e);
+            }
         }
     }
 

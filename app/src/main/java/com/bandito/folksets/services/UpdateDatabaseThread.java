@@ -112,7 +112,7 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
             //Linger a few more seconds
         } catch (Exception e) {
-            ExceptionManager.manageException(context, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
+            ExceptionManager.manageException(callingActivity, context, tag, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
         } finally {
             try {
                 sleep(3000L);

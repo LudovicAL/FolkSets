@@ -3,12 +3,17 @@ package com.bandito.folksets.util;
 import java.util.regex.Pattern;
 
 public class Constants {
+    public static final String LOG_FILE_NAME = "LogFile.txt";
     public static final String UNIQUE_VALUES = "Unique values";
     public static final String TUNE_ENTITY_LIST = "tuneEntityList";
     public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String BITMAP_LIST = "bitmapList";
     public static final String PREVIOUS_AND_NEXT_TUNE = "Previous and next tune";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
+    public static final String CROPPER_PREFERED_ACTIVATION_KEY = "cropperPreferedActivationKey";
+    public static final boolean CROPPER_DEFAULT_ACTIVATION = true;
+    public static final String CROPPER_PREFERED_VALUE_KEY = "cropperPreferedValue";
+    public static final int CROPPER_DEFAULT_VALUE = 15;
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";
 

@@ -2,6 +2,7 @@ package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.*;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -55,6 +56,7 @@ import java.time.OffsetDateTime;
 public class TuneActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = TuneActivity.class.getName();
+    private final Activity activity = this;
     private final TuneActivity.MyBroadcastReceiver myBroadcastReceiver = new TuneActivity.MyBroadcastReceiver();
     private ProgressBar progressBar;
     private TextView progressBarHint;
@@ -181,7 +183,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             ((TextView)headerView.findViewById(R.id.tune_nav_header_consultationdate_autocompletetextview)).setText(tuneEntity.tuneLastConsultationDate);
             ((TextView)headerView.findViewById(R.id.tune_nav_header_consultationnumber_autocompletetextview)).setText(tuneEntity.tuneConsultationNumber.toString());
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
 
         drawerLayout = findViewById(R.id.activity_tune_drawerlayout);
@@ -240,7 +242,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this, "Tune saved", Toast.LENGTH_SHORT).show();
             drawerLayout.closeDrawer(GravityCompat.END);
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 
@@ -255,7 +257,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         try {
             ServiceSingleton.getInstance().interruptPdfRendering();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
         StaticData.bitmapList = null;
         super.onDestroy();
@@ -267,9 +269,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
         LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
         try {
-            ServiceSingleton.getInstance().renderPdfAndGetPreviousAndNextTune(this, tuneEntity, setEntity, position, tuneOrSet);
+            ServiceSingleton.getInstance().renderPdfAndGetPreviousAndNextTune(this, this, tuneEntity, setEntity, position, tuneOrSet);
         } catch (FolkSetsException e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 
@@ -366,7 +368,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             if (bundle == null) {
-                ExceptionManager.manageException(context, new FolkSetsException("The activity receive à broadcast with not extras.", null));
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("The activity receive à broadcast with not extras.", null));
             }
             if (bundle.containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
                 updateProgressBarVisibility(bundle.getInt(Constants.BroadcastKey.progressVisibility.toString()));
@@ -408,7 +410,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 nextTuneButton.setOnClickListener(this);
             }
         } catch (Exception e) {
-            ExceptionManager.manageException(this, e);
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 

@@ -158,7 +158,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                 // Showing the popup menu
                 popupMenu.show();
             } catch (Exception e) {
-                ExceptionManager.manageException(context, e);
+                ExceptionManager.manageException(activity, context, TAG, e);
             }
         }
     }

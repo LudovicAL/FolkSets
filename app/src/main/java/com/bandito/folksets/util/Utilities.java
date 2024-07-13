@@ -20,6 +20,30 @@ import java.util.List;
 
 public class Utilities {
 
+    public static void writeBooleanToSharedPreferences(Activity activity, String key, boolean value) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putBoolean(key, value);
+        sharedPreferencesEditor.commit();
+    }
+
+    public static boolean readBooleanFromSharedPreferences(Activity activity, String key, boolean defaultValue) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(key, defaultValue);
+    }
+
+    public static void writeIntToSharedPreferences(Activity activity, String key, int value) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+        sharedPreferencesEditor.putInt(key, value);
+        sharedPreferencesEditor.commit();
+    }
+
+    public static int readIntFromSharedPreferences(Activity activity, String key, int defaultValue) {
+        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(key, defaultValue);
+    }
+
     public static void writeStringToSharedPreferences(Activity activity, String key, String value) {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
