@@ -25,6 +25,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.bandito.folksets.adapters.TabAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.services.ServiceSingleton;
@@ -107,16 +108,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
-        if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
-            tabLayout.selectTab(tabLayout.getTabAt(2));
-        } else {
-            LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
-            try {
-                ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
-            } catch (Exception e) {
-                ExceptionManager.manageException(this, this, TAG, e);
+        try {
+            String selectedDirectoryUri = Utilities.readStringFromSharedPreferences(this, STORAGE_DIRECTORY_URI, null);
+            if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
+                tabLayout.selectTab(tabLayout.getTabAt(2));
+            } else {
+                try {
+                    LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
+                    ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
+                } catch (Exception e) {
+                    throw new FolkSetsException("An exception occured while resuming MainActivity essential processes.", e, true);
+                }
             }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, e);
         }
     }
 

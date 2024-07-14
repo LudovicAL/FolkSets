@@ -29,6 +29,7 @@ import android.widget.TextView;
 
 import com.bandito.folksets.adapters.SetListRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.util.Constants;
@@ -207,12 +208,19 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.fragment_set_list_createnewset_button) {
-            Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
-            });
+            loadSetActivity();
         }
     }
 
+    private void loadSetActivity() {
+        try {
+            Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
+                    new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
+            });
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
+        }
+    }
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

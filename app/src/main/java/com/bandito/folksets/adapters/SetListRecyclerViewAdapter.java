@@ -146,12 +146,16 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                 popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem menuItem) {
-                        Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
-                                new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
-                                new Pair<>(POSITION, menuItem.getItemId()),
-                                new Pair<>(SET_ENTITY, setEntityList.get(getAdapterPosition())),
-                                new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
-                        });
+                        try {
+                            Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
+                                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                                    new Pair<>(POSITION, menuItem.getItemId()),
+                                    new Pair<>(SET_ENTITY, setEntityList.get(getAdapterPosition())),
+                                    new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                            });
+                        } catch (Exception e) {
+                            ExceptionManager.manageException(activity, context, TAG, e);
+                        }
                         return true;
                     }
                 });

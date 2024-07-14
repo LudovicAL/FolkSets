@@ -25,6 +25,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.IntentLauncher;
 import com.bandito.folksets.util.Utilities;
@@ -37,20 +39,28 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private final CompoundButton.OnCheckedChangeListener cropperActivationSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            Utilities.writeBooleanToSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, isChecked);
-            if (innerConstraintLayout != null) {
-                if (isChecked) {
-                    innerConstraintLayout.setVisibility(View.VISIBLE);
-                } else {
-                    innerConstraintLayout.setVisibility(View.GONE);
+            try {
+                Utilities.writeBooleanToSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, isChecked);
+                if (innerConstraintLayout != null) {
+                    if (isChecked) {
+                        innerConstraintLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        innerConstraintLayout.setVisibility(View.GONE);
+                    }
                 }
+            } catch (Exception e) {
+                ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An error occured while processing cropper switch checked change.", e));
             }
         }
     };
     private final SeekBar.OnSeekBarChangeListener cropperSensitivitySeekBarListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            Utilities.writeIntToSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, progress);
+            try {
+                Utilities.writeIntToSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, progress);
+            } catch (Exception e) {
+                ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing cropper seekbar change.", e));
+            }
         }
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
@@ -73,28 +83,34 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
-        view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
-        view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
-        view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
-        selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
-        innerConstraintLayout = view.findViewById(R.id.fragment_setting_inner_constraintlayout);
-        updateSelectStorageDirectoryTextView(null);
-        SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
-        seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
-        seekBar.setOnSeekBarChangeListener(cropperSensitivitySeekBarListener);
-        SwitchCompat switchCompat = view.findViewById(R.id.fragment_setting_croppingactivation_switch);
-        switchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION));
-        switchCompat.setOnCheckedChangeListener(cropperActivationSwitchListener);
-        switchCompat.toggle();
-        switchCompat.toggle();
+        try {
+            view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
+            selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
+            innerConstraintLayout = view.findViewById(R.id.fragment_setting_inner_constraintlayout);
+            updateSelectStorageDirectoryTextView();
+            SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
+            seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
+            seekBar.setOnSeekBarChangeListener(cropperSensitivitySeekBarListener);
+            SwitchCompat switchCompat = view.findViewById(R.id.fragment_setting_croppingactivation_switch);
+            switchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION));
+            switchCompat.setOnCheckedChangeListener(cropperActivationSwitchListener);
+            switchCompat.toggle();
+            switchCompat.toggle();
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while creating the SettingsFragment view.", e, true));
+        }
         return view;
     }
 
-    private void updateSelectStorageDirectoryTextView(String text) {
-        if (text == null) {
-            text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString (R.string.select_storage_directory));
+    private void updateSelectStorageDirectoryTextView() {
+        try {
+            String text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString(R.string.select_storage_directory));
+            selectStorageDirectoryTextView.setText(text);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while updating the selected storage directory textview.", e));
         }
-        selectStorageDirectoryTextView.setText(text);
     }
 
     public void selectStorageDirectory() {
@@ -108,19 +124,23 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     private void selectFolderCallback(ActivityResult activityResult) {
-        if (activityResult.getResultCode() == Activity.RESULT_OK && activityResult.getData() != null) {
-            Intent resultData = activityResult.getData();
-            Uri uriTree = resultData.getData();
-            if (uriTree == null) {
-                Log.e(TAG, "The folder picking intent returned a null object.");
+        try {
+            if (activityResult.getResultCode() == Activity.RESULT_OK && activityResult.getData() != null) {
+                Intent resultData = activityResult.getData();
+                Uri uriTree = resultData.getData();
+                if (uriTree == null) {
+                    Log.e(TAG, "The folder picking intent returned a null object.");
+                } else {
+                    final int modeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    requireActivity().getContentResolver().takePersistableUriPermission(uriTree, modeFlags);
+                    Utilities.writeStringToSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, uriTree.toString());
+                    updateSelectStorageDirectoryTextView();
+                }
             } else {
-                final int modeFlags = (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                requireActivity().getContentResolver().takePersistableUriPermission(uriTree, modeFlags);
-                Utilities.writeStringToSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, uriTree.toString());
-                updateSelectStorageDirectoryTextView(null);
+                throw new FolkSetsException("The folder picking intent failed.", null);
             }
-        } else {
-            Log.e(TAG, "The folder picking intent failed.");
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing the select folder intent callback.", e));
         }
     }
 

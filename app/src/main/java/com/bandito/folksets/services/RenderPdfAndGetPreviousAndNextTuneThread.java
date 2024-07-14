@@ -40,16 +40,20 @@ public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
     private final Constants.TuneOrSet tuneOrSet;
     private final boolean isCropperActivated;
     private int cropperStrideSize = CROPPER_DEFAULT_VALUE;
-    public RenderPdfAndGetPreviousAndNextTuneThread(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) {
-        this.context = context;
-        this.activity = activity;
-        this.tuneEntity = tuneEntity;
-        this.setEntity = setEntity;
-        this.position = position;
-        this.tuneOrSet = tuneOrSet;
-        this.isCropperActivated = Utilities.readBooleanFromSharedPreferences(activity, CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION);
-        if (isCropperActivated) {
-            this.cropperStrideSize = Utilities.readIntFromSharedPreferences(activity, CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE);
+    public RenderPdfAndGetPreviousAndNextTuneThread(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
+        try {
+            this.context = context;
+            this.activity = activity;
+            this.tuneEntity = tuneEntity;
+            this.setEntity = setEntity;
+            this.position = position;
+            this.tuneOrSet = tuneOrSet;
+            this.isCropperActivated = Utilities.readBooleanFromSharedPreferences(activity, CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION);
+            if (isCropperActivated) {
+                this.cropperStrideSize = Utilities.readIntFromSharedPreferences(activity, CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE);
+            }
+        } catch (Exception e ) {
+            throw new FolkSetsException("An exception occured while constructing a RenderPdfAndGetPreviousAndNextTuneThread object.", e);
         }
     }
 

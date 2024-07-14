@@ -312,7 +312,15 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                     new Pair<>(TUNE_ENTITY, StaticData.previousTune)
             };
         }
-        Utilities.loadActivity(this, this, TuneActivity.class, messages);
+        loadTuneActivity(messages);
+    }
+
+    private void loadTuneActivity(Pair<String, ? extends Serializable>[] messages) {
+        try {
+            Utilities.loadActivity(this, this, TuneActivity.class, messages);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, e);
+        }
     }
 
     private void loadNextTune() {
@@ -329,7 +337,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                     new Pair<>(TUNE_ENTITY, StaticData.nextTune)
             };
         }
-        Utilities.loadActivity(this, this, TuneActivity.class, messages);
+        loadTuneActivity(messages);
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.

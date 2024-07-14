@@ -30,17 +30,25 @@ public class IoUtilities {
 
     private static final String TAG = IoUtilities.class.getName();
     public static void assertDirectoryExist(Context context, String uriFromTreeAsString) throws FolkSetsException {
-        Utilities.assertObjectIsNotNull("uriFromTreeAsString", uriFromTreeAsString);
-        DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(uriFromTreeAsString));
-        if (documentFile == null || !documentFile.exists()) {
-            throw new FolkSetsException("The directory does not exist: " + uriFromTreeAsString, null);
+        try {
+            Utilities.assertObjectIsNotNull("uriFromTreeAsString", uriFromTreeAsString);
+            DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(uriFromTreeAsString));
+            if (documentFile == null || !documentFile.exists()) {
+                throw new FolkSetsException("The directory does not exist: " + uriFromTreeAsString, null);
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while asserting the existence of a directory", e);
         }
     }
 
     public static void assertFileExist(File file) throws FolkSetsException {
-        Utilities.assertObjectIsNotNull("file" , file);
-        if (!file.exists()) {
-            throw new FolkSetsException("The file does not exist: " + file.getName(), null);
+        try {
+            Utilities.assertObjectIsNotNull("file", file);
+            if (!file.exists()) {
+                throw new FolkSetsException("The file does not exist: " + file.getName(), null);
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while asserting the existence of a file", e);
         }
     }
 
@@ -58,7 +66,7 @@ public class IoUtilities {
                 destinationFileChannel.write(ByteBuffer.wrap(buffer));
             }
         } catch (Exception e) {
-            throw new FolkSetsException("An error occured while exporting the database.", e);
+            throw new FolkSetsException("An error occured while copying source to destination file.", e);
         } finally {
             closeCloseable(destinationFileChannel);
             closeCloseable(inputStream);

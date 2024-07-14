@@ -20,40 +20,64 @@ import java.util.List;
 
 public class Utilities {
 
-    public static void writeBooleanToSharedPreferences(Activity activity, String key, boolean value) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.putBoolean(key, value);
-        sharedPreferencesEditor.commit();
+    public static void writeBooleanToSharedPreferences(Activity activity, String key, boolean value) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putBoolean(key, value);
+            sharedPreferencesEditor.commit();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while writing a boolean to Shared Preferences.", e);
+        }
     }
 
-    public static boolean readBooleanFromSharedPreferences(Activity activity, String key, boolean defaultValue) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(key, defaultValue);
+    public static boolean readBooleanFromSharedPreferences(Activity activity, String key, boolean defaultValue) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            return sharedPreferences.getBoolean(key, defaultValue);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while reading a boolean from Shared Preferences.", e);
+        }
     }
 
-    public static void writeIntToSharedPreferences(Activity activity, String key, int value) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.putInt(key, value);
-        sharedPreferencesEditor.commit();
+    public static void writeIntToSharedPreferences(Activity activity, String key, int value) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putInt(key, value);
+            sharedPreferencesEditor.commit();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while writing an int to Shared Preferences.", e);
+        }
     }
 
-    public static int readIntFromSharedPreferences(Activity activity, String key, int defaultValue) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getInt(key, defaultValue);
+    public static int readIntFromSharedPreferences(Activity activity, String key, int defaultValue) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            return sharedPreferences.getInt(key, defaultValue);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while reading an int from Shared Preferences.", e);
+        }
     }
 
-    public static void writeStringToSharedPreferences(Activity activity, String key, String value) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-        sharedPreferencesEditor.putString(key, value);
-        sharedPreferencesEditor.commit();
+    public static void writeStringToSharedPreferences(Activity activity, String key, String value) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+            sharedPreferencesEditor.putString(key, value);
+            sharedPreferencesEditor.commit();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while writing a String to Shared Preferences.", e);
+        }
     }
 
-    public static String readStringFromSharedPreferences(Activity activity, String key, String defaultValue) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(key, defaultValue);
+    public static String readStringFromSharedPreferences(Activity activity, String key, String defaultValue) throws FolkSetsException {
+        try {
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCES_NAME, Context.MODE_PRIVATE);
+            return sharedPreferences.getString(key, defaultValue);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while reading a String from Shared Preferences.", e);
+        }
     }
 
     public static void assertObjectIsNotNull(String objectName, Object object) throws FolkSetsException {
@@ -62,32 +86,44 @@ public class Utilities {
         }
     }
 
-    public static void loadActivity(Activity callingActivity, Context context, Class<?> calledActivityClass, Pair<String, ? extends Serializable>[] messages) {
-        Intent intent = new Intent(context, calledActivityClass);
-        Bundle bundle = new Bundle();
-        if (messages != null) {
-            for (Pair<String, ? extends Serializable> pair : messages) {
-                bundle.putSerializable(pair.first, pair.second);
+    public static void loadActivity(Activity callingActivity, Context context, Class<?> calledActivityClass, Pair<String, ? extends Serializable>[] messages) throws FolkSetsException {
+        try {
+            Intent intent = new Intent(context, calledActivityClass);
+            Bundle bundle = new Bundle();
+            if (messages != null) {
+                for (Pair<String, ? extends Serializable> pair : messages) {
+                    bundle.putSerializable(pair.first, pair.second);
+                }
             }
+            intent.putExtras(bundle);
+            callingActivity.startActivity(intent);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while loading an Activity.", e);
         }
-        intent.putExtras(bundle);
-        callingActivity.startActivity(intent);
     }
 
-    public static List<TuneEntity> rearangeTuneInSetOrder(List<TuneEntity> unorderedSetTuneEntityList, String[] tuneIdsInSetOrder) {
-        List<TuneEntity> orderedSetTuneEntityList = new ArrayList<>();
-        for (String tuneId : tuneIdsInSetOrder) {
-            orderedSetTuneEntityList.add(unorderedSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
+    public static List<TuneEntity> rearangeTuneInSetOrder(List<TuneEntity> unorderedSetTuneEntityList, String[] tuneIdsInSetOrder) throws FolkSetsException {
+        try {
+            List<TuneEntity> orderedSetTuneEntityList = new ArrayList<>();
+            for (String tuneId : tuneIdsInSetOrder) {
+                orderedSetTuneEntityList.add(unorderedSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
+            }
+            return orderedSetTuneEntityList;
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while rearanging tunes in set order.", e);
         }
-        return orderedSetTuneEntityList;
     }
 
-    public static void broadcastMessage(Context context, Constants.BroadcastName intentName, Constants.BroadcastKey[] messageKey, Serializable[] messageValue) {
-        Intent intent = new Intent(intentName.toString());
-        for (int i = 0, max = messageKey.length; i < max; i++) {
-            intent.putExtra(messageKey[i].toString(), messageValue[i]);
+    public static void broadcastMessage(Context context, Constants.BroadcastName intentName, Constants.BroadcastKey[] messageKey, Serializable[] messageValue) throws FolkSetsException {
+        try {
+            Intent intent = new Intent(intentName.toString());
+            for (int i = 0, max = messageKey.length; i < max; i++) {
+                intent.putExtra(messageKey[i].toString(), messageValue[i]);
+            }
+            LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while broadcasting a message.", e);
         }
-        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public static String convertExceptionToString(Exception exception) throws FolkSetsException {
@@ -102,12 +138,8 @@ public class Utilities {
                     + "\n----------------------------------------------------------------------"
                     + "\nException stacktrace: ");
             StackTraceElement[] stackTrace = exception.getStackTrace();
-            if (stackTrace == null) {
-                stringBuilder.append("null");
-            } else {
-                for (StackTraceElement stackTraceElement : stackTrace) {
-                    stringBuilder.append("\n    " + stackTraceElement.toString());
-                }
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                stringBuilder.append("\n    " + stackTraceElement.toString());
             }
             stringBuilder.append("\n\n\n\n\n\n");
             return stringBuilder.toString();
