@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        try {
+            IoUtilities.createNewLogFile(this, this);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, e);
+        }
         progressBar = findViewById(R.id.activity_main_progressbar);
         progressBarHintTextView = findViewById(R.id.activity_main_progressbar_hint_textView);
         ViewPager2 viewPager2 = findViewById(R.id.activity_main_viewpager2);
@@ -106,7 +111,6 @@ public class MainActivity extends AppCompatActivity {
         if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
             tabLayout.selectTab(tabLayout.getTabAt(2));
         } else {
-            IoUtilities.createNewLogFile(this, this, TAG);
             LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
             try {
                 ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);

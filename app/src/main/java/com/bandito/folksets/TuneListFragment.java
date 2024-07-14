@@ -187,11 +187,15 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     }
 
     private void updateSearchBarHint() {
-        String searchMethod = ((MaterialButton)getActivity().findViewById(materialButtonToggleGroup.getCheckedButtonId())).getText().toString().toLowerCase();
-        searchMethod = getResources().getString(R.string.played_by).equalsIgnoreCase(searchMethod) ? "player" : searchMethod;
-        String sortMethod = sortSpinner.getSelectedItem().toString().toLowerCase();
-        String hint = "Search by " + searchMethod + ", " + sortMethod;
-        ((TextInputLayout)getActivity().findViewById((R.id.fragment_tune_list_textinputlayout))).setHint(hint);
+        try {
+            String searchMethod = ((MaterialButton) requireActivity().findViewById(materialButtonToggleGroup.getCheckedButtonId())).getText().toString().toLowerCase();
+            searchMethod = getResources().getString(R.string.played_by).equalsIgnoreCase(searchMethod) ? "player" : searchMethod;
+            String sortMethod = sortSpinner.getSelectedItem().toString().toLowerCase();
+            String hint = "Search by " + searchMethod + ", " + sortMethod;
+            ((TextInputLayout) getActivity().findViewById((R.id.fragment_tune_list_textinputlayout))).setHint(hint);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
+        }
     }
 
     @Override

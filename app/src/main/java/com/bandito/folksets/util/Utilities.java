@@ -89,4 +89,30 @@ public class Utilities {
         }
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
+
+    public static String convertExceptionToString(Exception exception) throws FolkSetsException {
+        try {
+            StringBuilder stringBuilder = new StringBuilder("\nException toString(): " + exception
+                    + "\n----------------------------------------------------------------------"
+                    + "\nException message: " + exception.getMessage()
+                    + "\n----------------------------------------------------------------------"
+                    + "\nException simple class name: " + exception.getClass().getSimpleName()
+                    + "\n----------------------------------------------------------------------"
+                    + "\nException cause: " + exception.getCause()
+                    + "\n----------------------------------------------------------------------"
+                    + "\nException stacktrace: ");
+            StackTraceElement[] stackTrace = exception.getStackTrace();
+            if (stackTrace == null) {
+                stringBuilder.append("null");
+            } else {
+                for (StackTraceElement stackTraceElement : stackTrace) {
+                    stringBuilder.append("\n    " + stackTraceElement.toString());
+                }
+            }
+            stringBuilder.append("\n\n\n\n\n\n");
+            return stringBuilder.toString();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while converting an exception to String.", e);
+        }
+    }
 }

@@ -131,40 +131,49 @@ public class IoUtilities {
         }
     }
 
-    public static void createNewLogFile(Activity activity, Context context, String tag) {
-        try {
-            String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, "");
-            if (!StringUtils.isEmpty(storageDirectoryUri)) {
-                DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
-                DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
-                if (destinationFile != null) {
-                    if (!destinationFile.delete()) {
-                        throw new FolkSetsException("An error occured while deleting the old log file", null);
-                    }
-                }
-                destinationDirectory.createFile("text/plain", Constants.LOG_FILE_NAME);
-            }
-        } catch (Exception e) {
-            Log.e(tag, "An error occured while preparing to delete the old log file", e);
-        }
-    }
-
-    public static void writeExceptionToLogFile(Activity activity, Context context, String tag, Exception exceptionToWrite) {
-        OutputStream outputStream = null;
+    public static DocumentFile createNewLogFile(Activity activity, Context context) throws FolkSetsException {
         try {
             String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, "");
             if (StringUtils.isEmpty(storageDirectoryUri)) {
-                DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
-                DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
-                if (destinationFile == null) {
-
-                }
-                Uri destinationFileUri = destinationFile.getUri();
-                outputStream = context.getContentResolver().openOutputStream(destinationFileUri);
-                outputStream.write((exceptionToWrite.toString() + "\n\n\n").getBytes());
+                throw new FolkSetsException("Can not create new log file because storage directory is not selected.", null);
             }
+            DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
+            DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
+            if (destinationFile != null) {
+                if (!destinationFile.delete()) {
+                    throw new FolkSetsException("An error occured while deleting the old log file", null);
+                }
+            }
+            return destinationDirectory.createFile("text/plain", Constants.LOG_FILE_NAME);
         } catch (Exception e) {
-            Log.e(tag, "An error occured while preparing to write to log file", e);
+            throw new FolkSetsException("An exception occured while creating a new log file", e);
+        }
+    }
+
+    public static Uri getLogFileUri(Activity activity, Context context) throws FolkSetsException {
+        try {
+            String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
+            if (StringUtils.isEmpty(storageDirectoryUri)) {
+                throw new FolkSetsException("Can not retrieve log file uri because storage directory is not selected.", null);
+            }
+            DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
+            DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
+            if (destinationFile == null) {
+                destinationFile = createNewLogFile(activity, context);
+            }
+            return destinationFile.getUri();
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while retrieving the log file uri.", e);
+        }
+    }
+
+    public static void appendTextToFile(Context context, String tag, Uri fileUri, String text) {
+        OutputStream outputStream = null;
+        try {
+            outputStream = context.getContentResolver().openOutputStream(fileUri, "wa");
+            outputStream.write(text.getBytes());
+        } catch (Exception e) {
+            Log.e(tag, "An error occured append text to a file.", e);
         } finally {
             try {
                 flushFlushable(outputStream);
