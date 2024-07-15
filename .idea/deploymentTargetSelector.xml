@@ -4,19 +4,16 @@
     <selectionStates>
       <SelectionState runConfigName="app">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-06-17T03:19:19.070295500Z">
+        <DropdownSelection timestamp="2024-07-15T16:25:38.582453800Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\ludov\.android\avd\Nexus_9_API_33.avd" />
+              <DeviceId pluginId="PhysicalDevice" identifier="serial=R52NA05H4QH" />
             </handle>
           </Target>
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
       <SelectionState runConfigName="ExampleInstrumentedTest">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="findSongsWithTagsInDatabase()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="findSetsWithSongInDatabase1()">
@@ -26,6 +23,9 @@
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="findSetByNameInDatabase()">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="updateTuneInDatabase()">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

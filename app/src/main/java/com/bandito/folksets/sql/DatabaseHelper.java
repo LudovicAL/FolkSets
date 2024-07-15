@@ -121,7 +121,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public int removeTuneFromDatabase(SQLiteDatabase sqLiteDatabase, long tuneId) {
         removeTuneFromSets(sqLiteDatabase, tuneId);
-        return sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + " LIKE '%" + tuneId + "%'", new String[0]);
+        return sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + "=" + tuneId, new String[0]);
     }
 
     public void removeTunesFromDatabase(SQLiteDatabase sqLiteDatabase, List<Long> tuneIds) {
@@ -131,7 +131,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.beginTransaction();
         try {
             for (Long tuneId : tuneIds) {
-                sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + " LIKE '%" + tuneId + "%'", new String[0]);
+                sqLiteDatabase.delete(TABLE_TUNE, TUNE_ID + "=" + tuneId, new String[0]);
             }
             sqLiteDatabase.setTransactionSuccessful();
         } finally {
@@ -140,9 +140,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int updateTuneInDatabase(SQLiteDatabase sqLiteDatabase, TuneEntity tuneEntity) {
-        String whereClause = TUNE_ID + " LIKE '%" + tuneEntity.tuneId + "%'";
+        String whereClause = TUNE_ID + "=" + tuneEntity.tuneId;
         ContentValues contentValues = TuneEntityToContentValuesMapper.mapTuneEntityToContentValues(tuneEntity);
-        contentValues.remove(TUNE_ID);
         return sqLiteDatabase.update(TABLE_TUNE, contentValues, whereClause, new String[0]);
     }
 
@@ -153,14 +152,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public int removeSetFromDatabase(SQLiteDatabase sqLiteDatabase, long setId) {
-        String whereClause = SET_ID + " LIKE '%" + setId + "%'";
+        String whereClause = SET_ID + "=" + setId;
         return sqLiteDatabase.delete(TABLE_SET, whereClause, new String[0]);
     }
 
     public int updateSetInDatabase(SQLiteDatabase sqLiteDatabase, SetEntity setEntity) {
-        String whereClause = SET_ID + " LIKE '%" + setEntity.setId + "%'";
+        String whereClause = SET_ID + "=" + setEntity.setId;
         ContentValues contentValues = SetEntityToContentValuesMapper.mapSetEntityToContentValues(setEntity);
-        contentValues.remove(SET_ID);
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
