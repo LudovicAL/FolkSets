@@ -193,7 +193,7 @@ public class SetActivity extends AppCompatActivity {
         if (selectedTuneSelectionPosition != null) {
             lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
             recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition);
-            recyclerViewAdapter.notifyDataSetChanged();
+            recyclerViewAdapter.notifyItemRemoved(selectedTuneSelectionPosition);
             lastSelectedTuneSelectedView = null;
             lastSelectedTuneSelectedDrawable = null;
             selectedTuneSelectionPosition = null;

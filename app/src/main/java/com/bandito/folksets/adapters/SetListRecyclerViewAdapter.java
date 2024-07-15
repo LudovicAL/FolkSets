@@ -24,8 +24,10 @@ import androidx.core.util.Pair;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
+import com.bandito.folksets.SetActivity;
 import com.bandito.folksets.TuneActivity;
 import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
@@ -102,7 +104,8 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
         public SetViewHolder(View view) {
             super(view);
             setNameTextView = view.findViewById(R.id.adapter_set_item_textview);
-            view.findViewById(R.id.adapter_set_item_floatingactionbutton).setOnClickListener(this);
+            view.findViewById(R.id.adapter_set_item_select_floatingactionbutton).setOnClickListener(this);
+            view.findViewById(R.id.adapter_set_item_edit_floatingactionbutton).setOnClickListener(this);
             view.setOnClickListener(this);
             view.setOnLongClickListener(this);
         }
@@ -113,8 +116,18 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.adapter_set_item_floatingactionbutton) {
+            if (view.getId() == R.id.adapter_set_item_select_floatingactionbutton) {
                 displayPopupMenuOfTunesInSet(view);
+            } else if (view.getId() == R.id.adapter_set_item_edit_floatingactionbutton) {
+                try {
+                    List<SetEntity> setEntityListOfClickedSet = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setEntityList.get(getAdapterPosition()).setId), null, null);
+                    Utilities.loadActivity(activity, context, SetActivity.class, new Pair[]{
+                            new Pair<>(OPERATION, Constants.SetOperation.editSet.toString()),
+                            new Pair<>(SET_ENTITY, setEntityListOfClickedSet.get(0))
+                    });
+                } catch (Exception e) {
+                    ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while laoading the SetActivity.", e));
+                }
             } else if (itemClickListener != null) {
                 itemClickListener.onItemClick(view, getAdapterPosition());
             }

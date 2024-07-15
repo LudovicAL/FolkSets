@@ -2,6 +2,7 @@
     <string name="app_name">FolkSets</string>
     <string name="loading_data">Loading data</string>
 
+    <string name="current_directory">Current directory: </string>
     <string name="select_storage_directory">Select a storage directory</string>
     <string name="export_database_to_storage">Export database to storage</string>
     <string name="import_database_from_storage">Import database from storage</string>
@@ -67,7 +68,7 @@
     <string name="most_precise_crop">Most precise crop</string>
     <string name="precise_crop_slower_loading">Precise crop\nSlower loading</string>
     <string name="imprecise_crop_faster_loading">Imprecise crop\nFaster loading</string>
-    <string name="pdf_cropper_seekbar_explanation">(If loading a tune takes too long, move the seekbar\'s handle left. If the whitespace around loaded tune is cropped with too much imprecision, move the seekbar\'s handle right.)</string>
+    <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle left. If the whitespace around loaded tunes is cropped with too much imprecision, move the seekbar\'s handle right.)</string>
 
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>

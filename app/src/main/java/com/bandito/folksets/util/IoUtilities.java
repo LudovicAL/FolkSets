@@ -143,7 +143,8 @@ public class IoUtilities {
         try {
             String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, "");
             if (StringUtils.isEmpty(storageDirectoryUri)) {
-                throw new FolkSetsException("Can not create new log file because storage directory is not selected.", null);
+                Log.w("Can not create the log file because the storage directory is not selected. This warning is expected.", (Exception) null);
+                return null;
             }
             DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
             DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);
@@ -162,7 +163,8 @@ public class IoUtilities {
         try {
             String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
             if (StringUtils.isEmpty(storageDirectoryUri)) {
-                throw new FolkSetsException("Can not retrieve log file uri because storage directory is not selected.", null);
+                Log.e("Can not retrieve log file uri because storage directory is not selected.", null);
+                return null;
             }
             DocumentFile destinationDirectory = DocumentFile.fromTreeUri(context, Uri.parse(storageDirectoryUri));
             DocumentFile destinationFile = destinationDirectory.findFile(Constants.LOG_FILE_NAME);

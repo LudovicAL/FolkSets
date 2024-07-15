@@ -31,21 +31,23 @@ import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.IntentLauncher;
 import com.bandito.folksets.util.Utilities;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private static final String TAG = SettingsFragment.class.getName();
     private TextView selectStorageDirectoryTextView;
-    private ConstraintLayout innerConstraintLayout;
+    private ConstraintLayout cropperInnerConstraintLayout;
     private final CompoundButton.OnCheckedChangeListener cropperActivationSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             try {
                 Utilities.writeBooleanToSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, isChecked);
-                if (innerConstraintLayout != null) {
+                if (cropperInnerConstraintLayout != null) {
                     if (isChecked) {
-                        innerConstraintLayout.setVisibility(View.VISIBLE);
+                        cropperInnerConstraintLayout.setVisibility(View.VISIBLE);
                     } else {
-                        innerConstraintLayout.setVisibility(View.GONE);
+                        cropperInnerConstraintLayout.setVisibility(View.GONE);
                     }
                 }
             } catch (Exception e) {
@@ -88,7 +90,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
             view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
             selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
-            innerConstraintLayout = view.findViewById(R.id.fragment_setting_inner_constraintlayout);
+            cropperInnerConstraintLayout = view.findViewById(R.id.fragment_setting_cropperinner_constraintlayout);
             updateSelectStorageDirectoryTextView();
             SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
             seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
@@ -106,8 +108,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     private void updateSelectStorageDirectoryTextView() {
         try {
-            String text = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, getString(R.string.select_storage_directory));
-            selectStorageDirectoryTextView.setText(text);
+            String directory = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, null);
+            if (StringUtils.isEmpty(directory)) {
+                selectStorageDirectoryTextView.setVisibility(View.GONE);
+            } else {
+                selectStorageDirectoryTextView.setText(directory);
+                selectStorageDirectoryTextView.setVisibility(View.VISIBLE);
+            }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while updating the selected storage directory textview.", e));
         }
