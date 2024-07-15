@@ -6,7 +6,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import androidx.core.util.Pair;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -145,6 +150,25 @@ public class Utilities {
             return stringBuilder.toString();
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while converting an exception to String.", e);
+        }
+    }
+
+    //The following strange bit of code make it so EditText loose the focus when we touch outside them.
+    //It applies even in fragments that are "children" of this activity.
+    public static void dispatchTouchEvent(MotionEvent motionEvent, View view, InputMethodManager inputMethodManager) throws FolkSetsException {
+        try {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                if (view instanceof EditText) {
+                    Rect outRect = new Rect();
+                    view.getGlobalVisibleRect(outRect);
+                    if (!outRect.contains((int) motionEvent.getRawX(), (int) motionEvent.getRawY())) {
+                        view.clearFocus();
+                        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while processing a dispatchTouchEvent demand.", e);
         }
     }
 }

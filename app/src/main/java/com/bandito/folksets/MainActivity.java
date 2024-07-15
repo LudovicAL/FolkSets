@@ -2,16 +2,14 @@ package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -40,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ProgressBar progressBar;
     private TextView progressBarHintTextView;
+    private Activity activity;
     private final MainActivity.MyBroadcastReceiver myBroadcastReceiver = new MainActivity.MyBroadcastReceiver();
 
     @Override
@@ -52,41 +51,38 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        try {
-            IoUtilities.createNewLogFile(this, this);
-        } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
-        }
-        progressBar = findViewById(R.id.activity_main_progressbar);
-        progressBarHintTextView = findViewById(R.id.activity_main_progressbar_hint_textView);
-        ViewPager2 viewPager2 = findViewById(R.id.activity_main_viewpager2);
-        TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
-        tabAdapter.addFragment(new TuneListFragment());
-        tabAdapter.addFragment(new SetListFragment());
-        tabAdapter.addFragment(new SettingsFragment());
-        viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
-        viewPager2.setUserInputEnabled(false);
-        viewPager2.setAdapter(tabAdapter);
-        tabLayout = findViewById(R.id.activity_main_tablayout);
-        new TabLayoutMediator(tabLayout, viewPager2,
-                (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText(R.string.tab_tunes);
-                    break;
-                case 1:
-                    tab.setText(R.string.tab_sets);
-                    break;
-                case 2:
-                    tab.setText(R.string.tab_settings);
-                    break;
-            }
-        }).attach();
 
         try {
+            activity = this;
+            IoUtilities.createNewLogFile(this, this);
+            progressBar = findViewById(R.id.activity_main_progressbar);
+            progressBarHintTextView = findViewById(R.id.activity_main_progressbar_hint_textView);
+            ViewPager2 viewPager2 = findViewById(R.id.activity_main_viewpager2);
+            TabAdapter tabAdapter = new TabAdapter(getSupportFragmentManager(), getLifecycle());
+            tabAdapter.addFragment(new TuneListFragment());
+            tabAdapter.addFragment(new SetListFragment());
+            tabAdapter.addFragment(new SettingsFragment());
+            viewPager2.setOrientation(ViewPager2.ORIENTATION_HORIZONTAL);
+            viewPager2.setUserInputEnabled(false);
+            viewPager2.setAdapter(tabAdapter);
+            tabLayout = findViewById(R.id.activity_main_tablayout);
+            new TabLayoutMediator(tabLayout, viewPager2,
+                    (tab, position) -> {
+                switch (position) {
+                    case 0:
+                        tab.setText(R.string.tab_tunes);
+                        break;
+                    case 1:
+                        tab.setText(R.string.tab_sets);
+                        break;
+                    case 2:
+                        tab.setText(R.string.tab_settings);
+                        break;
+                }
+            }).attach();
             DatabaseManager.initializeDatabase(this);
         } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured during the OnCreate step of class MainActivity.", e, true));
         }
     }
 
@@ -94,13 +90,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         try {
             ServiceSingleton.getInstance().interruptDatabaseUpdate();
-        } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
-        }
-        try {
             DatabaseManager.closeDatabase();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while destroying MainActivity.", e, true));
         }
         super.onDestroy();
     }
@@ -113,41 +105,35 @@ public class MainActivity extends AppCompatActivity {
             if (selectedDirectoryUri == null && tabLayout.getSelectedTabPosition() != 2) {
                 tabLayout.selectTab(tabLayout.getTabAt(2));
             } else {
-                try {
-                    LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
-                    ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
-                } catch (Exception e) {
-                    throw new FolkSetsException("An exception occured while resuming MainActivity essential processes.", e, true);
-                }
+                LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
+                ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
             }
         } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while resuming MainActivity.", e, true));
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
+        try {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(myBroadcastReceiver);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while pausing MainActivity.", e, true));
+        }
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.
     //It applies even in fragments that are "children" of this activity.
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if ( v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
-                    v.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        try {
+            Utilities.dispatchTouchEvent(motionEvent, getCurrentFocus(), (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+            return super.dispatchTouchEvent(motionEvent);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing dispatchTouchEvent.", e));
+            return true;
         }
-        return super.dispatchTouchEvent( event );
     }
 
     private void updateProgressBar(int progressNumericValue, String progressTextHint) {
@@ -163,13 +149,17 @@ public class MainActivity extends AppCompatActivity {
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (intent.getExtras() == null) {
-                return;
-            }
-            if (intent.getExtras().containsKey(Constants.BroadcastKey.progressValue.toString())) {
-                updateProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressValue.toString()), intent.getExtras().getString(Constants.BroadcastKey.progressHint.toString()));
-            } else if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
-                displayProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressVisibility.toString()));
+            try {
+                if (intent.getExtras() == null) {
+                    return;
+                }
+                if (intent.getExtras().containsKey(Constants.BroadcastKey.progressValue.toString())) {
+                    updateProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressValue.toString()), intent.getExtras().getString(Constants.BroadcastKey.progressHint.toString()));
+                } else if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
+                    displayProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressVisibility.toString()));
+                }
+            } catch (Exception e) {
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured during an OnReceive event.", e));
             }
         }
     }

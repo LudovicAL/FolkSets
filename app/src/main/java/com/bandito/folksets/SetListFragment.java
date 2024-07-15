@@ -51,16 +51,20 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     private TextView setMatchNumberTextview;
     private MaterialButtonToggleGroup materialButtonToggleGroup;
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
-        if (isChecked) {
-            if (setMatchNumberTextview != null) {
-                if (checkedId == R.id.fragment_set_list_tuneinsets_materialbutton) {
-                    setMatchNumberTextview.setVisibility(View.VISIBLE);
-                } else {
-                    setMatchNumberTextview.setVisibility(View.GONE);
+        try {
+            if (isChecked) {
+                if (setMatchNumberTextview != null) {
+                    if (checkedId == R.id.fragment_set_list_tuneinsets_materialbutton) {
+                        setMatchNumberTextview.setVisibility(View.VISIBLE);
+                    } else {
+                        setMatchNumberTextview.setVisibility(View.GONE);
+                    }
                 }
+                updateSearchBarHint();
+                demandNewSearch(false);
             }
-            updateSearchBarHint();
-            demandNewSearch(false);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing a toggle button checked event.", e));
         }
     };
 
@@ -75,7 +79,11 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
 
         @Override
         public void afterTextChanged(Editable s) {
-            demandNewSearch(true);
+            try {
+                demandNewSearch(true);
+            } catch (Exception e) {
+                ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing and AfterTextChanged event.", e));
+            }
         }
     };
     public SetListRecyclerViewAdapter setListRecyclerViewAdapter;
@@ -91,35 +99,47 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_set_list, container, false);
-        materialButtonToggleGroup = view.findViewById(R.id.fragment_set_list_materialbuttontogglegroup);
-        materialButtonToggleGroup.addOnButtonCheckedListener(materialButtonToggleGroupCheckedListener);
-        textInputEditText = view.findViewById(R.id.fragment_set_list_textinputedittext);
-        textInputEditText.addTextChangedListener(textWatcher);
-        RecyclerView recyclerView = view.findViewById(R.id.fragment_set_list_recyclerview);
-        recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-        setListRecyclerViewAdapter = new SetListRecyclerViewAdapter(requireActivity(), requireContext());
-        setListRecyclerViewAdapter.setClickListener(this);
-        recyclerView.setAdapter(setListRecyclerViewAdapter);
-        setMatchNumberTextview = view.findViewById(R.id.fragment_set_list_matchcount_textview);
-        view.findViewById(R.id.fragment_set_list_createnewset_button).setOnClickListener(this);
+        try {
+            materialButtonToggleGroup = view.findViewById(R.id.fragment_set_list_materialbuttontogglegroup);
+            materialButtonToggleGroup.addOnButtonCheckedListener(materialButtonToggleGroupCheckedListener);
+            textInputEditText = view.findViewById(R.id.fragment_set_list_textinputedittext);
+            textInputEditText.addTextChangedListener(textWatcher);
+            RecyclerView recyclerView = view.findViewById(R.id.fragment_set_list_recyclerview);
+            recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+            setListRecyclerViewAdapter = new SetListRecyclerViewAdapter(requireActivity(), requireContext());
+            setListRecyclerViewAdapter.setClickListener(this);
+            recyclerView.setAdapter(setListRecyclerViewAdapter);
+            setMatchNumberTextview = view.findViewById(R.id.fragment_set_list_matchcount_textview);
+            view.findViewById(R.id.fragment_set_list_createnewset_button).setOnClickListener(this);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured during the OnCreateView step of class SetListFragment.", e, true));
+        }
         return view;
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
-        updateSearchBarHint();
-        demandNewSearch(false);
+        try {
+            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
+            updateSearchBarHint();
+            demandNewSearch(false);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while resuming SetListFragment.", e, true));
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(myBroadcastReceiver);
+        try {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(myBroadcastReceiver);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while pausing SetListFragment.", e, true));
+        }
     }
 
-    private void demandNewSearch(boolean userIsTyping) {
+    private void demandNewSearch(boolean userIsTyping) throws FolkSetsException {
         if (timer != null) {
             timer.cancel();
         }
@@ -129,7 +149,13 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     new TimerTask() {
                         @Override
                         public void run() {
-                            requireActivity().runOnUiThread(() -> performSearch());
+                            requireActivity().runOnUiThread(() -> {
+                                try {
+                                    performSearch();
+                                } catch (FolkSetsException e) {
+                                    ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while performing a search on UI thread.", e));
+                                }
+                            });
                         }
                     },
                     500L);
@@ -138,27 +164,23 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         }
     }
 
-    private void performSearch() {
-        try {
-            String textToSearch = textInputEditText.getText().toString();
-            if (textToSearch.isEmpty()) {
-                setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null));
-            } else {
-                int i = materialButtonToggleGroup.getCheckedButtonId();
-                if (i == R.id.fragment_set_list_setname_materialbutton) {
-                    Log.i(TAG, "Seaching name: " + textToSearch);
-                    setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase("*", textToSearch, SET_NAME, null));
-                } else if (i == R.id.fragment_set_list_tuneinsets_materialbutton) {
-                    Log.i(TAG, "Seaching tune in set: " + textToSearch);
-                    Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithTunesInDatabase(textToSearch, SET_NAME, null);
-                    setMatchNumber(result.first);
-                    setListRecyclerViewAdapter.setSetEntityList(result.second);
-                }
+    private void performSearch() throws FolkSetsException {
+        String textToSearch = textInputEditText.getText().toString();
+        if (textToSearch.isEmpty()) {
+            setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null));
+        } else {
+            int i = materialButtonToggleGroup.getCheckedButtonId();
+            if (i == R.id.fragment_set_list_setname_materialbutton) {
+                Log.i(TAG, "Seaching name: " + textToSearch);
+                setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findSetsByNameInDatabase("*", textToSearch, SET_NAME, null));
+            } else if (i == R.id.fragment_set_list_tuneinsets_materialbutton) {
+                Log.i(TAG, "Seaching tune in set: " + textToSearch);
+                Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithTunesInDatabase(textToSearch, SET_NAME, null);
+                setMatchNumber(result.first);
+                setListRecyclerViewAdapter.setSetEntityList(result.second);
             }
-            setListRecyclerViewAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
         }
+        setListRecyclerViewAdapter.notifyDataSetChanged();
     }
 
     private void updateSearchBarHint() {
@@ -187,7 +209,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnItemClick event.", e));
         }
     }
 
@@ -201,32 +223,36 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                     new Pair<>(SET_ENTITY, setEntityList.get(0))
             });
         } catch (Exception e) {
-            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnItemClick event.", e));
         }
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.fragment_set_list_createnewset_button) {
-            loadSetActivity();
+        try {
+            if (view.getId() == R.id.fragment_set_list_createnewset_button) {
+                loadSetActivity();
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
         }
     }
 
-    private void loadSetActivity() {
-        try {
-            Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
-            });
-        } catch (Exception e) {
-            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, e);
-        }
+    private void loadSetActivity() throws FolkSetsException {
+        Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
+                new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
+        });
     }
     public class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.staticDataValue.toString()))) {
-                setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
-                setListRecyclerViewAdapter.notifyDataSetChanged();
+            try {
+                if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.staticDataValue.toString()))) {
+                    setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
+                    setListRecyclerViewAdapter.notifyDataSetChanged();
+                }
+            } catch (Exception e) {
+                ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnReceive event.", e));
             }
         }
     }

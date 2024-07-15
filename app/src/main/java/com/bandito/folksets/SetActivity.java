@@ -6,10 +6,10 @@ import static com.bandito.folksets.util.Constants.SET_ENTITY;
 import static com.bandito.folksets.util.Constants.TUNE_ID;
 import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,7 +25,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
@@ -43,6 +42,7 @@ import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
+import com.bandito.folksets.util.Utilities;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.apache.commons.lang3.StringUtils;
@@ -53,7 +53,7 @@ import java.util.stream.Collectors;
 
 public class SetActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getName();
+    private static final String TAG = SetActivity.class.getName();
     private Constants.SetOperation currentSetOperation;
     private SetEntity currentSet = new SetEntity();
     private TextInputEditText setNameEditTextInputEditText;
@@ -62,31 +62,40 @@ public class SetActivity extends AppCompatActivity {
     private View lastSelectedTuneSelectedView = null;
     private Drawable lastSelectedTuneSelectedDrawable = null;
     private Integer selectedTuneSelectionPosition = null;
+    private Activity activity;
     private Context context;
     private Dialog dialog;
 
-    private final TuneListRecyclerViewAdapter.ItemClickListener selectedTuneItemClickListener = new TuneListRecyclerViewAdapter.ItemClickListener() {
+    private TuneListRecyclerViewAdapter.ItemClickListener selectedTuneItemClickListener = new TuneListRecyclerViewAdapter.ItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
-            if (view.equals(lastSelectedTuneSelectedView)) {
-                lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
-                lastSelectedTuneSelectedView = null;
-                lastSelectedTuneSelectedDrawable = null;
-                selectedTuneSelectionPosition = null;
-            } else {
-                if (lastSelectedTuneSelectedView != null) {
+            try {
+                if (view.equals(lastSelectedTuneSelectedView)) {
                     lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                    lastSelectedTuneSelectedView = null;
+                    lastSelectedTuneSelectedDrawable = null;
+                    selectedTuneSelectionPosition = null;
+                } else {
+                    if (lastSelectedTuneSelectedView != null) {
+                        lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                    }
+                    lastSelectedTuneSelectedView = view;
+                    lastSelectedTuneSelectedDrawable = view.getBackground();
+                    selectedTuneSelectionPosition = position;
+                    view.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.view_border, context.getTheme()));
                 }
-                lastSelectedTuneSelectedView = view;
-                lastSelectedTuneSelectedDrawable = view.getBackground();
-                selectedTuneSelectionPosition = position;
-                view.setBackground(ResourcesCompat.getDrawable(context.getResources(), R.drawable.view_border, context.getTheme()));
+            } catch (Exception e) {
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while processing an OnItemClick event.", e));
             }
         }
 
         @Override
         public void onLongItemClick(View view, int position) {
-            onItemClick(view, position);
+            try {
+                onItemClick(view, position);
+            } catch (Exception e) {
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while processing an OnLongItemClick event.", e));
+            }
         }
     };
 
@@ -101,50 +110,50 @@ public class SetActivity extends AppCompatActivity {
             return insets;
         });
 
-        context = this;
+        try {
+            activity = this;
+            context = this;
 
-        //Prepare the RecyclerView and its adapter for selected tunes
-        recyclerView = findViewById(R.id.activity_set_recyclerview);
-        recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-        recyclerViewAdapter = new TuneListRecyclerViewAdapter();
-        recyclerViewAdapter.setClickListener(selectedTuneItemClickListener);
+            //Prepare the RecyclerView and its adapter for selected tunes
+            recyclerView = findViewById(R.id.activity_set_recyclerview);
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            recyclerViewAdapter = new TuneListRecyclerViewAdapter();
+            recyclerViewAdapter.setClickListener(selectedTuneItemClickListener);
 
-        //Retrieve the bundle message
-        setNameEditTextInputEditText = findViewById(R.id.activity_set_name_textinputedittext);
-        if (Constants.SetOperation.editSet.toString().equals(getIntent().getExtras().getString(OPERATION))) {
-            currentSetOperation = Constants.SetOperation.editSet;
-            currentSet = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
-            ((TextView)findViewById(R.id.activity_set_header_textview)).setText(R.string.edit_set);
-            setNameEditTextInputEditText.setText(currentSet.setName);
-            String[] currentSetTuneIdArrayOfStrings = StringUtils.split(currentSet.setTunes, DEFAULT_SEPARATOR);
-            if (currentSetTuneIdArrayOfStrings != null) {
-                try {
+            //Retrieve the bundle message
+            setNameEditTextInputEditText = findViewById(R.id.activity_set_name_textinputedittext);
+            if (Constants.SetOperation.editSet.toString().equals(getIntent().getExtras().getString(OPERATION))) {
+                currentSetOperation = Constants.SetOperation.editSet;
+                currentSet = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
+                ((TextView) findViewById(R.id.activity_set_header_textview)).setText(R.string.edit_set);
+                setNameEditTextInputEditText.setText(currentSet.setName);
+                String[] currentSetTuneIdArrayOfStrings = StringUtils.split(currentSet.setTunes, DEFAULT_SEPARATOR);
+                if (currentSetTuneIdArrayOfStrings != null) {
                     List<TuneEntity> unorderedCurrentSetTuneEntityList = DatabaseManager.findTunesByIdInDatabase(TUNE_ID + "," + TUNE_TITLES, currentSetTuneIdArrayOfStrings, null, null);
                     List<TuneEntity> orderedCurrentSetTuneEntityList = new ArrayList<>();
                     for (String tuneId : currentSetTuneIdArrayOfStrings) {
                         orderedCurrentSetTuneEntityList.add(unorderedCurrentSetTuneEntityList.stream().filter(tuneEntity -> tuneEntity.tuneId.equals(Long.valueOf(tuneId))).findFirst().get());
                     }
                     recyclerViewAdapter.setTuneEntityList(orderedCurrentSetTuneEntityList);
-                } catch (FolkSetsException e) {
-                    ExceptionManager.manageException(this, this, TAG, e);
                 }
+            } else {
+                findViewById(R.id.activity_set_delete_button).setVisibility(View.GONE);
+                currentSetOperation = Constants.SetOperation.createSet;
+                ((TextView) findViewById(R.id.activity_set_header_textview)).setText(R.string.create_new_set);
             }
-        } else {
-            findViewById(R.id.activity_set_delete_button).setVisibility(View.GONE);
-            currentSetOperation = Constants.SetOperation.createSet;
-            ((TextView)findViewById(R.id.activity_set_header_textview)).setText(R.string.create_new_set);
+
+            recyclerView.setAdapter(recyclerViewAdapter);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured during the OnCreate step of class SetActivity.", e, true));
         }
-
-        recyclerView.setAdapter(recyclerViewAdapter);
-    }
-
-    protected void onSaveInstanceState (@NonNull Bundle outState) {
-        //TODO: Save my data
-        super.onSaveInstanceState(outState);
     }
 
     public void onBackButtonClick(View view) {
-        this.finish();
+        try {
+            this.finish();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing an OnBackButtonClick event.", e));
+        }
     }
 
     public void onDeleteSetButtonClick(View view) {
@@ -153,25 +162,25 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set deleted", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing an OnDeleteSetButtonClick event.", e));
         }
     }
 
     public void onSaveSetButtonClick(View view) {
-        currentSet.setName = setNameEditTextInputEditText.getText().toString();
-        if (currentSet.setName.isEmpty()) {
-            Toast.makeText(this, "Choose a name for the set", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        currentSet.setTunes = StringUtils.join(
-                recyclerViewAdapter.getTuneEntityList().stream().map(tuneEntity -> tuneEntity.tuneId).collect(Collectors.toList()),
-                DEFAULT_SEPARATOR
-        );
-        if (currentSet.setTunes.isEmpty()) {
-            Toast.makeText(this, "Select at least one tune", Toast.LENGTH_SHORT).show();
-            return;
-        }
         try {
+            currentSet.setName = setNameEditTextInputEditText.getText().toString();
+            if (currentSet.setName.isEmpty()) {
+                Toast.makeText(this, "Choose a name for the set", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            currentSet.setTunes = StringUtils.join(
+                    recyclerViewAdapter.getTuneEntityList().stream().map(tuneEntity -> tuneEntity.tuneId).collect(Collectors.toList()),
+                    DEFAULT_SEPARATOR
+            );
+            if (currentSet.setTunes.isEmpty()) {
+                Toast.makeText(this, "Select at least one tune", Toast.LENGTH_SHORT).show();
+                return;
+            }
             if (currentSetOperation == Constants.SetOperation.createSet) {
                 DatabaseManager.insertSetInDatabase(currentSet);
             } else {
@@ -180,111 +189,133 @@ public class SetActivity extends AppCompatActivity {
             Toast.makeText(this, "Set saved", Toast.LENGTH_SHORT).show();
             this.finish();
         } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing an OnSaveSetButtonClick event.", e));
         }
     }
 
     private void selectTune(TuneEntity tuneEntity) {
-        recyclerViewAdapter.addTuneEntity(tuneEntity);
-        recyclerViewAdapter.notifyDataSetChanged();
+        try {
+            recyclerViewAdapter.addTuneEntity(tuneEntity);
+            recyclerViewAdapter.notifyDataSetChanged();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while selecting a tune.", e));
+        }
     }
 
     public void deselectTune(View view) {
-        if (selectedTuneSelectionPosition != null) {
-            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
-            recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition);
-            recyclerViewAdapter.notifyItemRemoved(selectedTuneSelectionPosition);
-            lastSelectedTuneSelectedView = null;
-            lastSelectedTuneSelectedDrawable = null;
-            selectedTuneSelectionPosition = null;
+        try {
+            if (selectedTuneSelectionPosition != null) {
+                lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition);
+                recyclerViewAdapter.notifyItemRemoved(selectedTuneSelectionPosition);
+                lastSelectedTuneSelectedView = null;
+                lastSelectedTuneSelectedDrawable = null;
+                selectedTuneSelectionPosition = null;
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while deselecting a tune.", e));
         }
     }
 
     public void moveTuneUp(View view) {
-        if (selectedTuneSelectionPosition != null && selectedTuneSelectionPosition > 0) {
-            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
-            recyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition - 1, recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
-            recyclerViewAdapter.notifyDataSetChanged();
-            lastSelectedTuneSelectedView = null;
-            lastSelectedTuneSelectedDrawable = null;
-            int newPosition = selectedTuneSelectionPosition - 1;
-            selectedTuneSelectionPosition = null;
-            selectedTuneItemClickListener.onItemClick(recyclerView.getChildAt(newPosition), newPosition);
+        try {
+            if (selectedTuneSelectionPosition != null && selectedTuneSelectionPosition > 0) {
+                lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                recyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition - 1, recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
+                recyclerViewAdapter.notifyDataSetChanged();
+                lastSelectedTuneSelectedView = null;
+                lastSelectedTuneSelectedDrawable = null;
+                int newPosition = selectedTuneSelectionPosition - 1;
+                selectedTuneSelectionPosition = null;
+                selectedTuneItemClickListener.onItemClick(recyclerView.getChildAt(newPosition), newPosition);
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while moving a tune up.", e));
         }
     }
 
     public void moveTuneDown(View view) {
-        if (selectedTuneSelectionPosition != null && selectedTuneSelectionPosition < recyclerViewAdapter.getItemCount() - 1) {
-            lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
-            recyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition + 1, recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
-            recyclerViewAdapter.notifyDataSetChanged();
-            lastSelectedTuneSelectedView = null;
-            lastSelectedTuneSelectedDrawable = null;
-            int newPosition = selectedTuneSelectionPosition + 1;
-            selectedTuneSelectionPosition = null;
-            selectedTuneItemClickListener.onItemClick(recyclerView.getChildAt(newPosition), newPosition);
+        try {
+            if (selectedTuneSelectionPosition != null && selectedTuneSelectionPosition < recyclerViewAdapter.getItemCount() - 1) {
+                lastSelectedTuneSelectedView.setBackground(lastSelectedTuneSelectedDrawable);
+                recyclerViewAdapter.addTuneEntityAtIndex(selectedTuneSelectionPosition + 1, recyclerViewAdapter.removeTuneEntity(selectedTuneSelectionPosition));
+                recyclerViewAdapter.notifyDataSetChanged();
+                lastSelectedTuneSelectedView = null;
+                lastSelectedTuneSelectedDrawable = null;
+                int newPosition = selectedTuneSelectionPosition + 1;
+                selectedTuneSelectionPosition = null;
+                selectedTuneItemClickListener.onItemClick(recyclerView.getChildAt(newPosition), newPosition);
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while moving a tune down.", e));
         }
     }
 
     public void openSelectTuneDialog(View view) {
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.searchable_spinner);
-        int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
-        int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
-        dialog.getWindow().setLayout(width, height);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-        dialog.findViewById(R.id.searchable_spinner_back_floatingActionButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-        ListView listView = dialog.findViewById(R.id.searchable_spinner_listview);
-        TuneListArrayAdapter arrayAdapter = new TuneListArrayAdapter(this, android.R.layout.simple_list_item_1, StaticData.tuneEntityList);
-        listView.setAdapter(arrayAdapter);
-        ((EditText)dialog.findViewById(R.id.searchable_spinner_edittext)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+        try {
+            dialog = new Dialog(this);
+            dialog.setContentView(R.layout.searchable_spinner);
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+            int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+            dialog.getWindow().setLayout(width, height);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+            dialog.findViewById(R.id.searchable_spinner_back_floatingActionButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            ListView listView = dialog.findViewById(R.id.searchable_spinner_listview);
+            TuneListArrayAdapter arrayAdapter = new TuneListArrayAdapter(this, android.R.layout.simple_list_item_1, StaticData.tuneEntityList);
+            listView.setAdapter(arrayAdapter);
+            ((EditText)dialog.findViewById(R.id.searchable_spinner_edittext)).addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-                arrayAdapter.getFilter().filter(charSequence);
-            }
+                @Override
+                public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
+                    try {
+                        arrayAdapter.getFilter().filter(charSequence);
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while processing an OnTextChanged event.", e));
+                    }
+                }
 
-            @Override
-            public void afterTextChanged(Editable editable) {
+                @Override
+                public void afterTextChanged(Editable editable) {
 
-            }
-        });
+                }
+            });
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectTune(arrayAdapter.getItem(position));
-                dialog.dismiss();
-            }
-        });
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    try {
+                        selectTune(arrayAdapter.getItem(position));
+                        dialog.dismiss();
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured wile processing an OnItemClick event.", e));
+                    }
+                }
+            });
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while opening a tune selection dialog.", e));
+        }
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.
     //It applies even in fragments that are "children" of this activity.
     @Override
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            View v = getCurrentFocus();
-            if ( v instanceof EditText) {
-                Rect outRect = new Rect();
-                v.getGlobalVisibleRect(outRect);
-                if (!outRect.contains((int)event.getRawX(), (int)event.getRawY())) {
-                    v.clearFocus();
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                }
-            }
+    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        try {
+            Utilities.dispatchTouchEvent(motionEvent, getCurrentFocus(), (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE));
+            return super.dispatchTouchEvent(motionEvent);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing dispatchTouchEvent.", e));
+            return true;
         }
-        return super.dispatchTouchEvent( event );
     }
 }

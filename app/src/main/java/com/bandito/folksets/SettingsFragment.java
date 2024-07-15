@@ -101,7 +101,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             switchCompat.toggle();
             switchCompat.toggle();
         } catch (Exception e) {
-            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while creating the SettingsFragment view.", e, true));
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured during the OnCreateView step of class SettingsFragment.", e, true));
         }
         return view;
     }
@@ -121,13 +121,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     }
 
     public void selectStorageDirectory() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.addFlags(
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                        | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
-        intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
-        intentLauncher.launch(intent, activityResult -> selectFolderCallback(activityResult));
+        try {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+            intent.addFlags(
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                            | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION);
+            intent.putExtra("android.content.extra.SHOW_ADVANCED", true);
+            intentLauncher.launch(intent, activityResult -> selectFolderCallback(activityResult));
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while selecting the storage directory.", e));
+        }
     }
 
     private void selectFolderCallback(ActivityResult activityResult) {
@@ -156,8 +160,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             DatabaseManager.exportDatabase(requireContext(), requireActivity());
             Toast.makeText(requireContext(), "Exportation complete", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "An error occured", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "An error occured when exporting the database to storage.", e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while exporting the database to storage.", e));
         }
     }
 
@@ -166,19 +169,22 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             DatabaseManager.importDatabase(requireContext(), requireActivity());
             Toast.makeText(requireContext(), "Importation complete", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "An error occured", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "An error occured when importing the database from storage.", e);
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while importing the database from storage.", e));
         }
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() ==  R.id.fragment_settings_selectstoragedirectory_button) {
-            selectStorageDirectory();
-        } else if (view.getId() ==  R.id.fragment_settings_exportdatabase_button) {
-            exportDatabaseToStorage();
-        } else if (view.getId() ==  R.id.fragment_settings_importdatabase_button) {
-            importDatabaseFromStorage();
+        try {
+            if (view.getId() == R.id.fragment_settings_selectstoragedirectory_button) {
+                selectStorageDirectory();
+            } else if (view.getId() == R.id.fragment_settings_exportdatabase_button) {
+                exportDatabaseToStorage();
+            } else if (view.getId() == R.id.fragment_settings_importdatabase_button) {
+                importDatabaseFromStorage();
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
         }
     }
 }
