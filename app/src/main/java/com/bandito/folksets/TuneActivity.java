@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -42,10 +41,10 @@ import com.bandito.folksets.services.ServiceSingleton;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
+import com.bandito.folksets.util.ChipGroupUtilities;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
-import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.navigation.NavigationView;
 
@@ -66,6 +65,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private TuneEntity tuneEntity;
     private DrawerLayout drawerLayout;
     private AutoCompleteTextView tuneTitlesAutoCompleteTextView;
+    private ChipGroup tuneTitlesChipGroup;
     private AutoCompleteTextView tuneTagsAutoCompleteTextView;
     private ChipGroup tuneTagsChipGroup;
     private AutoCompleteTextView tuneComposerAutoCompleteTextView;
@@ -74,34 +74,35 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private AutoCompleteTextView tuneIncipitAutoCompleteTextView;
     private AutoCompleteTextView tuneFormAutoCompleteTextView;
     private AutoCompleteTextView tunePlayedByAutoCompleteTextView;
+    private ChipGroup tunePlayedByChipGroup;
     private AutoCompleteTextView tuneNoteAutoCompleteTextView;
-
-    private final TextWatcher tagTextWatcher = new TextWatcher() {
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-        @Override
-        public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
-            if (DELIMITER_INPUT_PATTERN.matcher(charSequence).find()) {
-                String sanitizedString = charSequence.toString().replace(DEFAULT_SEPARATOR, "");
-                if (!sanitizedString.isEmpty()) {
-                    addChipToChipGroup(new String[]{sanitizedString}, tuneTagsChipGroup);
-                }
-                tuneTagsAutoCompleteTextView.setText("");
-            }
-        }
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
-    };
+    private TextWatcher titleTextWatcher;
+    private TextWatcher tagTextWatcher;
+    private TextWatcher playedByTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_tune);
+
+        //Find views
+        View headerView = ((NavigationView)findViewById(R.id.activity_tune_navigationview)).getHeaderView(0);
+        progressBar = findViewById(R.id.activity_tune_progressbar);
+        progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
+        tuneTitlesChipGroup = headerView.findViewById(R.id.tune_nav_header_title_chipgroup);
+        tuneTagsChipGroup = headerView.findViewById(R.id.tune_nav_header_tag_chipgroup);
+        tunePlayedByChipGroup = headerView.findViewById(R.id.tune_nav_header_players_chipgroup);
+        tuneTitlesAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_title_autocompletetextview);
+        tuneTagsAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_tag_autocompletetextview);
+        tuneComposerAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_composer_autocompletetextview);
+        tuneRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_region_autocompletetextview);
+        tuneKeyAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_key_autocompletetextview);
+        tuneIncipitAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_incipit_autocompletetextview);
+        tuneFormAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_form_autocompletetextview);
+        tunePlayedByAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_players_autocompletetextview);
+        tuneNoteAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_note_autocompletetextview);
+
         getWindow().setDecorFitsSystemWindows(false);
         WindowInsetsController controller = getWindow().getInsetsController();
         if (controller != null) {
@@ -115,9 +116,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         previousTuneButton.setPadding(previousTuneButton.getPaddingLeft(), previousTuneButton.getPaddingTop(), previousTuneButton.getPaddingRight(), navigationBarHeight);
         Button nextTuneButton = findViewById(R.id.activity_tune_next_button);
         nextTuneButton.setPadding(nextTuneButton.getPaddingLeft(), nextTuneButton.getPaddingTop(), nextTuneButton.getPaddingRight(), navigationBarHeight);
-
-        progressBar = findViewById(R.id.activity_tune_progressbar);
-        progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
 
         //Determine what was received: a tune or a set
         String tuneOrSetStr = getIntent().getExtras().getString(OPERATION);
@@ -136,46 +134,40 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        View headerView = ((NavigationView)findViewById(R.id.activity_tune_navigationview)).getHeaderView(0);
         //Set listeners
         headerView.findViewById(R.id.tune_nav_header_back_floatingactionbutton).setOnClickListener(this);
         headerView.findViewById(R.id.tune_nav_header_save_button).setOnClickListener(this);
         findViewById(R.id.activity_tune_edit_floatingactionbutton).setOnClickListener(this);
         findViewById(R.id.activity_tune_back_floatingactionbutton).setOnClickListener(this);
 
-        tuneTagsChipGroup = headerView.findViewById(R.id.tune_nav_header_tag_chipgroup);
+        titleTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
+        tagTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
+        playedByTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
         //Prepare the autocompletes
-        tuneTitlesAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_title_textview);
         tuneTitlesAutoCompleteTextView.setThreshold(0);
-        tuneTagsAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_tag_autocompletetextview);
+        tuneTitlesAutoCompleteTextView.addTextChangedListener(titleTextWatcher);
         tuneTagsAutoCompleteTextView.setThreshold(0);
         tuneTagsAutoCompleteTextView.addTextChangedListener(tagTextWatcher);
-        tuneComposerAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_composer_autocompletetextview);
         tuneComposerAutoCompleteTextView.setThreshold(0);
-        tuneRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_region_autocompletetextview);
         tuneRegionOfOriginAutoCompleteTextView.setThreshold(0);
-        tuneKeyAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_key_autocompletetextview);
         tuneKeyAutoCompleteTextView.setThreshold(0);
-        tuneIncipitAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_incipit_autocompletetextview);
         tuneIncipitAutoCompleteTextView.setThreshold(0);
-        tuneFormAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_form_autocompletetextview);
         tuneFormAutoCompleteTextView.setThreshold(0);
-        tunePlayedByAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_players_autocompletetextview);
         tunePlayedByAutoCompleteTextView.setThreshold(0);
-        tuneNoteAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_note_autocompletetextview);
+        tunePlayedByAutoCompleteTextView.addTextChangedListener(playedByTextWatcher);
         tuneNoteAutoCompleteTextView.setThreshold(0);
         prepareAutocompleteAdapters();
 
         //Display the data
         try {
-            tuneTitlesAutoCompleteTextView.setText(tuneEntity.tuneTitles);
-            addChipToChipGroup(StringUtils.split(tuneEntity.tuneTags, DEFAULT_SEPARATOR), tuneTagsChipGroup);
+            ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneTitles, DEFAULT_SEPARATOR), tuneTitlesChipGroup);
+            ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneTags, DEFAULT_SEPARATOR), tuneTagsChipGroup);
             tuneComposerAutoCompleteTextView.setText(tuneEntity.tuneComposer);
             tuneRegionOfOriginAutoCompleteTextView.setText(tuneEntity.tuneRegionOfOrigin);
             tuneKeyAutoCompleteTextView.setText(tuneEntity.tuneKey);
             tuneIncipitAutoCompleteTextView.setText(tuneEntity.tuneIncipit);
             tuneFormAutoCompleteTextView.setText(tuneEntity.tuneForm);
-            tunePlayedByAutoCompleteTextView.setText(tuneEntity.tunePlayedBy);
+            ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tunePlayedBy, DEFAULT_SEPARATOR), tunePlayedByChipGroup);
             tuneNoteAutoCompleteTextView.setText(tuneEntity.tuneNote);
             ((TextView)headerView.findViewById(R.id.tune_nav_header_filepath_autocompletetextview)).setText(tuneEntity.tuneFilePath);
             ((TextView)headerView.findViewById(R.id.tune_nav_header_filetype_autocompletetextview)).setText(tuneEntity.tuneFileType);
@@ -193,49 +185,19 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void addChipToChipGroup(String[] chipContentArray, ChipGroup chipGroup) {
-        if (chipContentArray == null) {
-            return;
-        }
-        for (String chipContent : chipContentArray) {
-            Chip chip = new Chip(this);
-            chip.setText(chipContent);
-            chip.setCloseIconVisible(true);
-            chip.setCheckable(false);
-            chipGroup.addView(chip);
-            chip.setOnCloseIconClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    chipGroup.removeView(view);
-                }
-            });
-        }
-    }
-
-    private String retrieveChipsFromChipGroup(ChipGroup chipGroup) {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0, max = chipGroup.getChildCount(); i < max; i++) {
-            stringBuilder.append(((Chip)chipGroup.getChildAt(i)).getText());
-            if (i < max - 1) {
-                stringBuilder.append(DEFAULT_SEPARATOR);
-            }
-        }
-        return stringBuilder.toString();
-    }
-
     private void saveTune() {
-        tuneEntity.tuneTitles = tuneTitlesAutoCompleteTextView.getText().toString();
-        if (tuneEntity.tuneTitles.isEmpty()) {
-            Toast.makeText(this, "A title is required", Toast.LENGTH_SHORT).show();
+        if (tuneTitlesChipGroup.getChildCount() == 0) {
+            Toast.makeText(this, "At least one title is required", Toast.LENGTH_SHORT).show();
             return;
         }
-        tuneEntity.tuneTags = retrieveChipsFromChipGroup(tuneTagsChipGroup);
+        tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(tuneTitlesChipGroup);
+        tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(tuneTagsChipGroup);
         tuneEntity.tuneComposer = tuneComposerAutoCompleteTextView.getText().toString();
         tuneEntity.tuneRegionOfOrigin = tuneRegionOfOriginAutoCompleteTextView.getText().toString();
         tuneEntity.tuneKey = tuneKeyAutoCompleteTextView.getText().toString();
         tuneEntity.tuneIncipit = tuneIncipitAutoCompleteTextView.getText().toString();
         tuneEntity.tuneForm = tuneFormAutoCompleteTextView.getText().toString();
-        tuneEntity.tunePlayedBy = tunePlayedByAutoCompleteTextView.getText().toString();
+        tuneEntity.tunePlayedBy = ChipGroupUtilities.retrieveChipsFromChipGroup(tunePlayedByChipGroup);
         tuneEntity.tuneNote = tuneNoteAutoCompleteTextView.getText().toString();
         try {
             DatabaseManager.updateTuneInDatabase(tuneEntity);
@@ -315,14 +277,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         loadTuneActivity(messages);
     }
 
-    private void loadTuneActivity(Pair<String, ? extends Serializable>[] messages) {
-        try {
-            Utilities.loadActivity(this, this, TuneActivity.class, messages);
-        } catch (Exception e) {
-            ExceptionManager.manageException(this, this, TAG, e);
-        }
-    }
-
     private void loadNextTune() {
         Pair<String, ? extends Serializable>[] messages;
         if (tuneOrSet == Constants.TuneOrSet.set) {
@@ -338,6 +292,14 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             };
         }
         loadTuneActivity(messages);
+    }
+
+    private void loadTuneActivity(Pair<String, ? extends Serializable>[] messages) {
+        try {
+            Utilities.loadActivity(this, this, TuneActivity.class, messages);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, e);
+        }
     }
 
     //The following strange bit of code make it so EditText loose the focus when we touch outside them.
@@ -361,13 +323,16 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
 
     private void prepareAutocompleteAdapters() {
         tuneTitlesAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneTitleArray));
+        tuneTitlesAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup));
         tuneTagsAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneTagArray));
+        tuneTagsAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup));
         tuneComposerAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneComposerArray));
         tuneRegionOfOriginAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneRegionArray));
         tuneKeyAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneKeyArray));
         tuneIncipitAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneIncipitArray));
         tuneFormAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneFormArray));
         tunePlayedByAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTunePlayedByArray));
+        tunePlayedByAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup));
         tuneNoteAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneNoteArray));
     }
 
