@@ -63,7 +63,7 @@ public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Converting pdf to bitmaps"});
             List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(activity, context, TAG, tuneEntity.tuneFilePath);
-            int maxNumberOfSteps = bitmapList.size() + 2;
+            int maxNumberOfSteps = bitmapList.size() + 3;
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressStepNumber, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, 1, "Cropping bitmaps"});
             int progressCurrentStep = 2;
             if (isCropperActivated) {
@@ -109,6 +109,9 @@ public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
                 }
             }
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{PREVIOUS_AND_NEXT_TUNE});
+            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading consultation update"});
+            tuneEntity.tuneConsultationNumber++;
+            DatabaseManager.updateTuneInDatabase(tuneEntity);
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, "Loading complete"});
             sleep(3000L);
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Serializable[]{View.GONE});

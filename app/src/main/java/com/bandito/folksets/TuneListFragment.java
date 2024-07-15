@@ -202,8 +202,6 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     public void onItemClick(View view, int position) {
         try {
             TuneEntity tuneEntity = DatabaseManager.findTuneByIdInDatabase("*", String.valueOf(tuneListRecyclerViewAdapter.getItem(position)), null, null).get(0);
-            tuneEntity.tuneConsultationNumber++;
-            DatabaseManager.updateTuneInDatabase(tuneEntity);
             Log.i(TAG, "You short clicked " + tuneEntity.getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), TuneActivity.class, new Pair[]{
                     new Pair<>(OPERATION, TUNE_ENTITY),
