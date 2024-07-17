@@ -17,6 +17,9 @@
         android:theme="@style/Theme.FolkSets"
         tools:targetApi="30">
         <activity
+            android:name=".ManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".SetActivity"
             android:exported="false" />
         <activity
@@ -25,8 +28,8 @@
             android:noHistory="true" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

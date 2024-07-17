@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -20,7 +19,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -119,8 +117,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             nextTuneButton.setPadding(nextTuneButton.getPaddingLeft(), nextTuneButton.getPaddingTop(), nextTuneButton.getPaddingRight(), navigationBarHeight);
 
             //Determine what was received: a tune or a set
-            String tuneOrSetStr = getIntent().getExtras().getString(OPERATION);
-            tuneOrSet = Constants.TuneOrSet.set.toString().equals(tuneOrSetStr) ? Constants.TuneOrSet.set : Constants.TuneOrSet.tune;
+            tuneOrSet = (Constants.TuneOrSet)(getIntent().getExtras().getSerializable(OPERATION));
 
             //Retrieve Tune data
             if (tuneOrSet.equals(Constants.TuneOrSet.tune)) {
@@ -272,13 +269,13 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         Pair<String, ? extends Serializable>[] messages;
         if (tuneOrSet == Constants.TuneOrSet.set) {
             messages = new Pair[]{
-                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set),
                     new Pair<>(POSITION, position - 1),
                     new Pair<>(SET_ENTITY, setEntity)
             };
         } else {
             messages = new Pair[]{
-                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(OPERATION, Constants.TuneOrSet.tune),
                     new Pair<>(TUNE_ENTITY, StaticData.previousTune)
             };
         }
@@ -289,13 +286,13 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         Pair<String, ? extends Serializable>[] messages;
         if (tuneOrSet == Constants.TuneOrSet.set) {
             messages = new Pair[]{
-                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set),
                     new Pair<>(POSITION, position + 1),
                     new Pair<>(SET_ENTITY, setEntity)
             };
         } else {
             messages = new Pair[]{
-                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(OPERATION, Constants.TuneOrSet.tune),
                     new Pair<>(TUNE_ENTITY, StaticData.nextTune)
             };
         }

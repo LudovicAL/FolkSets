@@ -4,6 +4,7 @@ import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_ACTIVATION;
 import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_VALUE;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_ACTIVATION_KEY;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_VALUE_KEY;
+import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
 import android.app.Activity;
@@ -14,6 +15,7 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResult;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -28,6 +30,7 @@ import android.widget.Toast;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
+import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IntentLauncher;
 import com.bandito.folksets.util.Utilities;
 
@@ -89,6 +92,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
             view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
             view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_managetags_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_manageplayers_button).setOnClickListener(this);
             selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
             cropperInnerConstraintLayout = view.findViewById(R.id.fragment_setting_cropperinner_constraintlayout);
             updateSelectStorageDirectoryTextView();
@@ -173,6 +178,18 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    private void manageTags() throws FolkSetsException {
+        Utilities.loadActivity(requireActivity(), requireContext(), ManagementActivity.class, new Pair[]{
+                new Pair<>(OPERATION, Constants.ManagementOperation.manageTags)
+        });
+    }
+
+    private void managePlayers() throws FolkSetsException {
+        Utilities.loadActivity(requireActivity(), requireContext(), ManagementActivity.class, new Pair[]{
+                new Pair<>(OPERATION, Constants.ManagementOperation.managePlayers)
+        });
+    }
+
     @Override
     public void onClick(View view) {
         try {
@@ -182,6 +199,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 exportDatabaseToStorage();
             } else if (view.getId() == R.id.fragment_settings_importdatabase_button) {
                 importDatabaseFromStorage();
+            } else if (view.getId() == R.id.fragment_settings_managetags_button) {
+                manageTags();
+            } else if (view.getId() == R.id.fragment_settings_manageplayers_button) {
+                managePlayers();
             }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));

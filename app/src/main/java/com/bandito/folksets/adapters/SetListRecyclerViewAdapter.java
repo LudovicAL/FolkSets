@@ -122,7 +122,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                 try {
                     List<SetEntity> setEntityListOfClickedSet = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setEntityList.get(getAdapterPosition()).setId), null, null);
                     Utilities.loadActivity(activity, context, SetActivity.class, new Pair[]{
-                            new Pair<>(OPERATION, Constants.SetOperation.editSet.toString()),
+                            new Pair<>(OPERATION, Constants.SetOperation.editSet),
                             new Pair<>(SET_ENTITY, setEntityListOfClickedSet.get(0))
                     });
                 } catch (Exception e) {
@@ -161,7 +161,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                     public boolean onMenuItemClick(MenuItem menuItem) {
                         try {
                             Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
-                                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                                    new Pair<>(OPERATION, Constants.TuneOrSet.set),
                                     new Pair<>(POSITION, menuItem.getItemId()),
                                     new Pair<>(SET_ENTITY, setEntityList.get(getAdapterPosition())),
                                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())

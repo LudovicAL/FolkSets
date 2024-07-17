@@ -122,8 +122,8 @@ public class SetActivity extends AppCompatActivity {
 
             //Retrieve the bundle message
             setNameEditTextInputEditText = findViewById(R.id.activity_set_name_textinputedittext);
-            if (Constants.SetOperation.editSet.toString().equals(getIntent().getExtras().getString(OPERATION))) {
-                currentSetOperation = Constants.SetOperation.editSet;
+            currentSetOperation = (Constants.SetOperation)getIntent().getExtras().getSerializable(OPERATION);
+            if (currentSetOperation == Constants.SetOperation.editSet) {
                 currentSet = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
                 ((TextView) findViewById(R.id.activity_set_header_textview)).setText(R.string.edit_set);
                 setNameEditTextInputEditText.setText(currentSet.setName);
@@ -138,7 +138,6 @@ public class SetActivity extends AppCompatActivity {
                 }
             } else {
                 findViewById(R.id.activity_set_delete_button).setVisibility(View.GONE);
-                currentSetOperation = Constants.SetOperation.createSet;
                 ((TextView) findViewById(R.id.activity_set_header_textview)).setText(R.string.create_new_set);
             }
 

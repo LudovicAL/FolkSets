@@ -181,4 +181,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_setting_cropperinner_constraintlayout" />
 
+    <Button
+        android:id="@+id/fragment_settings_managetags_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_tags"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider3"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <Button
+        android:id="@+id/fragment_settings_manageplayers_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/manage_players"
+        android:textSize="24sp"
+        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_managetags_button"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

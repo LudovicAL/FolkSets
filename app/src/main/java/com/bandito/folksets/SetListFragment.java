@@ -203,7 +203,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You short clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), TuneActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.TuneOrSet.set.toString()),
+                    new Pair<>(OPERATION, Constants.TuneOrSet.set),
                     new Pair<>(POSITION, 0),
                     new Pair<>(SET_ENTITY, setEntityList.get(0)),
                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
@@ -219,7 +219,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.SetOperation.editSet.toString()),
+                    new Pair<>(OPERATION, Constants.SetOperation.editSet),
                     new Pair<>(SET_ENTITY, setEntityList.get(0))
             });
         } catch (Exception e) {
@@ -240,7 +240,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
 
     private void loadSetActivity() throws FolkSetsException {
         Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                new Pair<>(OPERATION, Constants.SetOperation.createSet.toString())
+                new Pair<>(OPERATION, Constants.SetOperation.createSet)
         });
     }
     public class MyBroadcastReceiver extends BroadcastReceiver {

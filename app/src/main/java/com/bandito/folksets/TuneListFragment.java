@@ -222,7 +222,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             TuneEntity tuneEntity = DatabaseManager.findTuneByIdInDatabase("*", String.valueOf(tuneListRecyclerViewAdapter.getItem(position)), null, null).get(0);
             Log.i(TAG, "You short clicked " + tuneEntity.getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), TuneActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(OPERATION, TuneOrSet.tune),
                     new Pair<>(TUNE_ENTITY, tuneEntity),
                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
             });
@@ -237,7 +237,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             List<TuneEntity> tuneEntityList = DatabaseManager.findTuneByIdInDatabase("*", String.valueOf(tuneListRecyclerViewAdapter.getItem(position)), null, null);
             Log.i(TAG, "You long clicked " + tuneEntityList.get(0).getFirstTitle() + ", which is at cell position " + position);
             Utilities.loadActivity(requireActivity(), requireContext(), TuneActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, TUNE_ENTITY),
+                    new Pair<>(OPERATION, TuneOrSet.tune),
                     new Pair<>(TUNE_ENTITY, tuneEntityList.get(0)),
                     new Pair<>(CLICK_TYPE, Constants.ClickType.longClick.toString())
             });

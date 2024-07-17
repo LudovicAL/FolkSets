@@ -58,6 +58,11 @@ public class Constants {
         editSet
     }
 
+    public enum ManagementOperation {
+        manageTags,
+        managePlayers
+    }
+
     public enum TuneOrSet {
         tune,
         set
