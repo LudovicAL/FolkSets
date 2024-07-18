@@ -66,7 +66,7 @@ public class SetActivity extends AppCompatActivity {
     private Context context;
     private Dialog dialog;
 
-    private TuneListRecyclerViewAdapter.ItemClickListener selectedTuneItemClickListener = new TuneListRecyclerViewAdapter.ItemClickListener() {
+    private final TuneListRecyclerViewAdapter.ItemClickListener selectedTuneItemClickListener = new TuneListRecyclerViewAdapter.ItemClickListener() {
         @Override
         public void onItemClick(View view, int position) {
             try {
@@ -117,7 +117,7 @@ public class SetActivity extends AppCompatActivity {
             //Prepare the RecyclerView and its adapter for selected tunes
             recyclerView = findViewById(R.id.activity_set_recyclerview);
             recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
-            recyclerViewAdapter = new TuneListRecyclerViewAdapter();
+            recyclerViewAdapter = new TuneListRecyclerViewAdapter(this, this);
             recyclerViewAdapter.setClickListener(selectedTuneItemClickListener);
 
             //Retrieve the bundle message
@@ -259,6 +259,8 @@ public class SetActivity extends AppCompatActivity {
             dialog.getWindow().setLayout(width, height);
             dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             dialog.show();
+            ((TextView)dialog.findViewById(R.id.searchable_spinner_textview)).setText(R.string.select_a_tune);
+            ((EditText)dialog.findViewById(R.id.searchable_spinner_edittext)).setHint(R.string.search_tunes);
             dialog.findViewById(R.id.searchable_spinner_back_floatingActionButton).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

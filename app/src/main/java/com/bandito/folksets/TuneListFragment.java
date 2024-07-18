@@ -77,10 +77,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             }
         }
     };
-    public TuneListRecyclerViewAdapter tuneListRecyclerViewAdapter;
-
-    public TuneListFragment() {
-    }
+    private TuneListRecyclerViewAdapter tuneListRecyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,7 +89,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             textInputEditText.addTextChangedListener(textWatcher);
             RecyclerView recyclerView = view.findViewById(R.id.fragment_tune_list_recyclerview);
             recyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
-            tuneListRecyclerViewAdapter = new TuneListRecyclerViewAdapter();
+            tuneListRecyclerViewAdapter = new TuneListRecyclerViewAdapter(requireActivity(), requireContext());
             tuneListRecyclerViewAdapter.setClickListener(this);
             recyclerView.setAdapter(tuneListRecyclerViewAdapter);
             sortSpinner = view.findViewById(R.id.fragment_tune_list_spinner);

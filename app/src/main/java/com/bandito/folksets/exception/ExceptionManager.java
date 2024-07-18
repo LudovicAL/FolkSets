@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.Utilities;
 

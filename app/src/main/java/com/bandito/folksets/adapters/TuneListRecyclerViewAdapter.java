@@ -1,5 +1,7 @@
 package com.bandito.folksets.adapters;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
+import com.bandito.folksets.exception.ExceptionManager;
+import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.TuneEntity;
 
 import java.util.ArrayList;
@@ -17,12 +22,16 @@ import java.util.List;
 
 public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRecyclerViewAdapter.TuneViewHolder> {
     private static final String TAG = TuneListRecyclerViewAdapter.class.getName();
+    private final Activity activity;
+    private final Context context;
     private List<TuneEntity> tuneEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
 
-    public TuneListRecyclerViewAdapter() {
-    }
 
+    public TuneListRecyclerViewAdapter(Activity activity, Context context) {
+        this.activity = activity;
+        this.context = context;
+    }
 
     public List<TuneEntity> getTuneEntityList() {
         return tuneEntityList;
@@ -58,7 +67,7 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
         try {
             viewHolder.getTuneTitleTextView().setText(tuneEntityList.get(position).getFirstTitle());
         } catch (Exception e) {
-            Log.w(TAG, "An error occured while binding ViewHolder " + position + ".");
+            ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured while binding ViewHolder " + position + ".", e));
         }
     }
 
@@ -106,10 +115,8 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
         public boolean onLongClick(View view) {
             if (itemClickListener != null) {
                 itemClickListener.onLongItemClick(view, getAdapterPosition());
-                return true;
-            } else {
-                return false;
             }
+            return true;
         }
     }
 }

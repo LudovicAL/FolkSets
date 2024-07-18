@@ -41,17 +41,23 @@ public class PdfUtilities {
             ExceptionManager.manageException(activity, context, tag, new FolkSetsException("An error occured while converting a Pdf file to a list of bitmaps.", e));
         } finally {
             try {
-                page.close();
+                if (page != null) {
+                    page.close();
+                }
             } catch (Exception e) {
                 Log.w(tag, "An error occured while closing a page. This warning is expected.", e);
             }
             try {
-                pdfRenderer.close();
+                if (pdfRenderer != null) {
+                    pdfRenderer.close();
+                }
             } catch (Exception e) {
                 Log.e(tag, "An error occured while closing the PdfRenderer.", e);
             }
             try {
-                parcelFileDescriptor.close();
+                if (parcelFileDescriptor != null) {
+                    parcelFileDescriptor.close();
+                }
             } catch (Exception e) {
                 Log.e(tag, "An error occured while closing the ParcelFileDescriptor.", e);
             }

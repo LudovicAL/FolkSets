@@ -74,9 +74,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private AutoCompleteTextView tunePlayedByAutoCompleteTextView;
     private ChipGroup tunePlayedByChipGroup;
     private AutoCompleteTextView tuneNoteAutoCompleteTextView;
-    private TextWatcher titleTextWatcher;
-    private TextWatcher tagTextWatcher;
-    private TextWatcher playedByTextWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +135,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             findViewById(R.id.activity_tune_edit_floatingactionbutton).setOnClickListener(this);
             findViewById(R.id.activity_tune_back_floatingactionbutton).setOnClickListener(this);
 
-            titleTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
-            tagTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
-            playedByTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
+            TextWatcher titleTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
+            TextWatcher tagTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
+            TextWatcher playedByTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
             //Prepare the autocompletes
             tuneTitlesAutoCompleteTextView.setThreshold(0);
             tuneTitlesAutoCompleteTextView.addTextChangedListener(titleTextWatcher);

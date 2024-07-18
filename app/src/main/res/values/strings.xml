@@ -39,7 +39,11 @@
     <string name="consultations">Consultations</string>
 
     <string name="search_tunes">Search tunes</string>
+    <string name="search_tags">Search tags</string>
+    <string name="search_players">Search players</string>
     <string name="select_a_tune">Select a tune</string>
+    <string name="select_a_tag">Select a tag</string>
+    <string name="select_a_player">Select a player</string>
     <string name="search_sets">Search sets</string>
     <string name="placeholder">Placeholder</string>
     <string name="back">Back</string>
@@ -68,15 +72,25 @@
 
     <string name="crop_whitespace">Crop whitespace</string>
     <string name="loading_speed_versus_crop_precision">Loading speed versus crop precision</string>
-    <string name="most_precise_crop">Most precise crop</string>
     <string name="precise_crop_slower_loading">Precise crop\nSlower loading</string>
     <string name="imprecise_crop_faster_loading">Imprecise crop\nFaster loading</string>
     <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle left. If the whitespace around loaded tunes is cropped with too much imprecision, move the seekbar\'s handle right.)</string>
+
+    <string name="create_new_tag">Create new tag</string>
+    <string name="create_new_player">Create new player</string>
+    <string name="write_your_input_here">Write your input here</string>
+    <string name="submit">Submit</string>
 
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>
         <item>@string/sort_by_last_created</item>
         <item>@string/sort_by_last_consulted</item>
         <item>@string/sort_by_most_consulted</item>
+    </string-array>
+
+    <string-array name="selection_filter_array">
+        <item>All</item>
+        <item>Selected</item>
+        <item>Unselected</item>
     </string-array>
 </resources>

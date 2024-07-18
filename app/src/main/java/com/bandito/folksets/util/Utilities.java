@@ -144,7 +144,7 @@ public class Utilities {
                     + "\nException stacktrace: ");
             StackTraceElement[] stackTrace = exception.getStackTrace();
             for (StackTraceElement stackTraceElement : stackTrace) {
-                stringBuilder.append("\n    " + stackTraceElement.toString());
+                stringBuilder.append("\n    ").append(stackTraceElement.toString());
             }
             stringBuilder.append("\n\n\n\n\n\n");
             return stringBuilder.toString();
