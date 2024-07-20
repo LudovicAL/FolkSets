@@ -1,5 +1,7 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.LOGFILE_DEFAULT_ACTIVATION;
+import static com.bandito.folksets.util.Constants.LOGFILE_PREFERED_ACTIVATION_KEY;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
 import android.app.Activity;
@@ -54,7 +56,9 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             activity = this;
-            IoUtilities.createNewLogFile(this, this);
+            if (Utilities.readBooleanFromSharedPreferences(this, LOGFILE_PREFERED_ACTIVATION_KEY, LOGFILE_DEFAULT_ACTIVATION)) {
+                IoUtilities.createNewLogFile(this, this);
+            }
             progressBar = findViewById(R.id.activity_main_progressbar);
             progressBarHintTextView = findViewById(R.id.activity_main_progressbar_hint_textView);
             ViewPager2 viewPager2 = findViewById(R.id.activity_main_viewpager2);

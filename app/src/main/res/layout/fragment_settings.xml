@@ -1,204 +1,230 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="3sp"
-    tools:context=".SettingsFragment">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/fragment_settings_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
-
-    <Button
-        android:id="@+id/fragment_settings_selectstoragedirectory_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/select_storage_directory"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragment_setting_storageselectorinner_constraintlayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/fragment_settings_guideline"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_selectstoragedirectory_button">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="3sp"
+        tools:context=".SettingsFragment">
 
-        <TextView
-            android:id="@+id/fragment_settings_currentstoragedirectory_textview"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/fragment_settings_guideline"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:text="@string/current_directory"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/fragment_settings_selectstoragedirectory_textview"
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="3sp"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <Button
+            android:id="@+id/fragment_settings_selectstoragedirectory_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:text="@string/select_storage_directory"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/fragment_settings_currentstoragedirectory_textview"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <View
-        android:id="@+id/fragment_settings_divider1"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginVertical="30sp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_setting_storageselectorinner_constraintlayout" />
-
-    <Button
-        android:id="@+id/fragment_settings_exportdatabase_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/export_database_to_storage"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider1" />
-
-    <Button
-        android:id="@+id/fragment_settings_importdatabase_button"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/import_database_from_storage"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_exportdatabase_button" />
-
-    <View
-        android:id="@+id/fragment_settings_divider2"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginVertical="30sp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_importdatabase_button" />
-
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/fragment_setting_croppingactivation_switch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/crop_whitespace"
-        android:textSize="24sp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider2" />
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragment_setting_cropperinner_constraintlayout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintLeft_toRightOf="@+id/fragment_settings_guideline"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_setting_croppingactivation_switch">
-
-        <TextView
-            android:id="@+id/fragment_settings_seekbarhint_textview"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@string/loading_speed_versus_crop_precision"
-            android:textAlignment="viewStart"
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <SeekBar
-            android:id="@+id/fragment_settings_pdfcropper_seekbar"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_setting_storageselectorinner_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6sp"
-            android:indeterminate="false"
-            android:max="120"
-            android:min="1"
-            android:progress="15"
+            app:layout_constraintLeft_toRightOf="@+id/fragment_settings_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_selectstoragedirectory_button">
+
+            <TextView
+                android:id="@+id/fragment_settings_currentstoragedirectory_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:text="@string/current_directory"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/fragment_settings_selectstoragedirectory_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3sp"
+                android:text="@string/select_storage_directory"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/fragment_settings_currentstoragedirectory_textview"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/fragment_settings_divider1"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="30sp"
+            android:background="?android:attr/listDivider"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_seekbarhint_textview" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_storageselectorinner_constraintlayout" />
 
-        <TextView
-            android:id="@+id/fragment_settings_crop_precision"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/fragment_settings_managetags_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/precise_crop_slower_loading"
-            android:textSize="18sp"
+            android:text="@string/manage_tags"
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_pdfcropper_seekbar" />
+            app:layout_constraintRight_toRightOf="parent" />
 
-        <TextView
-            android:id="@+id/fragment_settings_loading_speed"
+        <Button
+            android:id="@+id/fragment_settings_manageplayers_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/manage_players"
+            android:textSize="24sp"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_managetags_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <View
+            android:id="@+id/fragment_settings_divider2"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="30sp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_manageplayers_button" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/fragment_setting_croppingactivation_switch"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/imprecise_crop_faster_loading"
-            android:textSize="18sp"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_pdfcropper_seekbar" />
+            android:text="@string/crop_whitespace"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider2" />
 
-        <TextView
-            android:id="@+id/fragment_settings_pdfcropperhelper_textview"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/fragment_setting_cropperinner_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6sp"
-            android:paddingHorizontal="20sp"
-            android:text="@string/pdf_cropper_seekbar_explanation"
-            android:textAlignment="center"
-            android:textColor="#989898"
-            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/fragment_settings_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_croppingactivation_switch">
+
+            <TextView
+                android:id="@+id/fragment_settings_seekbarhint_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/loading_speed_versus_crop_precision"
+                android:textAlignment="viewStart"
+                android:textSize="24sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <SeekBar
+                android:id="@+id/fragment_settings_pdfcropper_seekbar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:indeterminate="false"
+                android:max="120"
+                android:min="1"
+                android:progress="15"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_settings_seekbarhint_textview" />
+
+            <TextView
+                android:id="@+id/fragment_settings_crop_precision"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/precise_crop_slower_loading"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_settings_pdfcropper_seekbar" />
+
+            <TextView
+                android:id="@+id/fragment_settings_loading_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/imprecise_crop_faster_loading"
+                android:textSize="18sp"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_settings_pdfcropper_seekbar" />
+
+            <TextView
+                android:id="@+id/fragment_settings_pdfcropperhelper_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6sp"
+                android:paddingHorizontal="20sp"
+                android:text="@string/pdf_cropper_seekbar_explanation"
+                android:textAlignment="center"
+                android:textColor="#989898"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/fragment_settings_crop_precision" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <View
+            android:id="@+id/fragment_settings_divider3"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="30sp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_cropperinner_constraintlayout" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/fragment_setting_logfile_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/log_errors"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider3" />
+
+        <View
+            android:id="@+id/fragment_settings_divider4"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginVertical="30sp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_logfile_switch" />
+
+        <Button
+            android:id="@+id/fragment_settings_exportdatabase_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/export_database_to_storage"
+            android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_crop_precision" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider4" />
+
+        <Button
+            android:id="@+id/fragment_settings_importdatabase_button"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/import_database_from_storage"
+            android:textSize="24sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_exportdatabase_button" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <View
-        android:id="@+id/fragment_settings_divider3"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:layout_marginVertical="30sp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_setting_cropperinner_constraintlayout" />
-
-    <Button
-        android:id="@+id/fragment_settings_managetags_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manage_tags"
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <Button
-        android:id="@+id/fragment_settings_manageplayers_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manage_players"
-        android:textSize="24sp"
-        app:layout_constraintTop_toBottomOf="@+id/fragment_settings_managetags_button"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

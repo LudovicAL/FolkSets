@@ -1,5 +1,8 @@
 package com.bandito.folksets.exception;
 
+import static com.bandito.folksets.util.Constants.LOGFILE_DEFAULT_ACTIVATION;
+import static com.bandito.folksets.util.Constants.LOGFILE_PREFERED_ACTIVATION_KEY;
+
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
@@ -18,9 +21,11 @@ public class ExceptionManager {
             Log.e(TAG, "A non fatal exception occured.", exception);
             Toast.makeText(context, "An error occured", Toast.LENGTH_SHORT).show();
             try {
-                Uri uri = IoUtilities.getLogFileUri(activity, context);
-                if (uri != null) {
-                    IoUtilities.appendTextToFile(context, tag, uri, Utilities.convertExceptionToString(exception));
+                if (Utilities.readBooleanFromSharedPreferences(activity, LOGFILE_PREFERED_ACTIVATION_KEY, LOGFILE_DEFAULT_ACTIVATION)) {
+                    Uri uri = IoUtilities.getLogFileUri(activity, context);
+                    if (uri != null) {
+                        IoUtilities.appendTextToFile(context, tag, uri, Utilities.convertExceptionToString(exception));
+                    }
                 }
             } catch (Exception e2) {
                 Log.e(tag, "An exception occured while appending a text file during an exception management.", e2);

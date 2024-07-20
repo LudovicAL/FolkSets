@@ -20,6 +20,7 @@ import androidx.documentfile.provider.DocumentFile;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
+import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IoUtilities;
@@ -81,12 +82,18 @@ public class UpdateDatabaseThread extends Thread {
             DatabaseManager.insertTunesInDatabase(tuneEntityToAddList);
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{6, "Loading final tune list"});
             //Get tune list
-            StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, TUNE_TITLES, null);
-            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNE_ENTITY_LIST});
+            if (StaticData.tuneEntityList == null || StaticData.tuneEntityList.isEmpty() || !tuneIdToRemoveList.isEmpty() || !tuneEntityToAddList.isEmpty()) {
+                StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, TUNE_TITLES, null);
+                broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNE_ENTITY_LIST});
+            }
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{7, "Loading final set list"});
             //Get set list
-            StaticData.setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
-            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SET_ENTITY_LIST});
+            List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
+            if (StaticData.setEntityList == null || StaticData.setEntityList.isEmpty() || setEntityList != StaticData.setEntityList) {
+                StaticData.setEntityList = setEntityList;
+                broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SET_ENTITY_LIST});
+            }
+
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{8, "Loading unique tune titles"});
             //Get unique values
             StaticData.uniqueTuneTitleArray = DatabaseManager.getAllUniqueTitleInTuneTable();

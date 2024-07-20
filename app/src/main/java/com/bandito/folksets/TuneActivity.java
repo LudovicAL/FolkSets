@@ -84,8 +84,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         try {
             //Find views
             View headerView = ((NavigationView) findViewById(R.id.activity_tune_navigationview)).getHeaderView(0);
-            progressBar = findViewById(R.id.activity_tune_progressbar);
-            progressBarHint = findViewById(R.id.activity_tune_progressbarhint_textview);
+            progressBar = findViewById(R.id.recyclerview_footer_progressbar);
+            progressBarHint = findViewById(R.id.recyclerview_footer_progressbarhint_textview);
             tuneTitlesChipGroup = headerView.findViewById(R.id.tune_nav_header_title_chipgroup);
             tuneTagsChipGroup = headerView.findViewById(R.id.tune_nav_header_tag_chipgroup);
             tunePlayedByChipGroup = headerView.findViewById(R.id.tune_nav_header_players_chipgroup);
@@ -108,9 +108,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             getWindow().setNavigationBarContrastEnforced(false);
             getWindow().setNavigationBarColor(Color.TRANSPARENT);
             int navigationBarHeight = getWindowManager().getCurrentWindowMetrics().getWindowInsets().getInsets(WindowInsets.Type.navigationBars()).bottom;
-            Button previousTuneButton = findViewById(R.id.activity_tune_previous_button);
+            View previousTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonprevious_constraintlayout);
             previousTuneButton.setPadding(previousTuneButton.getPaddingLeft(), previousTuneButton.getPaddingTop(), previousTuneButton.getPaddingRight(), navigationBarHeight);
-            Button nextTuneButton = findViewById(R.id.activity_tune_next_button);
+            View nextTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonnext_constraintlayout);
             nextTuneButton.setPadding(nextTuneButton.getPaddingLeft(), nextTuneButton.getPaddingTop(), nextTuneButton.getPaddingRight(), navigationBarHeight);
 
             //Determine what was received: a tune or a set
@@ -252,9 +252,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 saveTune();
             } else if (view.getId() == R.id.tune_nav_header_back_floatingactionbutton) {
                 drawerLayout.closeDrawer(GravityCompat.END);
-            } else if (view.getId() == R.id.activity_tune_previous_button) {
+            } else if (view.getId() == R.id.recyclerview_footer_innerbuttonprevious_constraintlayout) {
                 loadPreviousTune();
-            } else if (view.getId() == R.id.activity_tune_next_button) {
+            } else if (view.getId() == R.id.recyclerview_footer_innerbuttonnext_constraintlayout) {
                 loadNextTune();
             }
         } catch (Exception e) {
@@ -366,16 +366,16 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
 
     private void displayPreviousAndNextTune() throws FolkSetsException {
         if (StaticData.previousTune != null) {
-            Button previousTuneButton = findViewById(R.id.activity_tune_previous_button);
+            View previousTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonprevious_constraintlayout);
             previousTuneButton.setVisibility(View.VISIBLE);
-            previousTuneButton.setText(StaticData.previousTune.getFirstTitle());
             previousTuneButton.setOnClickListener(this);
+            ((TextView)findViewById(R.id.recyclerview_footer_previousfooter_textview)).setText(StaticData.previousTune.getFirstTitle());
         }
         if (StaticData.nextTune != null) {
-            Button nextTuneButton = findViewById(R.id.activity_tune_next_button);
+            View nextTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonnext_constraintlayout);
             nextTuneButton.setVisibility(View.VISIBLE);
-            nextTuneButton.setText(StaticData.nextTune.getFirstTitle());
             nextTuneButton.setOnClickListener(this);
+            ((TextView)findViewById(R.id.recyclerview_footer_nextfooter_textview)).setText(StaticData.nextTune.getFirstTitle());
         }
     }
 

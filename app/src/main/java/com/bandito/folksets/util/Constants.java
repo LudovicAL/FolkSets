@@ -14,6 +14,8 @@ public class Constants {
     public static final boolean CROPPER_DEFAULT_ACTIVATION = true;
     public static final String CROPPER_PREFERED_VALUE_KEY = "cropperPreferedValue";
     public static final int CROPPER_DEFAULT_VALUE = 15;
+    public static final String LOGFILE_PREFERED_ACTIVATION_KEY = "logFilePreferedActivationKey";
+    public static final boolean LOGFILE_DEFAULT_ACTIVATION = false;
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";
 

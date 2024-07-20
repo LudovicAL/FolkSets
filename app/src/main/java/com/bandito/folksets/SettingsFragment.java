@@ -4,6 +4,8 @@ import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_ACTIVATION;
 import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_VALUE;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_ACTIVATION_KEY;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_VALUE_KEY;
+import static com.bandito.folksets.util.Constants.LOGFILE_DEFAULT_ACTIVATION;
+import static com.bandito.folksets.util.Constants.LOGFILE_PREFERED_ACTIVATION_KEY;
 import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
@@ -32,6 +34,7 @@ import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IntentLauncher;
+import com.bandito.folksets.util.IoUtilities;
 import com.bandito.folksets.util.Utilities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -100,11 +103,26 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
             seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
             seekBar.setOnSeekBarChangeListener(cropperSensitivitySeekBarListener);
-            SwitchCompat switchCompat = view.findViewById(R.id.fragment_setting_croppingactivation_switch);
-            switchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION));
-            switchCompat.setOnCheckedChangeListener(cropperActivationSwitchListener);
-            switchCompat.toggle();
-            switchCompat.toggle();
+            SwitchCompat cropperSwitchCompat = view.findViewById(R.id.fragment_setting_croppingactivation_switch);
+            cropperSwitchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), CROPPER_PREFERED_ACTIVATION_KEY, CROPPER_DEFAULT_ACTIVATION));
+            cropperSwitchCompat.setOnCheckedChangeListener(cropperActivationSwitchListener);
+            cropperSwitchCompat.toggle();
+            cropperSwitchCompat.toggle();
+            SwitchCompat logFileSwitchCompat = view.findViewById(R.id.fragment_setting_logfile_switch);
+            logFileSwitchCompat.setChecked(Utilities.readBooleanFromSharedPreferences(requireActivity(), LOGFILE_PREFERED_ACTIVATION_KEY, LOGFILE_DEFAULT_ACTIVATION));
+            logFileSwitchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    try {
+                        Utilities.writeBooleanToSharedPreferences(requireActivity(), LOGFILE_PREFERED_ACTIVATION_KEY, isChecked);
+                        if (isChecked) {
+                            IoUtilities.createNewLogFile(requireActivity(), requireContext());
+                        }
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An error occured while processing an OnCheckedCanged event.", e));
+                    }
+                }
+            });
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured during the OnCreateView step of class SettingsFragment.", e, true));
         }

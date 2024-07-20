@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/activity_tune_progressbarhint_textview"
+        android:id="@+id/recyclerview_footer_progressbarhint_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/loading_data"
         android:textAlignment="viewStart"
         android:textSize="24sp"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/activity_tune_progressbar"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_progressbar"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <ProgressBar
-        android:id="@+id/activity_tune_progressbar"
+        android:id="@+id/recyclerview_footer_progressbar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:max="2"
         android:progress="0"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/activity_tune_inner_constraintlayout"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_inner_constraintlayout"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/activity_tune_inner_constraintlayout"
+        android:id="@+id/recyclerview_footer_inner_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#BC9DED"
@@ -40,59 +38,119 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
 
-        <Button
-            android:id="@+id/activity_tune_previous_button"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recyclerview_footer_innerbuttonprevious_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="1sp"
+            android:layout_marginLeft="1sp"
+            android:background="@color/dark_purple"
             android:clickable="true"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:singleLine="true"
-            android:text="@string/placeholder"
-            android:textAlignment="viewStart"
-            android:textSize="24sp"
             android:visibility="gone"
-            app:cornerRadius="0dp"
-            app:icon="@drawable/ic_half_arrow_left"
-            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/activity_tune_guideline" />
+            app:layout_constraintRight_toLeftOf="@+id/recyclerview_footer_guideline"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <TextView
+                android:id="@+id/recyclerview_footer_previousheader_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/previous"
+                android:textAlignment="viewStart"
+                android:textColor="@color/grey"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_previousfooter_textview"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview" />
+
+            <TextView
+                android:id="@+id/recyclerview_footer_previousfooter_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textAlignment="viewStart"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview" />
+
+            <ImageView
+                android:id="@+id/recyclerview_footer_previous_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_half_arrow_left" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/activity_tune_guideline"
+            android:id="@+id/recyclerview_footer_guideline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             app:layout_constraintGuide_percent="0.5" />
 
-        <Button
-            android:id="@+id/activity_tune_next_button"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/recyclerview_footer_innerbuttonnext_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="1sp"
+            android:background="@color/dark_purple"
             android:clickable="true"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:paddingLeft="0dp"
             android:paddingRight="0dp"
-            android:singleLine="true"
-            android:text="@string/placeholder"
-            android:textAlignment="viewEnd"
-            android:textSize="24sp"
             android:visibility="gone"
-            app:cornerRadius="0dp"
-            app:icon="@drawable/ic_half_arrow_right"
-            app:iconGravity="end"
-            app:iconPadding="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintLeft_toRightOf="@+id/activity_tune_guideline"
-            app:layout_constraintRight_toRightOf="parent" />
+            app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_guideline"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/recyclerview_footer_nextheader_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/next"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/grey"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_nextfooter_textview"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/recyclerview_footer_next_imageview" />
+
+            <TextView
+                android:id="@+id/recyclerview_footer_nextfooter_textview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/placeholder"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/recyclerview_footer_next_imageview" />
+
+            <ImageView
+                android:id="@+id/recyclerview_footer_next_imageview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:tint="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_half_arrow_right" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
