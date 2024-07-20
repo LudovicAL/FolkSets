@@ -5,7 +5,6 @@ import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import androidx.annotation.NonNull;
 
 import com.bandito.folksets.exception.FolkSetsException;
-import com.bandito.folksets.util.Constants;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -51,14 +50,14 @@ public class TuneEntity implements Serializable {
         if (tuneTags == null) {
             return false;
         }
-        return Arrays.stream(StringUtils.split(tuneTags, DEFAULT_SEPARATOR)).anyMatch(t -> t.equals(tag));
+        return Arrays.asList(StringUtils.split(tuneTags, DEFAULT_SEPARATOR)).contains(tag);
     }
 
     public boolean hasPlayer(String player) {
         if (tunePlayedBy == null) {
             return false;
         }
-        return Arrays.stream(StringUtils.split(tunePlayedBy, DEFAULT_SEPARATOR)).anyMatch(p -> p.equals(player));
+        return Arrays.asList(StringUtils.split(tunePlayedBy, DEFAULT_SEPARATOR)).contains(player);
     }
 
     public void addTag(String tag) {
