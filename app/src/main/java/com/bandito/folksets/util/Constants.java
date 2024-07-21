@@ -9,6 +9,7 @@ public class Constants {
     public static final String SET_ENTITY_LIST = "setEntityList";
     public static final String BITMAP_LIST = "bitmapList";
     public static final String PREVIOUS_AND_NEXT_TUNE = "Previous and next tune";
+    public static final String SETS_WITH_TUNE = "Sets with tune";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
     public static final String CROPPER_PREFERED_ACTIVATION_KEY = "cropperPreferedActivationKey";
     public static final boolean CROPPER_DEFAULT_ACTIVATION = true;

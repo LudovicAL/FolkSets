@@ -73,7 +73,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
         try {
             viewHolder.getSetNameTextView().setText(setEntityList.get(position).setName);
         } catch (Exception e) {
-            Log.w(TAG, "An error occured while binding ViewHolder " + position + ".");
+            ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured while binding ViewHolder " + position + ".", e));
         }
     }
 
@@ -116,20 +116,20 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
 
         @Override
         public void onClick(View view) {
-            if (view.getId() == R.id.adapter_set_item_select_floatingactionbutton) {
-                displayPopupMenuOfTunesInSet(view);
-            } else if (view.getId() == R.id.adapter_set_item_edit_floatingactionbutton) {
-                try {
+            try {
+                if (view.getId() == R.id.adapter_set_item_select_floatingactionbutton) {
+                    displayPopupMenuOfTunesInSet(view);
+                } else if (view.getId() == R.id.adapter_set_item_edit_floatingactionbutton) {
                     List<SetEntity> setEntityListOfClickedSet = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setEntityList.get(getAdapterPosition()).setId), null, null);
                     Utilities.loadActivity(activity, context, SetActivity.class, new Pair[]{
                             new Pair<>(OPERATION, Constants.SetOperation.editSet),
                             new Pair<>(SET_ENTITY, setEntityListOfClickedSet.get(0))
                     });
-                } catch (Exception e) {
-                    ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while laoading the SetActivity.", e));
+                } else if (itemClickListener != null) {
+                    itemClickListener.onItemClick(view, getAdapterPosition());
                 }
-            } else if (itemClickListener != null) {
-                itemClickListener.onItemClick(view, getAdapterPosition());
+            } catch (Exception e) {
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
             }
         }
 
@@ -167,7 +167,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                                     new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
                             });
                         } catch (Exception e) {
-                            ExceptionManager.manageException(activity, context, TAG, e);
+                            ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured during an OnMenuItemClick event.", e));
                         }
                         return true;
                     }
@@ -175,7 +175,7 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                 // Showing the popup menu
                 popupMenu.show();
             } catch (Exception e) {
-                ExceptionManager.manageException(activity, context, TAG, e);
+                ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured while displaying tunes in a set.", e));
             }
         }
     }

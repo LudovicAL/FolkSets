@@ -93,7 +93,6 @@ public class UpdateDatabaseThread extends Thread {
                 StaticData.setEntityList = setEntityList;
                 broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SET_ENTITY_LIST});
             }
-
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{8, "Loading unique tune titles"});
             //Get unique values
             StaticData.uniqueTuneTitleArray = DatabaseManager.getAllUniqueTitleInTuneTable();

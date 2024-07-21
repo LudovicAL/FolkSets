@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static android.view.Menu.NONE;
 import static com.bandito.folksets.util.Constants.*;
 
 import android.app.Activity;
@@ -11,6 +12,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -24,6 +26,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -49,10 +52,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.time.OffsetDateTime;
+
 public class TuneActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = TuneActivity.class.getName();
     private final Activity activity = this;
+    private final Context context = this;
     private final TuneActivity.MyBroadcastReceiver myBroadcastReceiver = new TuneActivity.MyBroadcastReceiver();
     private ProgressBar progressBar;
     private TextView progressBarHint;
@@ -251,6 +256,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 saveTune();
             } else if (view.getId() == R.id.tune_nav_header_back_floatingactionbutton) {
                 drawerLayout.closeDrawer(GravityCompat.END);
+            } else if (view.getId() == R.id.recyclerview_footer_set_textView) {
+                displayPopupMenuOfSetsWithTune(view);
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonprevious_constraintlayout) {
                 loadPreviousTune();
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonnext_constraintlayout) {
@@ -258,6 +265,40 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
+        }
+    }
+
+    private void displayPopupMenuOfSetsWithTune(View view) {
+        try {
+            if (tuneOrSet == TuneOrSet.set) {
+                return;
+            }
+            if (StaticData.setsWithTune == null || StaticData.setsWithTune.isEmpty()) {
+                return;
+            }
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            for (int i = 0, max = StaticData.setsWithTune.size(); i < max; i++) {
+                popupMenu.getMenu().add(NONE, i, NONE, StaticData.setsWithTune.get(i).setName);
+            }
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    try {
+                        Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
+                                new Pair<>(OPERATION, Constants.TuneOrSet.set),
+                                new Pair<>(POSITION, 0),
+                                new Pair<>(SET_ENTITY, StaticData.setsWithTune.get(menuItem.getItemId())),
+                                new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                        });
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured during an OnMenuItemClick event.", e));
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying sets with tune.", e));
         }
     }
 
@@ -355,6 +396,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                         prepareAutocompleteAdapters();
                     } else if (PREVIOUS_AND_NEXT_TUNE.equals(broadcastValue)) {
                         displayPreviousAndNextTune();
+                    } else if (SETS_WITH_TUNE.equals(broadcastValue)) {
+                        displaySetsWithTune();
                     }
                 }
             } catch (Exception e) {
@@ -376,6 +419,18 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             nextTuneButton.setOnClickListener(this);
             ((TextView)findViewById(R.id.recyclerview_footer_nextfooter_textview)).setText(StaticData.nextTune.getFirstTitle());
         }
+    }
+
+    private void displaySetsWithTune() {
+        if (tuneOrSet == TuneOrSet.set) {
+            return;
+        }
+        if (StaticData.setsWithTune == null || StaticData.setsWithTune.isEmpty()) {
+            return;
+        }
+        TextView setTextView = findViewById(R.id.recyclerview_footer_set_textView);
+        setTextView.setVisibility(View.VISIBLE);
+        setTextView.setOnClickListener(this);
     }
 
     private void retrieveBitmaps() {

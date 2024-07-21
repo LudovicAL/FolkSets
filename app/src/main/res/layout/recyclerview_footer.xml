@@ -33,16 +33,39 @@
         android:id="@+id/recyclerview_footer_inner_constraintlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#BC9DED"
+        android:background="@color/purple"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/recyclerview_footer_set_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1sp"
+            android:background="@color/dark_purple"
+            android:clickable="true"
+            android:text="@string/sets"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_barrier"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
+        <androidx.constraintlayout.widget.Barrier
+            android:id="@+id/recyclerview_footer_barrier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:barrierDirection="top"
+            app:constraint_referenced_ids="recyclerview_footer_innerbuttonprevious_constraintlayout,recyclerview_footer_innerbuttonnext_constraintlayout" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/recyclerview_footer_innerbuttonprevious_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="1sp"
+            android:layout_marginEnd="1sp"
             android:background="@color/dark_purple"
             android:clickable="true"
             android:insetTop="0dp"
@@ -52,8 +75,8 @@
             android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintRight_toLeftOf="@+id/recyclerview_footer_guideline"
-            app:layout_constraintLeft_toLeftOf="parent">
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/recyclerview_footer_guideline">
 
             <TextView
                 android:id="@+id/recyclerview_footer_previousheader_textview"
@@ -64,31 +87,32 @@
                 android:textColor="@color/grey"
                 android:textSize="18sp"
                 app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_previousfooter_textview"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview" />
+                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/recyclerview_footer_previousfooter_textview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/placeholder"
                 android:textAlignment="viewStart"
                 android:textColor="@color/white"
                 android:textSize="24sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview" />
+                app:layout_constraintLeft_toRightOf="@+id/recyclerview_footer_previous_imageview"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <ImageView
                 android:id="@+id/recyclerview_footer_previous_imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/previous"
-                app:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_half_arrow_left" />
+                app:srcCompat="@drawable/ic_half_arrow_left"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -103,7 +127,7 @@
             android:id="@+id/recyclerview_footer_innerbuttonnext_constraintlayout"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="1sp"
+            android:layout_marginStart="1sp"
             android:background="@color/dark_purple"
             android:clickable="true"
             android:insetTop="0dp"
@@ -132,6 +156,7 @@
                 android:id="@+id/recyclerview_footer_nextfooter_textview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:singleLine="true"
                 android:text="@string/placeholder"
                 android:textAlignment="viewEnd"
                 android:textColor="@color/white"
@@ -145,11 +170,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/next"
-                app:tint="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_half_arrow_right" />
+                app:srcCompat="@drawable/ic_half_arrow_right"
+                app:tint="@color/white" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
