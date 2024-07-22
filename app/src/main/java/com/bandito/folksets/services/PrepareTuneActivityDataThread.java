@@ -16,7 +16,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.bandito.folksets.TuneActivity;
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.DatabaseManager;
@@ -31,9 +30,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
+public class PrepareTuneActivityDataThread extends Thread {
 
-    private static final String TAG = TuneActivity.class.getName();
+    private static final String TAG = PrepareTuneActivityDataThread.class.getName();
     private final Activity activity;
     private final Context context;
     private final TuneEntity tuneEntity;
@@ -42,7 +41,8 @@ public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
     private final Constants.TuneOrSet tuneOrSet;
     private final boolean isCropperActivated;
     private int cropperStrideSize = CROPPER_DEFAULT_VALUE;
-    public RenderPdfAndGetPreviousAndNextTuneThread(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
+
+    public PrepareTuneActivityDataThread(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
         try {
             this.context = context;
             this.activity = activity;
@@ -55,15 +55,14 @@ public class RenderPdfAndGetPreviousAndNextTuneThread extends Thread {
                 this.cropperStrideSize = Utilities.readIntFromSharedPreferences(activity, CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE);
             }
         } catch (Exception e ) {
-            throw new FolkSetsException("An exception occured while constructing a RenderPdfAndGetPreviousAndNextTuneThread object.", e);
+            throw new FolkSetsException("An exception occured while constructing a PrepareTuneActivityDataThread object.", e);
         }
     }
 
     @Override
     public void run() {
         try {
-            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
-            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Converting pdf to bitmaps"});
+            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{View.VISIBLE, 0, "Converting pdf to bitmaps"});
             List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(activity, context, TAG, tuneEntity.tuneFilePath);
             int maxNumberOfSteps = bitmapList.size() + 4;
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressStepNumber, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, 1, "Cropping bitmaps"});

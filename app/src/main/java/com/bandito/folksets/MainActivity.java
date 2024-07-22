@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                 tabLayout.selectTab(tabLayout.getTabAt(2));
             } else {
                 LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.mainActivityProgressUpdate.toString()));
-                ServiceSingleton.getInstance().UpdateDatabase(this, this, TAG);
+                ServiceSingleton.getInstance().UpdateDatabase(this, this);
             }
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while resuming MainActivity.", e, true));
@@ -159,7 +159,8 @@ public class MainActivity extends AppCompatActivity {
                 }
                 if (intent.getExtras().containsKey(Constants.BroadcastKey.progressValue.toString())) {
                     updateProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressValue.toString()), intent.getExtras().getString(Constants.BroadcastKey.progressHint.toString()));
-                } else if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
+                }
+                if (intent.getExtras().containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
                     displayProgressBar(intent.getExtras().getInt(Constants.BroadcastKey.progressVisibility.toString()));
                 }
             } catch (Exception e) {

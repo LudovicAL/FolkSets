@@ -36,21 +36,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class UpdateDatabaseThread extends Thread {
+    private static final String TAG = UpdateDatabaseThread.class.getName();
     private final Activity callingActivity;
     private final Context context;
-    private final String tag;
 
-    public UpdateDatabaseThread(Activity callingActivity, Context context, String tag){
+    public UpdateDatabaseThread(Activity callingActivity, Context context){
         this.callingActivity = callingActivity;
         this.context = context;
-        this.tag = tag;
     }
 
     @Override
     public void run() {
         try {
-            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.VISIBLE});
-            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{0, "Loading storage directory"});
+            broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{View.VISIBLE, 0, "Loading storage directory"});
             DatabaseManager.initializeDatabase(callingActivity.getBaseContext());
 
             String storageDirectoryUri = Utilities.readStringFromSharedPreferences(callingActivity, STORAGE_DIRECTORY_URI, "");
@@ -118,13 +116,13 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
             //Linger a few more seconds
         } catch (Exception e) {
-            ExceptionManager.manageException(callingActivity, context, tag, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
+            ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
         } finally {
             try {
                 sleep(3000L);
                 broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
             } catch (Exception e2) {
-                Log.e(tag, "An error occured while ending the UpdateDatabase thread.", e2);
+                ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An error occured while ending the UpdateDatabase thread.", e2));
             }
         }
     }

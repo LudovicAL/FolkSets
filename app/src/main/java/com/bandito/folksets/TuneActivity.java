@@ -215,7 +215,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured when trying to update the tune last consultation date.", e));
         }
         try {
-            ServiceSingleton.getInstance().interruptPdfRendering();
+            ServiceSingleton.getInstance().interruptTuneActivityDataRetrieval();
             StaticData.bitmapList = null;
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while interrupting the pdf rendering service.", e, true));
@@ -229,7 +229,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         try {
             LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
             LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
-            ServiceSingleton.getInstance().renderPdfAndGetPreviousAndNextTune(this, this, tuneEntity, setEntity, position, tuneOrSet);
+            ServiceSingleton.getInstance().prepareTuneActivityData(this, this, tuneEntity, setEntity, position, tuneOrSet);
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while resuming TuneActivity.", e));
         }

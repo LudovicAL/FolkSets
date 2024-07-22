@@ -100,6 +100,11 @@ public class ManagementActivity extends AppCompatActivity implements AdapterView
             ((Button)findViewById(R.id.activity_management_createnew_button)).setText(tagsOrPlayers == Constants.ManagementOperation.manageTags ? R.string.create_new_tag : R.string.create_new_player);
             searchTextView.setText(tagsOrPlayers == Constants.ManagementOperation.manageTags ? R.string.select_a_tag : R.string.select_a_player);
             searchTextInputEditText.addTextChangedListener(textWatcher);
+            if (tagsOrPlayers == Constants.ManagementOperation.manageTags) {
+                StaticData.uniqueTuneTagArray = DatabaseManager.getAllUniqueTagInTuneTable();
+            } else {
+                StaticData.uniqueTunePlayedByArray = DatabaseManager.getAllUniquePlayedByInTuneTable();
+            }
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured during the OnCreate step of class ManagementActivity.", e, true));
         }

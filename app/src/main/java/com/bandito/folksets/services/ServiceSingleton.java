@@ -17,9 +17,9 @@ import java.util.concurrent.Executors;
 public class ServiceSingleton {
 
     private static ServiceSingleton INSTANCE;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(3);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(4);
     private UpdateDatabaseThread updateDatabaseThread;
-    private RenderPdfAndGetPreviousAndNextTuneThread renderPdfAndGetPreviousAndNextTuneThread;
+    private PrepareTuneActivityDataThread prepareTuneActivityDataThread;
     private ExportImportDatabaseThread exportImportDatabaseThread;
 
     private ServiceSingleton() {
@@ -32,12 +32,12 @@ public class ServiceSingleton {
         return INSTANCE;
     }
 
-    public void UpdateDatabase(final Activity activity, final Context context, final String tag) throws FolkSetsException {
+    public void UpdateDatabase(final Activity activity, final Context context) throws FolkSetsException {
         try {
             if (updateDatabaseThread == null || !updateDatabaseThread.isAlive()) {
                 String storageDirectoryUri = Utilities.readStringFromSharedPreferences(activity, STORAGE_DIRECTORY_URI, null);
                 if (storageDirectoryUri != null) {
-                    updateDatabaseThread = new UpdateDatabaseThread(activity, context, tag);
+                    updateDatabaseThread = new UpdateDatabaseThread(activity, context);
                     executorService.execute(updateDatabaseThread);
                 }
             }
@@ -56,11 +56,11 @@ public class ServiceSingleton {
         }
     }
 
-    public void renderPdfAndGetPreviousAndNextTune(final Context context, final Activity activity, final TuneEntity tuneEntity, final SetEntity setEntity, final int position, final Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
+    public void prepareTuneActivityData(final Context context, final Activity activity, final TuneEntity tuneEntity, final SetEntity setEntity, final int position, final Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
         try {
-            if (renderPdfAndGetPreviousAndNextTuneThread == null || !renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
-                renderPdfAndGetPreviousAndNextTuneThread = new RenderPdfAndGetPreviousAndNextTuneThread(context, activity, tuneEntity, setEntity, position, tuneOrSet);
-                executorService.execute(renderPdfAndGetPreviousAndNextTuneThread);
+            if (prepareTuneActivityDataThread == null || !prepareTuneActivityDataThread.isAlive()) {
+                prepareTuneActivityDataThread = new PrepareTuneActivityDataThread(context, activity, tuneEntity, setEntity, position, tuneOrSet);
+                executorService.execute(prepareTuneActivityDataThread);
 
             }
         } catch (Exception e) {
@@ -68,10 +68,10 @@ public class ServiceSingleton {
         }
     }
 
-    public void interruptPdfRendering() throws FolkSetsException {
+    public void interruptTuneActivityDataRetrieval() throws FolkSetsException {
         try {
-            if (renderPdfAndGetPreviousAndNextTuneThread != null && renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
-                renderPdfAndGetPreviousAndNextTuneThread.interrupt();
+            if (prepareTuneActivityDataThread != null && prepareTuneActivityDataThread.isAlive()) {
+                prepareTuneActivityDataThread.interrupt();
             }
         } catch (Exception e) {
             throw new FolkSetsException("An error occured while interrupting the pdf rendering thread.", e);
