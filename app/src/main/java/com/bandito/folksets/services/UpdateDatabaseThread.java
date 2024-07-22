@@ -89,7 +89,7 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{7, "Loading final set list"});
             //Get set list
             List<SetEntity> setEntityList = DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null);
-            if (StaticData.setEntityList == null || StaticData.setEntityList.isEmpty() || setEntityList != StaticData.setEntityList) {
+            if (StaticData.setEntityList == null || StaticData.setEntityList.isEmpty() || !setEntityList.equals(StaticData.setEntityList)) {
                 StaticData.setEntityList = setEntityList;
                 broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SET_ENTITY_LIST});
             }

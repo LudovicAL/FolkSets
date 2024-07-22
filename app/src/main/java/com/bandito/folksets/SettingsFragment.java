@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static android.view.View.GONE;
 import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_ACTIVATION;
 import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_VALUE;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_ACTIVATION_KEY;
@@ -10,7 +11,10 @@ import static com.bandito.folksets.util.Constants.OPERATION;
 import static com.bandito.folksets.util.Constants.STORAGE_DIRECTORY_URI;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -19,19 +23,22 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
-import com.bandito.folksets.sql.DatabaseManager;
+import com.bandito.folksets.services.ServiceSingleton;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.IntentLauncher;
 import com.bandito.folksets.util.IoUtilities;
@@ -44,6 +51,11 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private static final String TAG = SettingsFragment.class.getName();
     private TextView selectStorageDirectoryTextView;
     private ConstraintLayout cropperInnerConstraintLayout;
+    private Button exportDatabaseButton;
+    private Button importDatabaseButton;
+    private ProgressBar exportDatabaseProgressBar;
+    private ProgressBar importDatabaseProgressBar;
+    private final SettingsFragment.MyBroadcastReceiver myBroadcastReceiver = new SettingsFragment.MyBroadcastReceiver();
     private final CompoundButton.OnCheckedChangeListener cropperActivationSwitchListener = new CompoundButton.OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -53,7 +65,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                     if (isChecked) {
                         cropperInnerConstraintLayout.setVisibility(View.VISIBLE);
                     } else {
-                        cropperInnerConstraintLayout.setVisibility(View.GONE);
+                        cropperInnerConstraintLayout.setVisibility(GONE);
                     }
                 }
             } catch (Exception e) {
@@ -92,13 +104,17 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         try {
-            view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
-            view.findViewById(R.id.fragment_settings_exportdatabase_button).setOnClickListener(this);
-            view.findViewById(R.id.fragment_settings_importdatabase_button).setOnClickListener(this);
-            view.findViewById(R.id.fragment_settings_managetags_button).setOnClickListener(this);
-            view.findViewById(R.id.fragment_settings_manageplayers_button).setOnClickListener(this);
             selectStorageDirectoryTextView = view.findViewById(R.id.fragment_settings_selectstoragedirectory_textview);
             cropperInnerConstraintLayout = view.findViewById(R.id.fragment_setting_cropperinner_constraintlayout);
+            exportDatabaseButton = view.findViewById(R.id.fragment_settings_exportdatabase_button);
+            importDatabaseButton = view.findViewById(R.id.fragment_settings_importdatabase_button);
+            exportDatabaseProgressBar = view.findViewById(R.id.fragment_settings_exportdatabase_progressbar);
+            importDatabaseProgressBar = view.findViewById(R.id.fragment_settings_importdatabase_progressbar);
+            exportDatabaseButton.setOnClickListener(this);
+            importDatabaseButton.setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_selectstoragedirectory_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_managetags_button).setOnClickListener(this);
+            view.findViewById(R.id.fragment_settings_manageplayers_button).setOnClickListener(this);
             updateSelectStorageDirectoryTextView();
             SeekBar seekBar = view.findViewById(R.id.fragment_settings_pdfcropper_seekbar);
             seekBar.setProgress(Utilities.readIntFromSharedPreferences(requireActivity(), CROPPER_PREFERED_VALUE_KEY, CROPPER_DEFAULT_VALUE));
@@ -129,14 +145,54 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            LocalBroadcastManager.getInstance(requireContext()).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.importExportUpdate.toString()));
+            if (!ServiceSingleton.getInstance().isExportingOrImportingThreadAlive()) {
+                exportDatabaseButton.setEnabled(true);
+                exportDatabaseProgressBar.setVisibility(GONE);
+                importDatabaseButton.setEnabled(true);
+                importDatabaseProgressBar.setVisibility(GONE);
+            }
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while resuming SettingsFragment.", e));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            LocalBroadcastManager.getInstance(requireContext()).unregisterReceiver(myBroadcastReceiver);
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while pausing SettingsFragment.", e, true));
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+            ServiceSingleton.getInstance().interruptDatabaseExportingAndImporting();
+        } catch (Exception e) {
+            ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An error occured while destroying SettingsFragment.", e, true));
+        }
+        super.onDestroy();
+    }
+
     private void updateSelectStorageDirectoryTextView() {
         try {
             String directory = Utilities.readStringFromSharedPreferences(requireActivity(), STORAGE_DIRECTORY_URI, null);
             if (StringUtils.isEmpty(directory)) {
-                selectStorageDirectoryTextView.setVisibility(View.GONE);
+                selectStorageDirectoryTextView.setVisibility(GONE);
+                exportDatabaseButton.setEnabled(false);
+                importDatabaseButton.setEnabled(false);
             } else {
                 selectStorageDirectoryTextView.setText(directory);
                 selectStorageDirectoryTextView.setVisibility(View.VISIBLE);
+                exportDatabaseButton.setEnabled(true);
+                importDatabaseButton.setEnabled(true);
             }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while updating the selected storage directory textview.", e));
@@ -180,8 +236,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     public void exportDatabaseToStorage() {
         try {
-            DatabaseManager.exportDatabase(requireContext(), requireActivity());
-            Toast.makeText(requireContext(), "Exportation complete", Toast.LENGTH_SHORT).show();
+            ServiceSingleton.getInstance().exportOrImportDatabase(requireContext(), requireActivity(), TAG, Constants.ExportOrImport.exportDatabase);
+            exportDatabaseProgressBar.setVisibility(View.VISIBLE);
+            exportDatabaseButton.setEnabled(false);
+            importDatabaseButton.setEnabled(false);
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while exporting the database to storage.", e));
         }
@@ -189,8 +247,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
 
     public void importDatabaseFromStorage() {
         try {
-            DatabaseManager.importDatabase(requireContext(), requireActivity());
-            Toast.makeText(requireContext(), "Importation complete", Toast.LENGTH_SHORT).show();
+            ServiceSingleton.getInstance().exportOrImportDatabase(requireContext(), requireActivity(), TAG, Constants.ExportOrImport.importDatabase);
+            importDatabaseProgressBar.setVisibility(View.VISIBLE);
+            exportDatabaseButton.setEnabled(false);
+            importDatabaseButton.setEnabled(false);
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while importing the database from storage.", e));
         }
@@ -224,6 +284,32 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
             }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
+        }
+    }
+
+    public class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                Bundle bundle = intent.getExtras();
+                if (bundle == null) {
+                    ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("The activity receive à broadcast with not extras.", null));
+                }
+                if (bundle.containsKey(Constants.BroadcastKey.exportComplete.toString())) {
+                    Toast.makeText(requireContext(), "Export complete", Toast.LENGTH_SHORT).show();
+                    exportDatabaseProgressBar.setVisibility(GONE);
+                    exportDatabaseButton.setEnabled(true);
+                    importDatabaseButton.setEnabled(true);
+                }
+                if (bundle.containsKey(Constants.BroadcastKey.importComplete.toString())) {
+                    Toast.makeText(requireContext(), "Import complete", Toast.LENGTH_SHORT).show();
+                    importDatabaseProgressBar.setVisibility(GONE);
+                    exportDatabaseButton.setEnabled(true);
+                    importDatabaseButton.setEnabled(true);
+                }
+            } catch (Exception e) {
+                ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured during an OnReceive event.", e));
+            }
         }
     }
 }

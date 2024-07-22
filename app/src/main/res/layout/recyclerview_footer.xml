@@ -45,7 +45,7 @@
             android:layout_marginBottom="1sp"
             android:background="@color/dark_purple"
             android:clickable="true"
-            android:text="@string/sets"
+            android:text="@string/sets_containing_this_tune"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="24sp"

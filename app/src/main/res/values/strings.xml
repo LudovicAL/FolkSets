@@ -5,7 +5,9 @@
     <string name="current_directory">Current directory: </string>
     <string name="select_storage_directory">Select a storage directory</string>
     <string name="export_database_to_storage">Export database to storage</string>
+    <string name="export_explanation">Let\'s you export your metadata to a file in your storage directory. For this button to be enabled, a storage directory must have been selected already.</string>
     <string name="import_database_from_storage">Import database from storage</string>
+    <string name="import_explanation">Let\'s you import metadata from a file in your storage directory. For this button to be enabled, a storage directory must have been selected already and a metadata file must be present in it.</string>
     <string name="tab_tunes">TUNES</string>
     <string name="tab_sets">SETS</string>
     <string name="tab_settings">SETTINGS</string>
@@ -67,7 +69,7 @@
     <string name="move_tune_down">Move tune down</string>
     <string name="delete_set">Delete set</string>
 
-    <string name="sets">Sets</string>
+    <string name="sets_containing_this_tune">Sets containing this tune</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
 
@@ -75,11 +77,12 @@
     <string name="manage_players">Manage players</string>
 
     <string name="log_errors">Log errors to a file in storage</string>
+    <string name="log_errors_explanation">This option, if enabled, may slow down application startup. It is therefore disabled by default. Enable it only if you encounter crashes that you want to investigate.</string>
     <string name="crop_whitespace">Crop whitespace</string>
     <string name="loading_speed_versus_crop_precision">Loading speed versus crop precision</string>
     <string name="precise_crop_slower_loading">Precise crop\nSlower loading</string>
     <string name="imprecise_crop_faster_loading">Imprecise crop\nFaster loading</string>
-    <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle left. If the whitespace around loaded tunes is cropped with too much imprecision, move the seekbar\'s handle right.)</string>
+    <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle left. If the whitespace around loaded tunes is cropped too imprecisely, move the seekbar\'s handle right.)</string>
 
     <string name="create_new_tag">Create new tag</string>
     <string name="create_new_player">Create new player</string>

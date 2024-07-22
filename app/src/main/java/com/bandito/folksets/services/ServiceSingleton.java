@@ -20,6 +20,7 @@ public class ServiceSingleton {
     private final ExecutorService executorService = Executors.newFixedThreadPool(3);
     private UpdateDatabaseThread updateDatabaseThread;
     private RenderPdfAndGetPreviousAndNextTuneThread renderPdfAndGetPreviousAndNextTuneThread;
+    private ExportImportDatabaseThread exportImportDatabaseThread;
 
     private ServiceSingleton() {
     }
@@ -55,7 +56,7 @@ public class ServiceSingleton {
         }
     }
 
-    public void renderPdfAndGetPreviousAndNextTune(Context context, Activity activity, TuneEntity tuneEntity, SetEntity setEntity, int position, Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
+    public void renderPdfAndGetPreviousAndNextTune(final Context context, final Activity activity, final TuneEntity tuneEntity, final SetEntity setEntity, final int position, final Constants.TuneOrSet tuneOrSet) throws FolkSetsException {
         try {
             if (renderPdfAndGetPreviousAndNextTuneThread == null || !renderPdfAndGetPreviousAndNextTuneThread.isAlive()) {
                 renderPdfAndGetPreviousAndNextTuneThread = new RenderPdfAndGetPreviousAndNextTuneThread(context, activity, tuneEntity, setEntity, position, tuneOrSet);
@@ -74,6 +75,40 @@ public class ServiceSingleton {
             }
         } catch (Exception e) {
             throw new FolkSetsException("An error occured while interrupting the pdf rendering thread.", e);
+        }
+    }
+
+    public void exportOrImportDatabase(final Context context, final Activity activity, final String tag, final Constants.ExportOrImport exportOrImport) throws FolkSetsException {
+        try {
+            if (exportImportDatabaseThread == null || !exportImportDatabaseThread.isAlive()) {
+                exportImportDatabaseThread = new ExportImportDatabaseThread(activity, context, tag, exportOrImport);
+                executorService.execute(exportImportDatabaseThread);
+
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while starting the exporting and importing thread.", e);
+        }
+    }
+
+    public void interruptDatabaseExportingAndImporting() throws FolkSetsException {
+        try {
+            if (exportImportDatabaseThread != null && exportImportDatabaseThread.isAlive()) {
+                exportImportDatabaseThread.interrupt();
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while interrupting the exporting and importing thread.", e);
+        }
+    }
+
+    public boolean isExportingOrImportingThreadAlive() throws FolkSetsException {
+        try {
+            if (exportImportDatabaseThread != null) {
+                return exportImportDatabaseThread.isAlive();
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new FolkSetsException("An error occured while determing if the exporting and importing thread is alive.", e);
         }
     }
 }

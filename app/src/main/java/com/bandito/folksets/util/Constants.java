@@ -71,9 +71,15 @@ public class Constants {
         set
     }
 
+    public enum ExportOrImport {
+        exportDatabase,
+        importDatabase
+    }
+
     public enum BroadcastName {
         mainActivityProgressUpdate,
         tuneActivityProgressUpdate,
+        importExportUpdate,
         staticDataUpdate
     }
 
@@ -82,6 +88,8 @@ public class Constants {
         progressHint,
         progressStepNumber,
         progressValue,
-        staticDataValue
+        staticDataValue,
+        exportComplete,
+        importComplete
     }
 }

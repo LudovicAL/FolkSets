@@ -152,7 +152,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
                             requireActivity().runOnUiThread(() -> {
                                 try {
                                     performSearch();
-                                } catch (FolkSetsException e) {
+                                } catch (Exception e) {
                                     ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while performing a search on UI thread.", e));
                                 }
                             });
@@ -249,7 +249,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             try {
                 if (SET_ENTITY_LIST.equals(intent.getExtras().getString(Constants.BroadcastKey.staticDataValue.toString()))) {
                     setListRecyclerViewAdapter.setSetEntityList(StaticData.setEntityList);
-                    setListRecyclerViewAdapter.notifyDataSetChanged();
+                    demandNewSearch(false);
                 }
             } catch (Exception e) {
                 ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnReceive event.", e));

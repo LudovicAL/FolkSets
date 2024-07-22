@@ -261,7 +261,7 @@ public class ManagementActivity extends AppCompatActivity implements AdapterView
                             activity.runOnUiThread(() -> {
                                 try {
                                     performSearch();
-                                } catch (FolkSetsException e) {
+                                } catch (Exception e) {
                                     ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while performing a search on the UI thread.", e));
                                 }
                             });

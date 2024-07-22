@@ -43,6 +43,8 @@
                 android:layout_height="0dp"
                 android:text="@string/current_directory"
                 android:textSize="18sp"
+                android:paddingLeft="20sp"
+                android:textColor="@color/grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -54,6 +56,8 @@
                 android:layout_marginLeft="3sp"
                 android:text="@string/select_storage_directory"
                 android:textSize="18sp"
+                android:paddingRight="20sp"
+                android:textColor="@color/grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/fragment_settings_currentstoragedirectory_textview"
                 app:layout_constraintRight_toRightOf="parent"
@@ -103,7 +107,7 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/fragment_setting_croppingactivation_switch"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/crop_whitespace"
             android:textSize="24sp"
@@ -168,7 +172,7 @@
                 android:paddingHorizontal="20sp"
                 android:text="@string/pdf_cropper_seekbar_explanation"
                 android:textAlignment="center"
-                android:textColor="#989898"
+                android:textColor="@color/grey"
                 android:textSize="18sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -188,12 +192,26 @@
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/fragment_setting_logfile_switch"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/log_errors"
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider3" />
+
+        <TextView
+            android:id="@+id/fragment_setting_logfile_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/log_errors_explanation"
+            android:textAlignment="center"
+            android:textColor="@color/grey"
+            android:textSize="18sp"
+            android:paddingHorizontal="20sp"
+            app:layout_constraintLeft_toLeftOf="@+id/fragment_settings_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_logfile_switch"/>
 
         <View
             android:id="@+id/fragment_settings_divider4"
@@ -203,27 +221,77 @@
             android:background="?android:attr/listDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_logfile_switch" />
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_logfile_textview" />
 
         <Button
             android:id="@+id/fragment_settings_exportdatabase_button"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/export_database_to_storage"
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/fragment_settings_exportdatabase_progressbar"
             app:layout_constraintTop_toBottomOf="@+id/fragment_settings_divider4" />
+
+        <ProgressBar
+            android:id="@+id/fragment_settings_exportdatabase_progressbar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings_exportdatabase_button"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings_exportdatabase_button" />
+
+        <TextView
+            android:id="@+id/fragment_setting_exportdatabase_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/export_explanation"
+            android:textAlignment="center"
+            android:textColor="@color/grey"
+            android:textSize="18sp"
+            android:paddingHorizontal="20sp"
+            app:layout_constraintLeft_toLeftOf="@+id/fragment_settings_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_exportdatabase_button"/>
 
         <Button
             android:id="@+id/fragment_settings_importdatabase_button"
-            android:layout_width="fill_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:enabled="false"
             android:text="@string/import_database_from_storage"
             android:textSize="24sp"
             app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/fragment_settings_importdatabase_progressbar"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_setting_exportdatabase_textview" />
+
+        <ProgressBar
+            android:id="@+id/fragment_settings_importdatabase_progressbar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="2sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/fragment_settings_importdatabase_button"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_exportdatabase_button" />
+            app:layout_constraintTop_toTopOf="@+id/fragment_settings_importdatabase_button" />
+
+        <TextView
+            android:id="@+id/fragment_setting_importdatabase_textview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/import_explanation"
+            android:textAlignment="center"
+            android:textColor="@color/grey"
+            android:textSize="18sp"
+            android:paddingHorizontal="20sp"
+            app:layout_constraintLeft_toLeftOf="@+id/fragment_settings_guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/fragment_settings_importdatabase_button"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

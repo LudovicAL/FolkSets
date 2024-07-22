@@ -144,7 +144,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
                             requireActivity().runOnUiThread(() -> {
                                 try {
                                     performSearch();
-                                } catch (FolkSetsException e) {
+                                } catch (Exception e) {
                                     ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while performing a search on the UI thread.", e));
                                 }
                             });
@@ -267,7 +267,7 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             try {
                 if (TUNE_ENTITY_LIST.equals(intent.getExtras().getString(BroadcastKey.staticDataValue.toString()))) {
                     tuneListRecyclerViewAdapter.setTuneEntityList(StaticData.tuneEntityList);
-                    tuneListRecyclerViewAdapter.notifyDataSetChanged();
+                    demandNewSearch(false);
                 }
             } catch (Exception e) {
                 ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnReceive event.", e));

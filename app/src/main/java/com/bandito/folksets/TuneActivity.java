@@ -230,7 +230,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.tuneActivityProgressUpdate.toString()));
             LocalBroadcastManager.getInstance(this).registerReceiver(myBroadcastReceiver, new IntentFilter(Constants.BroadcastName.staticDataUpdate.toString()));
             ServiceSingleton.getInstance().renderPdfAndGetPreviousAndNextTune(this, this, tuneEntity, setEntity, position, tuneOrSet);
-        } catch (FolkSetsException e) {
+        } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while resuming TuneActivity.", e));
         }
     }

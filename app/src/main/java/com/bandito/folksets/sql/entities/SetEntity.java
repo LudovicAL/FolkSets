@@ -28,4 +28,25 @@ public class SetEntity implements Serializable {
             throw new FolkSetsException("An error occured while computing the tune count in a set.", e);
         }
     }
+
+    @Override
+    public boolean equals(Object otherObject) {
+        if (otherObject == null) {
+            return false;
+        }
+        if (otherObject.getClass() != this.getClass()) {
+            return false;
+        }
+        final SetEntity otherSetEntity = (SetEntity) otherObject;
+        if (this.setId != otherSetEntity.setId) {
+            return false;
+        }
+        if (this.setName == null ? otherSetEntity.setName != null : !this.setName.equals(otherSetEntity.setName)) {
+            return false;
+        }
+        if (this.setTunes == null ? otherSetEntity.setTunes != null : !this.setTunes.equals(otherSetEntity.setTunes)) {
+            return false;
+        }
+        return true;
+    }
 }
