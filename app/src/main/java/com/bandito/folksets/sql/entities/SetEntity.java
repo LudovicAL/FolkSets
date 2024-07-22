@@ -7,6 +7,7 @@ import com.bandito.folksets.exception.FolkSetsException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class SetEntity implements Serializable {
     public Long setId;
@@ -38,13 +39,13 @@ public class SetEntity implements Serializable {
             return false;
         }
         final SetEntity otherSetEntity = (SetEntity) otherObject;
-        if (this.setId != otherSetEntity.setId) {
+        if (!Objects.equals(this.setId, otherSetEntity.setId)) {
             return false;
         }
-        if (this.setName == null ? otherSetEntity.setName != null : !this.setName.equals(otherSetEntity.setName)) {
+        if (!Objects.equals(this.setName, otherSetEntity.setName)) {
             return false;
         }
-        if (this.setTunes == null ? otherSetEntity.setTunes != null : !this.setTunes.equals(otherSetEntity.setTunes)) {
+        if (!Objects.equals(this.setTunes, otherSetEntity.setTunes)) {
             return false;
         }
         return true;

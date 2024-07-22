@@ -294,6 +294,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 Bundle bundle = intent.getExtras();
                 if (bundle == null) {
                     ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("The activity receive à broadcast with not extras.", null));
+                    return;
                 }
                 if (bundle.containsKey(Constants.BroadcastKey.exportComplete.toString())) {
                     Toast.makeText(requireContext(), "Export complete", Toast.LENGTH_SHORT).show();

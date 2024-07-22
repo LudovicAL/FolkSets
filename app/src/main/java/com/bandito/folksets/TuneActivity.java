@@ -375,6 +375,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 Bundle bundle = intent.getExtras();
                 if (bundle == null) {
                     ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("The activity receive à broadcast with not extras.", null));
+                    return;
                 }
                 if (bundle.containsKey(Constants.BroadcastKey.progressVisibility.toString())) {
                     updateProgressBarVisibility(bundle.getInt(Constants.BroadcastKey.progressVisibility.toString()));

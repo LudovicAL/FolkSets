@@ -1,6 +1,5 @@
 package com.bandito.folksets.services;
 
-import static com.bandito.folksets.util.Constants.PREVIOUS_AND_NEXT_TUNE;
 import static com.bandito.folksets.util.Utilities.broadcastMessage;
 
 import android.app.Activity;
