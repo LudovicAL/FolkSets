@@ -120,7 +120,7 @@ public class PrepareTuneActivityDataThread extends Thread {
             sleep(3000L);
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Serializable[]{View.GONE});
         } catch (Exception e) {
-            ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while executing the thread that renders Pdf and determines previous and next tunes.", e));
+            activity.runOnUiThread(() ->ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An exception occured while executing the thread that renders Pdf and determines previous and next tunes.", e)));
         }
     }
 }

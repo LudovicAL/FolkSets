@@ -12,7 +12,6 @@ import static com.bandito.folksets.util.Utilities.broadcastMessage;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 
 import androidx.documentfile.provider.DocumentFile;
@@ -64,7 +63,7 @@ public class UpdateDatabaseThread extends Thread {
             //Remove deprecated tunes
             List<Long> tuneIdToRemoveList = tuneEntityList.stream()
                     .filter(tuneEntity -> documentFileList.stream().
-                            noneMatch(documentFile -> documentFile.getUri().toString().equals(tuneEntity.tuneFilePath)))
+                            noneMatch(documentFile -> tuneEntity.tuneFilePath.equals(documentFile.getUri().toString())))
                     .map(tuneEntity -> tuneEntity.tuneId)
                     .collect(Collectors.toList());
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{3, "Loading tune deletions"});
@@ -116,13 +115,13 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{18, "Loading complete"});
             //Linger a few more seconds
         } catch (Exception e) {
-            ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e));
+            callingActivity.runOnUiThread(() -> ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An exception occured while executing the thread that updates the database from the storage directory content.", e)));
         } finally {
             try {
                 sleep(3000L);
                 broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility}, new Integer[]{View.GONE});
             } catch (Exception e2) {
-                ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An error occured while ending the UpdateDatabase thread.", e2));
+                callingActivity.runOnUiThread(() -> ExceptionManager.manageException(callingActivity, context, TAG, new FolkSetsException("An error occured while ending the UpdateDatabase thread.", e2)));
             }
         }
     }

@@ -34,7 +34,7 @@ public class ExportImportDatabaseThread extends Thread {
                 broadcastMessage(context, Constants.BroadcastName.importExportUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.importComplete}, new String[]{Constants.BroadcastKey.importComplete.toString()});
             }
         } catch (Exception e) {
-            ExceptionManager.manageException(callingActivity, context, tag, new FolkSetsException("An exception occured while executing the thread that exports or imports the database.", e));
+            callingActivity.runOnUiThread(() ->ExceptionManager.manageException(callingActivity, context, tag, new FolkSetsException("An exception occured while executing the thread that exports or imports the database.", e)));
         }
     }
 }
