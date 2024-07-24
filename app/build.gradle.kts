@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.legacy.support.v4)
+    implementation(libs.splash.screen)
     testImplementation(libs.junit)
     androidTestImplementation(libs.assertj)
     androidTestImplementation(libs.ext.junit)
