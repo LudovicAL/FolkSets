@@ -190,11 +190,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     }
 
     private void setMatchNumber(int matchNumber) {
-        if (matchNumber > 1) {
-            setMatchNumberTextview.setText(matchNumber + " tunes matching your prompt");
-        } else {
-            setMatchNumberTextview.setText(matchNumber + " tune matching your prompt");
-        }
+        setMatchNumberTextview.setText(getResources().getQuantityString(R.plurals.tunes_matching_your_prompt, matchNumber, matchNumber));
     }
 
     @Override

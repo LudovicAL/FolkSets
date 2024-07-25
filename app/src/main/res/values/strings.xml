@@ -13,10 +13,14 @@
     <string name="tab_settings">SETTINGS</string>
     <string name="set_songs_dropdown">Set songs drop down</string>
 
+    <plurals name="tunes_matching_your_prompt">
+        <item quantity="one">%d tune matching your prompt</item>
+        <item quantity="other">%d tunes matching your prompt</item>
+    </plurals>
+
     <string name="title">Title</string>
     <string name="titles">Titles</string>
     <string name="title_input">Add titles (end each entry with ; )</string>
-    <string name="tag">Tag</string>
     <string name="tags">Tags</string>
     <string name="tag_input">Add tags (end each entry with ; )</string>
     <string name="composer">Composer</string>
@@ -94,11 +98,5 @@
         <item>@string/sort_by_last_created</item>
         <item>@string/sort_by_last_consulted</item>
         <item>@string/sort_by_most_consulted</item>
-    </string-array>
-
-    <string-array name="selection_filter_array">
-        <item>All</item>
-        <item>Selected</item>
-        <item>Unselected</item>
     </string-array>
 </resources>

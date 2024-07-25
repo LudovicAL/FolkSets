@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.FolkSets" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
@@ -7,25 +7,6 @@
 
     <style name="Theme.FolkSets" parent="Base.Theme.FolkSets" ></style>
 
-    <style name="Theme.FolkSets.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
-
     <style name="Theme.FolkSets.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.FolkSets.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
-
-    <style name="Theme.FolkSets.Fullscreen" parent="Theme.FolkSets">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowTranslucentNavigation">true</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <item name="android:enforceNavigationBarContrast">false</item>
-        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
-    </style>
-
-    <style name="ThemeOverlay.FolkSets.FullscreenContainer" parent="">
-        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
-        <item name="fullscreenTextColor">@color/light_blue_A200</item>
-    </style>
 </resources>

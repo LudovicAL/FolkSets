@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="3sp"
         tools:context=".SettingsFragment">
 
@@ -43,7 +43,7 @@
                 android:layout_height="0dp"
                 android:text="@string/current_directory"
                 android:textSize="18sp"
-                android:paddingLeft="20sp"
+                android:paddingStart="20sp"
                 android:textColor="@color/grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -53,10 +53,10 @@
                 android:id="@+id/fragment_settings_selectstoragedirectory_textview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="3sp"
+                android:layout_marginStart="3sp"
                 android:text="@string/select_storage_directory"
                 android:textSize="18sp"
-                android:paddingRight="20sp"
+                android:paddingEnd="20sp"
                 android:textColor="@color/grey"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toRightOf="@+id/fragment_settings_currentstoragedirectory_textview"

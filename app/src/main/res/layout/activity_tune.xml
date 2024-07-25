@@ -9,7 +9,7 @@
     android:fitsSystemWindows="false"
     tools:context=".TuneActivity"
     tools:openDrawer="end"
-    android:background="#FFFFFF">
+    android:background="@android:color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

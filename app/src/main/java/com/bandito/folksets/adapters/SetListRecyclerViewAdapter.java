@@ -50,9 +50,6 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
         this.context = context;
     }
 
-    public List<SetEntity> getSetEntityList() {
-        return setEntityList;
-    }
     public void setSetEntityList(List<SetEntity> setEntityList) {
         this.setEntityList = setEntityList;
     }
