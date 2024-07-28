@@ -17,6 +17,10 @@ public class Constants {
     public static final int CROPPER_DEFAULT_VALUE = 15;
     public static final String LOGFILE_PREFERED_ACTIVATION_KEY = "logFilePreferedActivationKey";
     public static final boolean LOGFILE_DEFAULT_ACTIVATION = false;
+    public static final float ZOOM_START = 1.0f;
+    public static final float ZOOM_INCREMENTS = 0.1f;
+    public static final float ZOOM_MAX = 1.0f;
+    public static final float ZOOM_MIN = 0.5f;
 
     public static final String PREFERENCES_NAME = "FolkSetsPreferences";
 
@@ -51,6 +55,7 @@ public class Constants {
     public static final String SORT_DESC = "DESC";
     public static final String POSITION = "Position";
     public static final Pattern DELIMITER_INPUT_PATTERN = Pattern.compile("([\\n;])$", Pattern.CASE_INSENSITIVE);
+
     public enum ClickType {
         shortClick,
         longClick

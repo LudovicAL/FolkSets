@@ -93,6 +93,9 @@
     <string name="write_your_input_here">Write your input here</string>
     <string name="submit">Submit</string>
 
+    <string name="zoom_in">Zoom in</string>
+    <string name="zoom_out">Zoom out</string>
+
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>
         <item>@string/sort_by_last_created</item>

@@ -1,6 +1,8 @@
 package com.bandito.folksets;
 
 import static android.view.Menu.NONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static com.bandito.folksets.util.Constants.*;
 
 import android.app.Activity;
@@ -46,6 +48,7 @@ import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import org.apache.commons.lang3.StringUtils;
@@ -63,6 +66,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private TextView progressBarHint;
     private Constants.TuneOrSet tuneOrSet;
     private int position;
+    private float currentZoom = ZOOM_START;
     private SetEntity setEntity;
     private TuneEntity tuneEntity;
     private DrawerLayout drawerLayout;
@@ -78,6 +82,10 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private AutoCompleteTextView tunePlayedByAutoCompleteTextView;
     private ChipGroup tunePlayedByChipGroup;
     private AutoCompleteTextView tuneNoteAutoCompleteTextView;
+    private FloatingActionButton zoomInFloatingActionButton;
+    private FloatingActionButton zoomOutFloatingActionButton;
+    private TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter;
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +110,11 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             tuneFormAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_form_autocompletetextview);
             tunePlayedByAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_players_autocompletetextview);
             tuneNoteAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_note_autocompletetextview);
+            zoomInFloatingActionButton = findViewById(R.id.activity_tune_zoomin_floatingactionbutton);
+            zoomOutFloatingActionButton = findViewById(R.id.activity_tune_zoomout_floatingactionbutton);
+            recyclerView = findViewById(R.id.activity_tune_recyclerview);
 
+            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
             getWindow().setDecorFitsSystemWindows(false);
             WindowInsetsController controller = getWindow().getInsetsController();
             if (controller != null) {
@@ -137,6 +149,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             headerView.findViewById(R.id.tune_nav_header_back_floatingactionbutton).setOnClickListener(this);
             headerView.findViewById(R.id.tune_nav_header_save_button).setOnClickListener(this);
             findViewById(R.id.activity_tune_edit_floatingactionbutton).setOnClickListener(this);
+            zoomInFloatingActionButton.setOnClickListener(this);
+            zoomOutFloatingActionButton.setOnClickListener(this);
             findViewById(R.id.activity_tune_back_floatingactionbutton).setOnClickListener(this);
 
             TextWatcher titleTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
@@ -178,6 +192,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             if (Constants.ClickType.longClick.toString().equals(clickType)) {
                 drawerLayout.openDrawer(GravityCompat.END);
             }
+            adjustZoomButtonsVisibility();
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured during the OnCreate step of class TuneActivity.", e, true));
         }
@@ -248,10 +263,14 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         try {
-            if (view.getId() == R.id.activity_tune_edit_floatingactionbutton) {
-                drawerLayout.openDrawer(GravityCompat.END);
-            } else if (view.getId() == R.id.activity_tune_back_floatingactionbutton) {
+            if (view.getId() == R.id.activity_tune_back_floatingactionbutton) {
                 this.finish();
+            } else if (view.getId() == R.id.activity_tune_zoomin_floatingactionbutton) {
+                zoom(ZOOM_INCREMENTS);
+            } else if (view.getId() == R.id.activity_tune_zoomout_floatingactionbutton) {
+                zoom(-ZOOM_INCREMENTS);
+            } else if (view.getId() == R.id.activity_tune_edit_floatingactionbutton) {
+                drawerLayout.openDrawer(GravityCompat.END);
             } else if (view.getId() == R.id.tune_nav_header_save_button) {
                 saveTune();
             } else if (view.getId() == R.id.tune_nav_header_back_floatingactionbutton) {
@@ -265,6 +284,25 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             }
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));
+        }
+    }
+
+    private void zoom(float increment) {
+        currentZoom += increment;
+        adjustZoomButtonsVisibility();
+        tunePagesRecyclerViewAdapter.zoom(currentZoom);
+    }
+
+    private void adjustZoomButtonsVisibility() {
+        if (currentZoom >= ZOOM_MAX) {
+            zoomInFloatingActionButton.setVisibility(INVISIBLE);
+        } else {
+            zoomInFloatingActionButton.setVisibility(VISIBLE);
+        }
+        if (currentZoom <= ZOOM_MIN) {
+            zoomOutFloatingActionButton.setVisibility(INVISIBLE);
+        } else {
+            zoomOutFloatingActionButton.setVisibility(VISIBLE);
         }
     }
 
@@ -410,13 +448,13 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private void displayPreviousAndNextTune() throws FolkSetsException {
         if (StaticData.previousTune != null) {
             View previousTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonprevious_constraintlayout);
-            previousTuneButton.setVisibility(View.VISIBLE);
+            previousTuneButton.setVisibility(VISIBLE);
             previousTuneButton.setOnClickListener(this);
             ((TextView)findViewById(R.id.recyclerview_footer_previousfooter_textview)).setText(StaticData.previousTune.getFirstTitle());
         }
         if (StaticData.nextTune != null) {
             View nextTuneButton = findViewById(R.id.recyclerview_footer_innerbuttonnext_constraintlayout);
-            nextTuneButton.setVisibility(View.VISIBLE);
+            nextTuneButton.setVisibility(VISIBLE);
             nextTuneButton.setOnClickListener(this);
             ((TextView)findViewById(R.id.recyclerview_footer_nextfooter_textview)).setText(StaticData.nextTune.getFirstTitle());
         }
@@ -430,18 +468,16 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         TextView setTextView = findViewById(R.id.recyclerview_footer_set_textView);
-        setTextView.setVisibility(View.VISIBLE);
+        setTextView.setVisibility(VISIBLE);
         setTextView.setOnClickListener(this);
     }
 
     private void retrieveBitmaps() {
         if (StaticData.bitmapList != null) {
-            TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
-            RecyclerView recyclerView = findViewById(R.id.activity_tune_recyclerview);
-            recyclerView.setLayoutManager(new GridLayoutManager(this, 1));
+            tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
             recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
-            tunePagesRecyclerViewAdapter.notifyDataSetChanged();
-            StaticData.bitmapList = null;
+            //tunePagesRecyclerViewAdapter.notifyDataSetChanged();
+            //StaticData.bitmapList = null;
         }
     }
 

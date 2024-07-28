@@ -11,10 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bandito.folksets.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePagesRecyclerViewAdapter.PageViewHolder> {
     private final List<Bitmap> bitmapList;
+    private final List<ImageView> imageViewList = new ArrayList<>();
 
     public TunePagesRecyclerViewAdapter(List<Bitmap> bitmapList) {
         this.bitmapList = bitmapList;
@@ -30,7 +32,9 @@ public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePages
 
     @Override
     public void onBindViewHolder(@NonNull PageViewHolder viewHolder, int position) {
-        viewHolder.getImageView().setImageBitmap(bitmapList.get(position));
+        ImageView imageView = viewHolder.getImageView();
+        imageView.setImageBitmap(bitmapList.get(position));
+        imageViewList.add(imageView);
     }
 
     @Override
@@ -38,6 +42,12 @@ public class TunePagesRecyclerViewAdapter extends RecyclerView.Adapter<TunePages
         return bitmapList.size();
     }
 
+    public void zoom(float zoomValue) {
+        for (ImageView imageView : imageViewList) {
+            imageView.setScaleX(zoomValue);
+            imageView.setScaleY(zoomValue);
+        }
+    }
 
     public class PageViewHolder extends RecyclerView.ViewHolder {
         private final ImageView imageView;
