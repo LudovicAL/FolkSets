@@ -1,10 +1,14 @@
 package com.bandito.folksets.adapters;
 
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
+
 import android.app.Activity;
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +19,8 @@ import com.bandito.folksets.exception.ExceptionManager;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.TuneEntity;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,13 +28,14 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
     private static final String TAG = TuneListRecyclerViewAdapter.class.getName();
     private final Activity activity;
     private final Context context;
+    private final int defaultMarginSize;
     private List<TuneEntity> tuneEntityList = new ArrayList<>();
     private ItemClickListener itemClickListener;
-
 
     public TuneListRecyclerViewAdapter(Activity activity, Context context) {
         this.activity = activity;
         this.context = context;
+        defaultMarginSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 18, context.getResources().getDisplayMetrics());
     }
 
     public List<TuneEntity> getTuneEntityList() {
@@ -63,7 +70,19 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
     @Override
     public void onBindViewHolder(@NonNull TuneViewHolder viewHolder, final int position) {
         try {
-            viewHolder.getTuneTitleTextView().setText(tuneEntityList.get(position).getFirstTitle());
+            String[] tuneTitleArray = StringUtils.split(tuneEntityList.get(position).tuneTitles, DEFAULT_SEPARATOR);
+            viewHolder.getTuneTitleTextView().setText(tuneTitleArray[0]);
+            for (int i = 1, max = tuneTitleArray.length; i < max; i++) {
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                layoutParams.setMargins(defaultMarginSize, 0, defaultMarginSize, 0);
+                TextView textView = new TextView(context);
+                textView.setLayoutParams(layoutParams);
+                textView.setText(tuneTitleArray[i]);
+                textView.setTextSize(18);
+                textView.setTextColor(context.getColor(R.color.grey));
+                ((LinearLayout)viewHolder.itemView.findViewById(R.id.adapter_textview_linearlayout)).addView(textView);
+            }
         } catch (Exception e) {
             ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured while binding ViewHolder " + position + ".", e));
         }

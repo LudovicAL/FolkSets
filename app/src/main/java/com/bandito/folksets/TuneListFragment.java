@@ -49,6 +49,9 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
     private final MyBroadcastReceiver myBroadcastReceiver = new MyBroadcastReceiver();
     private Spinner sortSpinner;
     private MaterialButtonToggleGroup materialButtonToggleGroup;
+    private TuneListRecyclerViewAdapter tuneListRecyclerViewAdapter;
+    private Timer timer;
+    private TextInputEditText textInputEditText;
     private final MaterialButtonToggleGroup.OnButtonCheckedListener materialButtonToggleGroupCheckedListener = (group, checkedId, isChecked) -> {
         try {
             if (isChecked) {
@@ -59,8 +62,6 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing a button checked event.", e));
         }
     };
-    private Timer timer;
-    private TextInputEditText textInputEditText;
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -77,7 +78,6 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
             }
         }
     };
-    private TuneListRecyclerViewAdapter tuneListRecyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
