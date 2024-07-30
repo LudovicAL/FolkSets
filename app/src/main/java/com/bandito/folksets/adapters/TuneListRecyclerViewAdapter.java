@@ -72,16 +72,17 @@ public class TuneListRecyclerViewAdapter extends RecyclerView.Adapter<TuneListRe
         try {
             String[] tuneTitleArray = StringUtils.split(tuneEntityList.get(position).tuneTitles, DEFAULT_SEPARATOR);
             viewHolder.getTuneTitleTextView().setText(tuneTitleArray[0]);
+            LinearLayout linearLayout = viewHolder.itemView.findViewById(R.id.adapter_inner_linearlayout);
+            linearLayout.removeAllViews();
             for (int i = 1, max = tuneTitleArray.length; i < max; i++) {
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
                 layoutParams.setMargins(defaultMarginSize, 0, defaultMarginSize, 0);
                 TextView textView = new TextView(context);
                 textView.setLayoutParams(layoutParams);
                 textView.setText(tuneTitleArray[i]);
                 textView.setTextSize(18);
                 textView.setTextColor(context.getColor(R.color.grey));
-                ((LinearLayout)viewHolder.itemView.findViewById(R.id.adapter_textview_linearlayout)).addView(textView);
+                linearLayout.addView(textView);
             }
         } catch (Exception e) {
             ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured while binding ViewHolder " + position + ".", e));
