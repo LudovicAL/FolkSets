@@ -11,6 +11,9 @@
         android:id="@+id/fragment_set_list_textinputlayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:endIconDrawable="@drawable/ic_clear"
+        app:endIconMode="clear_text"
+        app:errorIconTint="@color/dark_purple"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/fragment_set_list_createnewset_button"
         app:layout_constraintTop_toTopOf="parent">

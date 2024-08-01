@@ -11,6 +11,9 @@
         android:id="@+id/fragment_tune_list_textinputlayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:endIconDrawable="@drawable/ic_clear"
+        app:endIconMode="clear_text"
+        app:errorIconTint="@color/dark_purple"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/fragment_tune_list_spinner"
         app:layout_constraintTop_toTopOf="parent">
@@ -23,6 +26,7 @@
             android:importantForAutofill="no"
             android:inputType="text"
             android:maxLength="80"
+            android:padding="10sp"
             android:singleLine="true"
             android:textAlignment="viewStart"
             android:textSize="24sp"
