@@ -26,6 +26,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bandito.folksets.adapters.SetListRecyclerViewAdapter;
 import com.bandito.folksets.exception.ExceptionManager;
@@ -212,12 +213,16 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     @Override
     public void onLongItemClick(View view, int position) {
         try {
-            List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
-            Log.i(TAG, "You long clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
-            Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
-                    new Pair<>(OPERATION, Constants.SetOperation.editSet),
-                    new Pair<>(SET_ENTITY, setEntityList.get(0))
-            });
+            if (StaticData.tuneEntityList == null) {
+                Toast.makeText(requireContext(), "Please wait for the loading to finish before editing an existing set.", Toast.LENGTH_LONG).show();
+            } else {
+                List<SetEntity> setEntityList = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setListRecyclerViewAdapter.getItem(position)), null, null);
+                Log.i(TAG, "You long clicked " + setEntityList.get(0).setName + ", which is at cell position " + position);
+                Utilities.loadActivity(requireActivity(), requireContext(), SetActivity.class, new Pair[]{
+                        new Pair<>(OPERATION, Constants.SetOperation.editSet),
+                        new Pair<>(SET_ENTITY, setEntityList.get(0))
+                });
+            }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnItemClick event.", e));
         }
@@ -227,7 +232,11 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
     public void onClick(View view) {
         try {
             if (view.getId() == R.id.fragment_set_list_createnewset_button) {
-                loadSetActivity();
+                if (StaticData.tuneEntityList == null) {
+                    Toast.makeText(requireContext(), "Please wait for the loading to finish before creating a new set.", Toast.LENGTH_LONG).show();
+                } else {
+                    loadSetActivity();
+                }
             }
         } catch (Exception e) {
             ExceptionManager.manageException(requireActivity(), requireContext(), TAG, new FolkSetsException("An exception occured while processing an OnClick event.", e));

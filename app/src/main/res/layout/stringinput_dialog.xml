@@ -44,7 +44,7 @@
         android:background="@android:drawable/editbox_background"
         android:hint="@string/write_your_input_here"
         android:importantForAutofill="no"
-        android:inputType="text"
+        android:inputType="textCapSentences"
         android:textSize="24sp"
         android:padding="12dp"
         android:singleLine="true"

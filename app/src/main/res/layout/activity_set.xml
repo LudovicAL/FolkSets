@@ -55,6 +55,9 @@
         android:id="@+id/activity_set_search_textinputlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:endIconDrawable="@drawable/ic_clear"
+        app:endIconMode="clear_text"
+        app:errorIconTint="@color/dark_purple"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activity_set_inner_constraintlayout">
@@ -65,7 +68,7 @@
             android:layout_height="match_parent"
             android:hint="@string/set_name"
             android:importantForAutofill="no"
-            android:inputType="text"
+            android:inputType="textCapSentences"
             android:maxLength="80"
             android:singleLine="true"
             android:textAlignment="viewStart"
