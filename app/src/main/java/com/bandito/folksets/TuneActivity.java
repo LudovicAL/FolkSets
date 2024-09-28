@@ -476,8 +476,6 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         if (StaticData.bitmapList != null) {
             tunePagesRecyclerViewAdapter = new TunePagesRecyclerViewAdapter(StaticData.bitmapList);
             recyclerView.setAdapter(tunePagesRecyclerViewAdapter);
-            //tunePagesRecyclerViewAdapter.notifyDataSetChanged();
-            //StaticData.bitmapList = null;
         }
     }
 
