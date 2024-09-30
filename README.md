@@ -18,7 +18,7 @@ The .APK for your Android device file is available here: [APK](https://github.co
    1. Navigate to [https://github.com/LudovicAL/FolkSets/blob/main/app/release/app-release.apk](https://github.com/LudovicAL/FolkSets/blob/main/app/release/app-release.apk)
    2. Click the download button to download the app file
    
-     [![Click the download button](/assets/miniatures/download_button.png)](/assets/download_button.png)
+     ![Click the download button](/assets/miniatures/download_button.png)](/assets/download_button.png)
    
    3. When the app file has finished downloading, click it to launch the installer
    4. At this time, your device may ask for your permission to install an application from a source unknown to it:
