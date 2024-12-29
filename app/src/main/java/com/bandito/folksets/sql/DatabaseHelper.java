@@ -176,7 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return convertCursorToTuneEntityList(cursor);
     }
 
-    public List<TuneEntity> findTunesWithValueInListInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String fieldListName, String[] valueArray, String sortOnField, String sortDirection) {
+    public List<TuneEntity> findTunesWithValueInListInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String fieldListName, String[] valueArray, Operator operator, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder();
         query.append("SELECT ").append(fieldsNames).append(" FROM ").append(TABLE_TUNE);
@@ -187,7 +187,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 }
                 query.append(fieldListName).append(" LIKE '%").append(valueArray[i]).append("%'");
                 if (i < max - 1) {
-                    query.append(" AND ");
+                    query.append(" " + operator.toString() + " ");
                 }
             }
         }
@@ -222,7 +222,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     public Pair<Integer, List<SetEntity>> findSetsWithTunesInDatabase(SQLiteDatabase sqLiteDatabase, String tuneTitles, String sortOnField, String sortDirection) {
         String[] tuneTitlesArray = StringUtils.split(tuneTitles, DEFAULT_SEPARATOR);
-        List<TuneEntity> tuneEntityList = findTunesWithValueInListInDatabase(sqLiteDatabase, TUNE_ID, TUNE_TITLES, tuneTitlesArray, null, null);
+        List<TuneEntity> tuneEntityList = findTunesWithValueInListInDatabase(sqLiteDatabase, TUNE_ID, TUNE_TITLES, tuneTitlesArray, Operator.OR, null, null);
         if (tuneEntityList.isEmpty()) {
             return new Pair<>(0, new ArrayList<>());
         } else {

@@ -281,6 +281,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 drawerLayout.closeDrawer(GravityCompat.END);
             } else if (view.getId() == R.id.recyclerview_footer_set_textView) {
                 displayPopupMenuOfSetsWithTune(view);
+            } else if (view.getId() == R.id.recyclerview_footer_tunesByComposers_textView) {
+                displayPopupMenuOfTunesByComposers(view);
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonprevious_constraintlayout) {
                 loadPreviousTune();
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonnext_constraintlayout) {
@@ -341,6 +343,36 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             popupMenu.show();
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying sets with tune.", e));
+        }
+    }
+
+    private void displayPopupMenuOfTunesByComposers(View view) {
+        try {
+            if (StaticData.tuneByComposersList == null || StaticData.tuneByComposersList.isEmpty()) {
+                return;
+            }
+            PopupMenu popupMenu = new PopupMenu(this, view);
+            for (int i = 0, max = StaticData.tuneByComposersList.size(); i < max; i++) {
+                popupMenu.getMenu().add(NONE, i, NONE, StaticData.tuneByComposersList.get(i).tuneTitles.split(DEFAULT_SEPARATOR)[0]);
+            }
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    try {
+                        Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
+                                new Pair<>(OPERATION, TuneOrSet.tune),
+                                new Pair<>(TUNE_ENTITY, StaticData.tuneByComposersList.get(menuItem.getItemId())),
+                                new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                        });
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured during an OnMenuItemClick event.", e));
+                    }
+                    return true;
+                }
+            });
+            popupMenu.show();
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying tunes by same composers.", e));
         }
     }
 
@@ -442,6 +474,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                         displayPreviousAndNextTune();
                     } else if (SETS_WITH_TUNE.equals(broadcastValue)) {
                         displaySetsWithTune();
+                    } else if (TUNES_BY_COMPOSERS.equals(broadcastValue)) {
+                        displayTunesByComposers();
                     }
                 }
             } catch (Exception e) {
@@ -475,6 +509,15 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         TextView setTextView = findViewById(R.id.recyclerview_footer_set_textView);
         setTextView.setVisibility(VISIBLE);
         setTextView.setOnClickListener(this);
+    }
+
+    private void displayTunesByComposers() {
+        if (StaticData.tuneByComposersList == null || StaticData.tuneByComposersList.isEmpty()) {
+            return;
+        }
+        TextView tunesByComposersTextView = findViewById(R.id.recyclerview_footer_tunesByComposers_textView);
+        tunesByComposersTextView.setVisibility(VISIBLE);
+        tunesByComposersTextView.setOnClickListener(this);
     }
 
     private void retrieveBitmaps() {

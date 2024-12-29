@@ -5,9 +5,12 @@ import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_ACTIVATION;
 import static com.bandito.folksets.util.Constants.CROPPER_DEFAULT_VALUE;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_ACTIVATION_KEY;
 import static com.bandito.folksets.util.Constants.CROPPER_PREFERED_VALUE_KEY;
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.PREVIOUS_AND_NEXT_TUNE;
 import static com.bandito.folksets.util.Constants.SETS_WITH_TUNE;
 import static com.bandito.folksets.util.Constants.SET_NAME;
+import static com.bandito.folksets.util.Constants.TUNES_BY_COMPOSERS;
+import static com.bandito.folksets.util.Constants.TUNE_COMPOSERS;
 import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 import static com.bandito.folksets.util.Utilities.broadcastMessage;
 
@@ -28,7 +31,9 @@ import com.bandito.folksets.util.Utilities;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PrepareTuneActivityDataThread extends Thread {
 
@@ -64,7 +69,7 @@ public class PrepareTuneActivityDataThread extends Thread {
         try {
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{View.VISIBLE, 0, "Converting pdf to bitmaps"});
             List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(activity, context, TAG, tuneEntity.tuneFilePath);
-            int maxNumberOfSteps = bitmapList.size() + 4;
+            int maxNumberOfSteps = bitmapList.size() + 5;
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressStepNumber, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, 1, "Cropping bitmaps"});
             int progressCurrentStep = 2;
             if (isCropperActivated && bitmapList.size() <= 7) {
@@ -90,7 +95,7 @@ public class PrepareTuneActivityDataThread extends Thread {
                     StaticData.nextTune = null;
                 }
             } else {
-                List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, TUNE_TITLES, null);
+                List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, TUNE_TITLES, null);
                 int tuneEntityListSize = tuneEntityList.size();
                 int i = 0;
                 for (; i < tuneEntityListSize; i++) {
@@ -113,6 +118,25 @@ public class PrepareTuneActivityDataThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading sets with tune"});
             StaticData.setsWithTune = DatabaseManager.findSetsWithTunesInDatabase(new Long[]{tuneEntity.tuneId}, SET_NAME, null);
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SETS_WITH_TUNE});
+            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading tunes by same composers"});
+            StaticData.tuneByComposersList = null;
+            String[] tuneComposerArray = Arrays.stream(tuneEntity.tuneComposers.split(DEFAULT_SEPARATOR)).filter(composer -> !composer.isEmpty()).toArray(String[]::new);;
+            if (tuneComposerArray != null && tuneComposerArray.length > 0) {
+                List<TuneEntity> tuneByComposersList = DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_COMPOSERS, tuneComposerArray, Constants.Operator.OR, TUNE_TITLES, null);
+                if (tuneByComposersList != null && !tuneByComposersList.isEmpty()) {
+                    List<TuneEntity> filteredTuneByComposersList = tuneByComposersList.stream().filter(
+                            tune -> !tune.tuneId.equals(tuneEntity.tuneId) && Arrays.stream(tune.tuneComposers.split(DEFAULT_SEPARATOR)).anyMatch(
+                                    composer -> Arrays.stream(tuneComposerArray).anyMatch(
+                                            otherComposer -> composer.equals(otherComposer)
+                                    )
+                            )
+                    ).collect(Collectors.toList());
+                    if (!filteredTuneByComposersList.isEmpty()) {
+                        StaticData.tuneByComposersList = filteredTuneByComposersList;
+                    }
+                }
+            }
+            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNES_BY_COMPOSERS});
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading consultation update"});
             tuneEntity.tuneConsultationNumber++;
             DatabaseManager.updateTuneInDatabase(tuneEntity);

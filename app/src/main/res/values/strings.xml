@@ -74,6 +74,7 @@
     <string name="delete_set">Delete set</string>
 
     <string name="sets_containing_this_tune">Sets containing this tune</string>
+    <string name="tunes_by_same_composer">Tunes by same composers</string>
     <string name="previous">Previous</string>
     <string name="next">Next</string>
 

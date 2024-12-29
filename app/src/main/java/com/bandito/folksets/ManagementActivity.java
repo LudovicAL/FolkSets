@@ -285,9 +285,9 @@ public class ManagementActivity extends AppCompatActivity implements AdapterView
             tuneSelectorRecyclerViewAdapter.setTuneEntityList(new ArrayList<>());
         } else {
             if (StringUtils.isEmpty(textToSearch)) {
-                tuneSelectorRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, TUNE_TITLES, null));
+                tuneSelectorRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, TUNE_TITLES, null));
             } else {
-                tuneSelectorRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_TITLES, new String[]{textToSearch}, TUNE_TITLES, null));
+                tuneSelectorRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_TITLES, new String[]{textToSearch}, Constants.Operator.OR, TUNE_TITLES, null));
             }
         }
         tuneSelectorRecyclerViewAdapter.notifyDataSetChanged();

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
+import com.bandito.folksets.util.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_TUNE);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(1);
             Assertions.assertThat(tuneEntityList.get(0).tuneTitles).isEqualTo(tuneEntity.tuneTitles);
         });
@@ -71,7 +72,7 @@ public class ExampleInstrumentedTest {
             tuneEntityList.add(generateTuneEntity());
             tuneEntityList.add(generateTuneEntity());
             DatabaseManager.insertTunesInDatabase(tuneEntityList);
-            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(3);
         });
     }
@@ -83,11 +84,11 @@ public class ExampleInstrumentedTest {
             DatabaseManager.truncateTable(TABLE_TUNE);
             long tuneIdToDelete = DatabaseManager.insertTuneInDatabase(tuneEntity);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(2);
             int numberOfRowsDeleted = DatabaseManager.removeTuneFromDatabase(tuneIdToDelete);
             Assertions.assertThat(numberOfRowsDeleted).isEqualTo(1);
-            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(1);
         });
     }
@@ -102,11 +103,11 @@ public class ExampleInstrumentedTest {
             tuneEntityList.add(generateTuneEntity());
             tuneEntityList.add(generateTuneEntity());
             DatabaseManager.insertTunesInDatabase(tuneEntityList);
-            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(3);
             List<Long> tuneIds = tuneEntityList.stream().map(tuneEntity -> tuneEntity.tuneId).collect(Collectors.toList());
             DatabaseManager.removeTunesFromDatabase(tuneIds);
-            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(0);
         });
     }
@@ -211,7 +212,7 @@ public class ExampleInstrumentedTest {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_TUNE);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", null, null, null, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(1);
             Assertions.assertThat(tuneEntityList.get(0).tuneTitles).isEqualTo(tuneEntity.tuneTitles);
         });
@@ -232,7 +233,7 @@ public class ExampleInstrumentedTest {
             String tag1 = "tag1";
             String tag2 = "tag2";
             String[] tarArray = new String[] { tag1, tag2 };
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_TAGS, tarArray, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_TAGS, tarArray, Constants.Operator.AND, null, null);
             Assertions.assertThat(tuneEntityList).hasSize(2);
             for (TuneEntity se : tuneEntityList) {
                 Assertions.assertThat(se.tuneTags).contains(tag1).contains(tag2);
@@ -306,7 +307,7 @@ public class ExampleInstrumentedTest {
             SetEntity setEntity1 = generateSetEntity();
             SetEntity setEntity2 = generateSetEntity();
             SetEntity setEntity3 = generateSetEntity();
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID, null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID, null, null, null, null, null);
             setEntity1.setTunes = tuneEntityList.get(0).tuneId + ";" + tuneEntityList.get(1).tuneId;
             setEntity2.setTunes = tuneEntityList.get(1).tuneId + ";" + tuneEntityList.get(2).tuneId;
             setEntity3.setTunes = tuneEntityList.get(0).tuneId + ";" + tuneEntityList.get(2).tuneId;

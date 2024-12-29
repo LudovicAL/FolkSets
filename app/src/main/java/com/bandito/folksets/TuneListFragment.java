@@ -176,31 +176,31 @@ public class TuneListFragment extends Fragment implements AdapterView.OnItemSele
         String textToSearch = textInputEditText.getText().toString();
         Pair<String, String> sortParameters = getSortParameters();
         if (textToSearch.isEmpty()) {
-            tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, sortParameters.first, sortParameters.second));
+            tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, null, sortParameters.first, sortParameters.second));
         } else {
             int i = materialButtonToggleGroup.getCheckedButtonId();
             if (i == R.id.fragment_tune_title_materialbutton) {
                 Log.i(TAG, "Seaching title: " + textToSearch);
                 String[] titleArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TITLES, titleArray, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TITLES, titleArray, Operator.OR, sortParameters.first, sortParameters.second));
             } else if (i == R.id.fragment_tune_tag_materialbutton) {
                 Log.i(TAG, "Seaching tags: " + textToSearch);
                 String[] tagArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TAGS, tagArray, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_TAGS, tagArray, Operator.OR, sortParameters.first, sortParameters.second));
             } else if (i == R.id.fragment_tune_composer_materialbutton) {
                 Log.i(TAG, "Seaching composers: " + textToSearch);
                 String[] composerArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_COMPOSERS, composerArray, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_COMPOSERS, composerArray, Operator.OR, sortParameters.first, sortParameters.second));
             } else if (i == R.id.fragment_tune_region_materialbutton) {
                 Log.i(TAG, "Seaching region: " + textToSearch);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_REGION_OF_ORIGIN, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_REGION_OF_ORIGIN, new String[]{textToSearch}, Operator.OR, sortParameters.first, sortParameters.second));
             } else if (i == R.id.fragment_tune_key_materialbutton) {
                 Log.i(TAG, "Seaching key: " + textToSearch);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_KEY, new String[]{textToSearch}, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_KEY, new String[]{textToSearch}, Operator.OR, sortParameters.first, sortParameters.second));
             } else if (i == R.id.fragment_tune_playedby_materialbutton) {
                 Log.i(TAG, "Seaching players: " + textToSearch);
                 String[] playedByArray = StringUtils.split(textToSearch, DEFAULT_SEPARATOR);
-                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_PLAYED_BY, playedByArray, sortParameters.first, sortParameters.second));
+                tuneListRecyclerViewAdapter.setTuneEntityList(DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, TUNE_PLAYED_BY, playedByArray, Operator.OR, sortParameters.first, sortParameters.second));
             }
         }
         tuneListRecyclerViewAdapter.notifyDataSetChanged();

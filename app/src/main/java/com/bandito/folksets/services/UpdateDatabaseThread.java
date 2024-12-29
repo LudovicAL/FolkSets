@@ -58,7 +58,7 @@ public class UpdateDatabaseThread extends Thread {
 
             List<DocumentFile> documentFileList = IoUtilities.listPdfFilesFromStorage(context, callingActivity);
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{1, "Loading known tunes"});
-            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_FILE_PATH, null, null, null, null);
+            List<TuneEntity> tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_FILE_PATH, null, null, null, null, null);
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{2, "Loading deleted tunes"});
             //Remove deprecated tunes
             List<Long> tuneIdToRemoveList = tuneEntityList.stream()
@@ -80,7 +80,7 @@ public class UpdateDatabaseThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{6, "Loading final tune list"});
             //Get tune list
             if (StaticData.tuneEntityList == null || StaticData.tuneEntityList.isEmpty() || !tuneIdToRemoveList.isEmpty() || !tuneEntityToAddList.isEmpty()) {
-                StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, TUNE_TITLES, null);
+                StaticData.tuneEntityList = DatabaseManager.findTunesWithValueInListInDatabase(TUNE_ID + "," + TUNE_TITLES, null, null, null, TUNE_TITLES, null);
                 broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNE_ENTITY_LIST});
             }
             broadcastMessage(context, Constants.BroadcastName.mainActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{7, "Loading final set list"});

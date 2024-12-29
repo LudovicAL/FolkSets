@@ -13,6 +13,7 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
+import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.Utilities;
 import android.app.Activity;
 
@@ -169,9 +170,9 @@ public class DatabaseManager {
         }
     }
 
-    public static List<TuneEntity> findTunesWithValueInListInDatabase(String fieldsNames, String fieldListName, String[] valueArray, String sortOnField, String sortDirection) throws FolkSetsException {
+    public static List<TuneEntity> findTunesWithValueInListInDatabase(String fieldsNames, String fieldListName, String[] valueArray, Constants.Operator operator, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
-            return databaseHelper.findTunesWithValueInListInDatabase(sqLiteDatabase, fieldsNames, fieldListName, valueArray, sortOnField, sortDirection);
+            return databaseHelper.findTunesWithValueInListInDatabase(sqLiteDatabase, fieldsNames, fieldListName, valueArray, operator, sortOnField, sortDirection);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for tunes with tags in the database.", e);
         }
