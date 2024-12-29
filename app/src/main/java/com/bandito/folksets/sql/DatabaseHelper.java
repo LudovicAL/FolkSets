@@ -304,7 +304,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if (setTunesList.isEmpty()) {
                 removeSetFromDatabase(sqLiteDatabase, setEntity.setId);
             } else {
-                setEntity.setTunes = String.join(",", setTunesList);
+                setEntity.setTunes = String.join(DEFAULT_SEPARATOR, setTunesList);
                 updateSetInDatabase(sqLiteDatabase, setEntity);
             }
         }
