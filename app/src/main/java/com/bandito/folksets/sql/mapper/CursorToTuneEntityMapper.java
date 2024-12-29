@@ -22,8 +22,8 @@ public class CursorToTuneEntityMapper {
         tuneEntity.tuneId = columnIndex >= 0 ? cursor.getLong(columnIndex) : null;
         columnIndex = cursor.getColumnIndex(TUNE_TAGS);
         tuneEntity.tuneTags = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
-        columnIndex = cursor.getColumnIndex(TUNE_COMPOSER);
-        tuneEntity.tuneComposer = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
+        columnIndex = cursor.getColumnIndex(TUNE_COMPOSERS);
+        tuneEntity.tuneComposers = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
         columnIndex = cursor.getColumnIndex(TUNE_REGION_OF_ORIGIN);
         tuneEntity.tuneRegionOfOrigin = columnIndex >= 0 ? cursor.getString(columnIndex) : null;
         columnIndex = cursor.getColumnIndex(TUNE_KEY);

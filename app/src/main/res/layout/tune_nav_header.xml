@@ -156,31 +156,51 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="start|end"
+            android:layout_gravity="fill|end"
             android:layout_margin="3sp"
             android:background="#FFFFFF"
             android:padding="3sp"
             android:singleLine="true"
-            android:text="@string/composer"
+            android:text="@string/composers"
             android:textAlignment="viewEnd"
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <AutoCompleteTextView
-            android:id="@+id/tune_nav_header_composer_autocompletetextview"
-            android:layout_width="0dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start|end"
             android:layout_margin="3sp"
-            android:background="#FFFFFF"
-            android:hint="@string/composer_input"
-            android:importantForAutofill="no"
-            android:inputType="textCapSentences"
-            android:maxLength="80"
-            android:padding="3sp"
-            android:singleLine="true"
-            android:textAlignment="viewStart"
-            android:textSize="18sp" />
+            android:background="#FFFFFF">
+
+            <AutoCompleteTextView
+                android:id="@+id/tune_nav_header_composer_autocompletetextview"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                android:hint="@string/composer_input"
+                android:importantForAutofill="no"
+                android:inputType="textCapWords|textMultiLine"
+                android:maxLength="80"
+                android:padding="3sp"
+                android:singleLine="false"
+                android:textAlignment="viewStart"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/tune_nav_header_composer_chipgroup"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="#FFFFFF"
+                app:chipSpacingVertical="0dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tune_nav_header_composer_autocompletetextview" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:layout_width="wrap_content"
@@ -325,7 +345,7 @@
                 android:background="#FFFFFF"
                 android:hint="@string/played_by_input"
                 android:importantForAutofill="no"
-                android:inputType="textCapSentences|textMultiLine"
+                android:inputType="textCapWords|textMultiLine"
                 android:maxLength="80"
                 android:padding="3sp"
                 android:singleLine="false"

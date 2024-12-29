@@ -128,7 +128,7 @@ public class ExampleInstrumentedTest {
             tuneEntityList = DatabaseManager.findTuneByIdInDatabase("*", String.valueOf(idOfTuneToUpdate), null, null);
             Assertions.assertThat(tuneEntityList).hasSize(1);
             Assertions.assertThat(tuneEntityList.get(0).tuneTitles).isEqualTo(newTitle);
-            Assertions.assertThat(tuneEntityList.get(0).tuneComposer).isEqualTo(tuneEntity.tuneComposer);
+            Assertions.assertThat(tuneEntityList.get(0).tuneComposers).isEqualTo(tuneEntity.tuneComposers);
         });
     }
 
@@ -407,7 +407,7 @@ public class ExampleInstrumentedTest {
                 "file type",
                 "2024-01-01");
         generatedTuneEntity.tuneTags = "tag1;tag2;tag3";
-        generatedTuneEntity.tuneComposer = "composer";
+        generatedTuneEntity.tuneComposers = "composer1;composer2;composer3";
         generatedTuneEntity.tuneRegionOfOrigin = "regiong of origin";
         generatedTuneEntity.tuneKey = "key";
         generatedTuneEntity.tuneIncipit = "incipit";

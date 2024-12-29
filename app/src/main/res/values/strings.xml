@@ -20,11 +20,11 @@
 
     <string name="title">Title</string>
     <string name="titles">Titles</string>
-    <string name="title_input">Add titles (end each entry a return or ; )</string>
+    <string name="title_input">Add titles (end each entry with return or ; )</string>
     <string name="tags">Tags</string>
-    <string name="tag_input">Add tags (end each entry a return or ; )</string>
-    <string name="composer">Composer</string>
-    <string name="composer_input">Add a composer</string>
+    <string name="tag_input">Add tags (end each entry with return or ; )</string>
+    <string name="composers">Composers</string>
+    <string name="composer_input">Add composers (end each entry with return or ; )</string>
     <string name="region">Region</string>
     <string name="region_of_origin">Region of origin</string>
     <string name="region_of_origin_input">Add a region of origin</string>
@@ -35,7 +35,7 @@
     <string name="form">Form</string>
     <string name="form_input">Add a form</string>
     <string name="played_by">Played by</string>
-    <string name="played_by_input">Add players (end each entry a return or ; )</string>
+    <string name="played_by_input">Add players (end each entry with return or ; )</string>
     <string name="note">Note</string>
     <string name="note_input">Add a note</string>
     <string name="file_path">File path</string>

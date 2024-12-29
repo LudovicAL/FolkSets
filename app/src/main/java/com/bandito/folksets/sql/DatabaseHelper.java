@@ -38,7 +38,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + TUNE_TAGS + " TEXT, "
                 + TUNE_FILE_PATH + " TEXT NOT NULL, "
                 + TUNE_FILE_TYPE + " TEXT NOT NULL, "
-                + TUNE_COMPOSER + " TEXT, "
+                + TUNE_COMPOSERS + " TEXT, "
                 + TUNE_REGION_OF_ORIGIN + " TEXT, "
                 + TUNE_KEY + " TEXT, "
                 + TUNE_INCIPIT + " TEXT, "
@@ -339,6 +339,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return uniqueTagSet.toArray(new String[0]);
+    }
+
+    public String[] getAllUniqueComposerInTuneTable(SQLiteDatabase sqLiteDatabase) {
+        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_COMPOSERS);
+        Set<String> uniqueComposerSet = new HashSet<>();
+        for (String tags : tagsArray) {
+            String[] composerArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
+            if (composerArray != null) {
+                uniqueComposerSet.addAll(Arrays.asList(composerArray));
+            }
+        }
+        return uniqueComposerSet.toArray(new String[0]);
     }
 
     public String[] getAllUniquePlayedByInTuneTable(SQLiteDatabase sqLiteDatabase) {

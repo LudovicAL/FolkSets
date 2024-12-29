@@ -32,7 +32,7 @@ public class Constants {
     public static final String TUNE_TAGS = "tune_tags";
     public static final String TUNE_FILE_PATH = "tune_file_path";
     public static final String TUNE_FILE_TYPE = "tune_file_type";
-    public static final String TUNE_COMPOSER = "tune_composer";
+    public static final String TUNE_COMPOSERS = "tune_composer";
     public static final String TUNE_REGION_OF_ORIGIN = "tune_region_of_origin";
     public static final String TUNE_KEY = "tune_key";
     public static final String TUNE_INCIPIT = "tune_incipit";

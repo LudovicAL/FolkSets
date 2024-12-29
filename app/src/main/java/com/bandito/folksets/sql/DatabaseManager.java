@@ -1,6 +1,5 @@
 package com.bandito.folksets.sql;
 
-import static com.bandito.folksets.util.Constants.TUNE_COMPOSER;
 import static com.bandito.folksets.util.Constants.TUNE_FORM;
 import static com.bandito.folksets.util.Constants.TUNE_INCIPIT;
 import static com.bandito.folksets.util.Constants.TUNE_KEY;
@@ -260,7 +259,7 @@ public class DatabaseManager {
 
     public static String[] getAllUniqueComposerInTuneTable() throws FolkSetsException {
         try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_COMPOSER);
+            return databaseHelper.getAllUniqueComposerInTuneTable(sqLiteDatabase);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while retrieving all unique composers from the tune table", e);
         }
