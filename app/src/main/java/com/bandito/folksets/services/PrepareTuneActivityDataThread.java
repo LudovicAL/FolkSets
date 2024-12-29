@@ -67,7 +67,7 @@ public class PrepareTuneActivityDataThread extends Thread {
             int maxNumberOfSteps = bitmapList.size() + 4;
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressStepNumber, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, 1, "Cropping bitmaps"});
             int progressCurrentStep = 2;
-            if (isCropperActivated) {
+            if (isCropperActivated && bitmapList.size() <= 7) {
                 List<Bitmap> croppedBitmapList = new ArrayList<>();
                 for (Bitmap bitmap : bitmapList) {
                     croppedBitmapList.add(PdfUtilities.cropWhiteSpace(bitmap, cropperStrideSize));
