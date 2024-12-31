@@ -17,6 +17,7 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ChipGroupUtilities {
@@ -44,8 +45,16 @@ public class ChipGroupUtilities {
         }
     }
 
-    public static String retrieveChipsFromChipGroup(ChipGroup chipGroup) throws FolkSetsException {
+    public static String retrieveChipsFromChipGroup(Context context, AutoCompleteTextView autoCompleteTextView, ChipGroup chipGroup) throws FolkSetsException {
         try {
+            if (autoCompleteTextView.getText() != null) {
+                String content = autoCompleteTextView.getText().toString();
+                if (!content.isEmpty()) {
+                    String[] contentArray = Arrays.stream(content.split(DEFAULT_SEPARATOR)).filter(chip -> !chip.isEmpty()).toArray(String[]::new);
+                    addChipsToChipGroup(context, contentArray, chipGroup);
+                    autoCompleteTextView.setText(null);
+                }
+            }
             StringBuilder stringBuilder = new StringBuilder();
             List<CharSequence> tagList = new ArrayList<>();
             for (int i = 0, max = chipGroup.getChildCount(); i < max; i++) {

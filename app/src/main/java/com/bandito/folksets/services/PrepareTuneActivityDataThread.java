@@ -120,19 +120,21 @@ public class PrepareTuneActivityDataThread extends Thread {
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{SETS_WITH_TUNE});
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading tunes by same composers"});
             StaticData.tuneByComposersList = null;
-            String[] tuneComposerArray = Arrays.stream(tuneEntity.tuneComposers.split(DEFAULT_SEPARATOR)).filter(composer -> !composer.isEmpty()).toArray(String[]::new);;
-            if (tuneComposerArray != null && tuneComposerArray.length > 0) {
-                List<TuneEntity> tuneByComposersList = DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_COMPOSERS, tuneComposerArray, Constants.Operator.OR, TUNE_TITLES, null);
-                if (tuneByComposersList != null && !tuneByComposersList.isEmpty()) {
-                    List<TuneEntity> filteredTuneByComposersList = tuneByComposersList.stream().filter(
-                            tune -> !tune.tuneId.equals(tuneEntity.tuneId) && Arrays.stream(tune.tuneComposers.split(DEFAULT_SEPARATOR)).anyMatch(
-                                    composer -> Arrays.stream(tuneComposerArray).anyMatch(
-                                            otherComposer -> composer.equals(otherComposer)
-                                    )
-                            )
-                    ).collect(Collectors.toList());
-                    if (!filteredTuneByComposersList.isEmpty()) {
-                        StaticData.tuneByComposersList = filteredTuneByComposersList;
+            if (tuneEntity.tuneComposers != null) {
+                String[] tuneComposerArray = Arrays.stream(tuneEntity.tuneComposers.split(DEFAULT_SEPARATOR)).filter(composer -> !composer.isEmpty()).toArray(String[]::new);
+                if (tuneComposerArray != null && tuneComposerArray.length > 0) {
+                    List<TuneEntity> tuneByComposersList = DatabaseManager.findTunesWithValueInListInDatabase("*", TUNE_COMPOSERS, tuneComposerArray, Constants.Operator.OR, TUNE_TITLES, null);
+                    if (tuneByComposersList != null && !tuneByComposersList.isEmpty()) {
+                        List<TuneEntity> filteredTuneByComposersList = tuneByComposersList.stream().filter(
+                                tune -> !tune.tuneId.equals(tuneEntity.tuneId) && Arrays.stream(tune.tuneComposers.split(DEFAULT_SEPARATOR)).anyMatch(
+                                        composer -> Arrays.stream(tuneComposerArray).anyMatch(
+                                                otherComposer -> composer.equals(otherComposer)
+                                        )
+                                )
+                        ).collect(Collectors.toList());
+                        if (!filteredTuneByComposersList.isEmpty()) {
+                            StaticData.tuneByComposersList = filteredTuneByComposersList;
+                        }
                     }
                 }
             }

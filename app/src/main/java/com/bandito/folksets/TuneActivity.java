@@ -208,14 +208,14 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "At least one title is required", Toast.LENGTH_SHORT).show();
                 return;
             }
-            tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(tuneTitlesChipGroup);
-            tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(tuneTagsChipGroup);
-            tuneEntity.tuneComposers = ChipGroupUtilities.retrieveChipsFromChipGroup(tuneComposersChipGroup);
+            tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
+            tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
+            tuneEntity.tuneComposers = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup);
             tuneEntity.tuneRegionOfOrigin = tuneRegionOfOriginAutoCompleteTextView.getText().toString();
             tuneEntity.tuneKey = tuneKeyAutoCompleteTextView.getText().toString();
             tuneEntity.tuneIncipit = tuneIncipitAutoCompleteTextView.getText().toString();
             tuneEntity.tuneForm = tuneFormAutoCompleteTextView.getText().toString();
-            tuneEntity.tunePlayedBy = ChipGroupUtilities.retrieveChipsFromChipGroup(tunePlayedByChipGroup);
+            tuneEntity.tunePlayedBy = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
             tuneEntity.tuneNote = tuneNoteAutoCompleteTextView.getText().toString();
             DatabaseManager.updateTuneInDatabase(tuneEntity);
             Toast.makeText(this, "Tune saved", Toast.LENGTH_SHORT).show();
