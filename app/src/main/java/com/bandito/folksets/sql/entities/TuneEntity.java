@@ -19,7 +19,7 @@ public class TuneEntity implements Serializable {
     public String tuneTags;
     public String tuneComposers;
     public String tuneRegionOfOrigin;
-    public String tuneKey;
+    public String tuneKeys;
     public String tuneIncipit;
     public String tuneForm;
     public String tunePlayedBy;

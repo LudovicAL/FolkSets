@@ -95,7 +95,7 @@
             android:textSize="24sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/key" />
+            android:text="@string/keys" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/fragment_tune_playedby_materialbutton"

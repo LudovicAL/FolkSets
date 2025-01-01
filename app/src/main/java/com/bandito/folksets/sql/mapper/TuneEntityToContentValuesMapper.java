@@ -15,7 +15,7 @@ public class TuneEntityToContentValuesMapper {
         contentValues.put(TUNE_FILE_TYPE, tuneEntity.tuneFileType);
         contentValues.put(TUNE_COMPOSERS, tuneEntity.tuneComposers);
         contentValues.put(TUNE_REGION_OF_ORIGIN, tuneEntity.tuneRegionOfOrigin);
-        contentValues.put(TUNE_KEY, tuneEntity.tuneKey);
+        contentValues.put(TUNE_KEY, tuneEntity.tuneKeys);
         contentValues.put(TUNE_INCIPIT, tuneEntity.tuneIncipit);
         contentValues.put(TUNE_FORM, tuneEntity.tuneForm);
         contentValues.put(TUNE_PLAYED_BY, tuneEntity.tunePlayedBy);

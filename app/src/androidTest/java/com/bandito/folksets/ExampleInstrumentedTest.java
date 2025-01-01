@@ -410,7 +410,7 @@ public class ExampleInstrumentedTest {
         generatedTuneEntity.tuneTags = "tag1;tag2;tag3";
         generatedTuneEntity.tuneComposers = "composer1;composer2;composer3";
         generatedTuneEntity.tuneRegionOfOrigin = "regiong of origin";
-        generatedTuneEntity.tuneKey = "key";
+        generatedTuneEntity.tuneKeys = "key";
         generatedTuneEntity.tuneIncipit = "incipit";
         generatedTuneEntity.tuneForm = "form";
         generatedTuneEntity.tunePlayedBy = "Jacob;Grace;Patrice";

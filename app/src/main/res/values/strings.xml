@@ -28,8 +28,8 @@
     <string name="region">Region</string>
     <string name="region_of_origin">Region of origin</string>
     <string name="region_of_origin_input">Add a region of origin</string>
-    <string name="key">Key</string>
-    <string name="key_input">Add a key</string>
+    <string name="keys">Keys</string>
+    <string name="key_input">Add keys (end each entry with return or ; )</string>
     <string name="incipit">Incipit</string>
     <string name="incipit_input">Add an incipit</string>
     <string name="form">Form</string>
