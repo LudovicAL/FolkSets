@@ -1,5 +1,7 @@
 package com.bandito.folksets.util;
 
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
+import static com.bandito.folksets.util.Constants.KEYS;
 import static com.bandito.folksets.util.Constants.PREFERENCES_NAME;
 
 import android.app.Activity;
@@ -18,6 +20,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bandito.folksets.exception.FolkSetsException;
 import com.bandito.folksets.sql.entities.TuneEntity;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -169,6 +173,51 @@ public class Utilities {
             }
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while processing a dispatchTouchEvent demand.", e);
+        }
+    }
+
+    public static String getTuneLastKey(TuneEntity tuneEntity) {
+        if (tuneEntity == null || StringUtils.isEmpty(tuneEntity.tuneKeys)) {
+            return null;
+        }
+        String[] keyArray = tuneEntity.tuneKeys.split(DEFAULT_SEPARATOR);
+        for (int i = keyArray.length; i > 0; i--) {
+            if (keyArray[i - 1].length() > 0) {
+                return keyArray[i - 1];
+            }
+        }
+        return null;
+    }
+
+    public static Integer getKeyIndex(String key) throws FolkSetsException {
+        try {
+            for (int i = 0, max = KEYS.length; i < max; i++) {
+                if (KEYS[i].first.equals(key) || KEYS[i].second.equals(key)) {
+                    return i;
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while getting a key index.", e);
+        }
+    }
+
+    public static String getKeyWithInterval(String currentKey, int desiredInterval, Constants.KeyQualifier desiredKeyQualifier) throws FolkSetsException {
+        try {
+            Integer keyIndex = getKeyIndex(currentKey);
+            if (keyIndex == null) {
+                return null;
+            }
+            keyIndex += desiredInterval;
+            while (keyIndex > (KEYS.length - 1)) {
+                keyIndex -= KEYS.length;
+            }
+            while (keyIndex < 0) {
+                keyIndex += KEYS.length;
+            }
+            return desiredKeyQualifier == Constants.KeyQualifier.major ? KEYS[keyIndex].first : KEYS[keyIndex].second;
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while getting a key with an interval.", e);
         }
     }
 }

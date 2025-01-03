@@ -146,6 +146,14 @@ public class DatabaseManager {
         }
     }
 
+    public static TuneEntity findRandomTuneWithKeyAndTagsInDatabase(String key, String[] tagArray, Long exceptTuneId) throws FolkSetsException {
+        try {
+            return databaseHelper.findRandomTuneWithKeyAndTagsInDatabase(sqLiteDatabase, key, tagArray, exceptTuneId);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while looking for a random tune with key in the database.", e);
+        }
+    }
+
     public static List<TuneEntity> findTuneByIdInDatabase(String fieldsNames, Long tuneId, String sortOnField, String sortDirection) throws FolkSetsException {
         try {
             return databaseHelper.findTunesByIdInDatabase(sqLiteDatabase, fieldsNames, new String[]{String.valueOf(tuneId)}, sortOnField, sortDirection);

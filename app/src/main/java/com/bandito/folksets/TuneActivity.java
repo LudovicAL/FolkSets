@@ -6,11 +6,13 @@ import static android.view.View.VISIBLE;
 import static com.bandito.folksets.util.Constants.*;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +31,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -88,6 +91,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton zoomOutFloatingActionButton;
     private TunePagesRecyclerViewAdapter tunePagesRecyclerViewAdapter;
     private RecyclerView recyclerView;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -287,6 +291,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 displayPopupMenuOfSetsWithTune(view);
             } else if (view.getId() == R.id.recyclerview_footer_tunesByComposers_textView) {
                 displayPopupMenuOfTunesByComposers(view);
+            } else if (view.getId() == R.id.recyclerview_footer_tuneSuggestions_textView) {
+                displayDialogOfTuneSuggestions();
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonprevious_constraintlayout) {
                 loadPreviousTune();
             } else if (view.getId() == R.id.recyclerview_footer_innerbuttonnext_constraintlayout) {
@@ -352,6 +358,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
 
     private void displayPopupMenuOfTunesByComposers(View view) {
         try {
+            if (tuneOrSet == TuneOrSet.set) {
+                return;
+            }
             if (StaticData.tuneByComposersList == null || StaticData.tuneByComposersList.isEmpty()) {
                 return;
             }
@@ -377,6 +386,59 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             popupMenu.show();
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying tunes by same composers.", e));
+        }
+    }
+
+    private void displayDialogOfTuneSuggestions() {
+        try {
+            if (tuneOrSet == TuneOrSet.set) {
+                return;
+            }
+            dialog = new Dialog(this);
+            dialog.setContentView(R.layout.tunesuggestions_dialog);
+            int width = (int)(getResources().getDisplayMetrics().widthPixels*0.90);
+            int height = (int)(getResources().getDisplayMetrics().heightPixels*0.90);
+            dialog.getWindow().setLayout(width, height);
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            dialog.show();
+            dialog.findViewById(R.id.tunesuggestions_dialog_back_floatingActionButton).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+                }
+            });
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_minustoneminor_textview), StaticData.tuneSuggestions.minusToneMinor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_minustonemajor_textview), StaticData.tuneSuggestions.minusToneMajor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_relativeminor_textview), StaticData.tuneSuggestions.relativeMinor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_relativemajor_textview), StaticData.tuneSuggestions.relativeMajor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plustoneminor_textview), StaticData.tuneSuggestions.plusToneMinor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plustonemajor_textview), StaticData.tuneSuggestions.plusToneMajor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfourthminor_textview), StaticData.tuneSuggestions.plusFourthMinor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfourthmajor_textview), StaticData.tuneSuggestions.plusFourthMajor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfifthminor_textview), StaticData.tuneSuggestions.plusFifthMinor);
+            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfifthmajor_textview), StaticData.tuneSuggestions.plusFifthMajor);
+        } catch (Exception e) {
+            ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying the tune suggestions dialog.", e));
+        }
+    }
+
+    private void activateTuneSuggestionTextView(TextView textView, TuneEntity suggestedTuneEntity) {
+        if (suggestedTuneEntity != null) {
+            textView.setBackgroundColor(ContextCompat.getColor(context, R.color.dark_purple));
+            textView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    try {
+                        Utilities.loadActivity(activity, context, TuneActivity.class, new Pair[]{
+                                new Pair<>(OPERATION, TuneOrSet.tune),
+                                new Pair<>(TUNE_ENTITY, suggestedTuneEntity),
+                                new Pair<>(CLICK_TYPE, Constants.ClickType.shortClick.toString())
+                        });
+                    } catch (Exception e) {
+                        ExceptionManager.manageException(activity, context, TAG, new FolkSetsException("An error occured during an onClick event.", e));
+                    }
+                }
+            });
         }
     }
 
@@ -481,6 +543,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                         displaySetsWithTune();
                     } else if (TUNES_BY_COMPOSERS.equals(broadcastValue)) {
                         displayTunesByComposers();
+                    } else if (TUNES_SUGGESTIONS.equals(broadcastValue)) {
+                        displayTunesSuggestions();
                     }
                 }
             } catch (Exception e) {
@@ -521,6 +585,15 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
         TextView tunesByComposersTextView = findViewById(R.id.recyclerview_footer_tunesByComposers_textView);
+        tunesByComposersTextView.setVisibility(VISIBLE);
+        tunesByComposersTextView.setOnClickListener(this);
+    }
+
+    private void displayTunesSuggestions() {
+        if (StaticData.tuneSuggestions == null || !StaticData.tuneSuggestions.hasSuggestion()) {
+            return;
+        }
+        TextView tunesByComposersTextView = findViewById(R.id.recyclerview_footer_tuneSuggestions_textView);
         tunesByComposersTextView.setVisibility(VISIBLE);
         tunesByComposersTextView.setOnClickListener(this);
     }

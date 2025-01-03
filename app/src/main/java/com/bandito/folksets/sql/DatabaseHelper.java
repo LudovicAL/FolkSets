@@ -162,6 +162,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
+    public TuneEntity findRandomTuneWithKeyAndTagsInDatabase(SQLiteDatabase sqLiteDatabase, String key, String[] tagArray, Long exceptTuneId) {
+        StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_TUNE + " WHERE (((" + TUNE_KEY + " = '" + key + "') OR (" + TUNE_KEY + " LIKE '" + key + ";%'))");
+        for (String tag : tagArray) {
+            query.append(" AND (" + TUNE_TAGS + " LIKE '%" + tag + "%')");
+        }
+        if (exceptTuneId != null) {
+            query.append(" AND (" + TUNE_ID + " != " + exceptTuneId + ")");
+        }
+        query.append(") ORDER BY RANDOM() LIMIT 1");
+        Cursor cursor = sqLiteDatabase.rawQuery(query.toString(), new String[0]);
+        List<TuneEntity> tuneList = convertCursorToTuneEntityList(cursor);
+        if (tuneList.isEmpty()) {
+            return null;
+        }
+        return tuneList.get(0);
+    }
+
     public List<TuneEntity> findTunesByIdInDatabase(SQLiteDatabase sqLiteDatabase, String fieldsNames, String[] tuneIdArray, String sortOnField, String sortDirection) {
         fieldsNames = StringUtils.isNotBlank(fieldsNames) ? fieldsNames : "*";
         StringBuilder query = new StringBuilder("SELECT " + fieldsNames + " FROM " + TABLE_TUNE + " WHERE ");

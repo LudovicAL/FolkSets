@@ -1,5 +1,7 @@
 package com.bandito.folksets.util;
 
+import androidx.core.util.Pair;
+
 import java.util.regex.Pattern;
 
 public class Constants {
@@ -11,6 +13,7 @@ public class Constants {
     public static final String PREVIOUS_AND_NEXT_TUNE = "Previous and next tune";
     public static final String SETS_WITH_TUNE = "Sets with tune";
     public static final String TUNES_BY_COMPOSERS = "Tunes by composers";
+    public static final String TUNES_SUGGESTIONS = "Tunes suggestions";
     public static final String STORAGE_DIRECTORY_URI = "storageDirectoryUri";
     public static final String CROPPER_PREFERED_ACTIVATION_KEY = "cropperPreferedActivationKey";
     public static final boolean CROPPER_DEFAULT_ACTIVATION = true;
@@ -56,6 +59,27 @@ public class Constants {
     public static final String SORT_DESC = "DESC";
     public static final String POSITION = "Position";
     public static final Pattern DELIMITER_INPUT_PATTERN = Pattern.compile("([\\n;])$", Pattern.CASE_INSENSITIVE);
+
+    public static final Pair<String, String>[] KEYS = new Pair[] {
+            new Pair("Gb", "Emb"),
+            new Pair("Db", "Bmb"),
+            new Pair("Ab", "Fm"),
+            new Pair("Eb", "Cm"),
+            new Pair("Bb", "Gm"),
+            new Pair("F", "Dm"),
+            new Pair("C", "Am"),
+            new Pair("G", "Em"),
+            new Pair("D", "Bm"),
+            new Pair("A", "F#m"),
+            new Pair("E", "C#m"),
+            new Pair("B", "G#m"),
+            new Pair("F#", "D#m")
+    };
+
+    public enum KeyQualifier {
+        major,
+        minor
+    }
 
     public enum Operator {
         AND,

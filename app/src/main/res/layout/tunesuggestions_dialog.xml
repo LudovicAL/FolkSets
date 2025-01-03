@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tunesuggestions_dialog_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/select_a_direction"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_back_floatingActionButton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/tunesuggestions_dialog_back_floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:contentDescription="@string/back"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_clear" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/tunesuggestions_dialog_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/stringinput_dialog_barrier1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="tunesuggestions_dialog_textview,tunesuggestions_dialog_back_floatingActionButton" />
+
+    <TextView
+        android:id="@+id/stringinput_minustoneminor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="-1th minor"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier1" />
+
+    <TextView
+        android:id="@+id/stringinput_minustonemajor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="-1th major"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier1" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/stringinput_dialog_barrier2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="stringinput_minustoneminor_textview,stringinput_minustonemajor_textview" />
+
+    <TextView
+        android:id="@+id/stringinput_relativeminor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
+        android:layout_marginHorizontal="5sp"
+        android:background="@color/purple"
+        android:text="Relative minor"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier2" />
+
+    <TextView
+        android:id="@+id/stringinput_relativemajor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
+        android:layout_marginHorizontal="5sp"
+        android:background="@color/purple"
+        android:text="Relative major"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier2" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/stringinput_dialog_barrier3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="stringinput_relativeminor_textview,stringinput_relativemajor_textview" />
+
+    <TextView
+        android:id="@+id/stringinput_plustoneminor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
+        android:layout_marginHorizontal="5sp"
+        android:background="@color/purple"
+        android:text="+1th minor"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier3" />
+
+    <TextView
+        android:id="@+id/stringinput_plustonemajor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15sp"
+        android:layout_marginHorizontal="5sp"
+        android:background="@color/purple"
+        android:text="+1th major"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier3" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/stringinput_dialog_barrier4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="stringinput_plustoneminor_textview,stringinput_plustonemajor_textview" />
+
+    <TextView
+        android:id="@+id/stringinput_plusfourthminor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="+4th minor"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier4" />
+
+    <TextView
+        android:id="@+id/stringinput_plusfourthmajor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="+4th major"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier4" />
+
+    <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/stringinput_dialog_barrier5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="stringinput_plusfourthminor_textview,stringinput_plusfourthmajor_textview" />
+
+    <TextView
+        android:id="@+id/stringinput_plusfifthminor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="+5th minor"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier5" />
+
+    <TextView
+        android:id="@+id/stringinput_plusfifthmajor_textview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:background="@color/purple"
+        android:text="+5th major"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toRightOf="@+id/tunesuggestions_dialog_guideline"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/stringinput_dialog_barrier5" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

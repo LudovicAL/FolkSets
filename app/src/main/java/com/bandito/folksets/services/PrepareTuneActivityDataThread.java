@@ -10,6 +10,7 @@ import static com.bandito.folksets.util.Constants.PREVIOUS_AND_NEXT_TUNE;
 import static com.bandito.folksets.util.Constants.SETS_WITH_TUNE;
 import static com.bandito.folksets.util.Constants.SET_NAME;
 import static com.bandito.folksets.util.Constants.TUNES_BY_COMPOSERS;
+import static com.bandito.folksets.util.Constants.TUNES_SUGGESTIONS;
 import static com.bandito.folksets.util.Constants.TUNE_COMPOSERS;
 import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 import static com.bandito.folksets.util.Utilities.broadcastMessage;
@@ -27,6 +28,7 @@ import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
 import com.bandito.folksets.util.PdfUtilities;
 import com.bandito.folksets.util.StaticData;
+import com.bandito.folksets.util.TuneSuggestion;
 import com.bandito.folksets.util.Utilities;
 
 import java.io.Serializable;
@@ -69,7 +71,7 @@ public class PrepareTuneActivityDataThread extends Thread {
         try {
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressVisibility, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{View.VISIBLE, 0, "Converting pdf to bitmaps"});
             List<Bitmap> bitmapList = PdfUtilities.convertPdfToBitmapList(activity, context, TAG, tuneEntity.tuneFilePath);
-            int maxNumberOfSteps = bitmapList.size() + 5;
+            int maxNumberOfSteps = bitmapList.size() + 6;
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressStepNumber, Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{maxNumberOfSteps, 1, "Cropping bitmaps"});
             int progressCurrentStep = 2;
             if (isCropperActivated && bitmapList.size() <= 7) {
@@ -139,6 +141,26 @@ public class PrepareTuneActivityDataThread extends Thread {
                 }
             }
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNES_BY_COMPOSERS});
+            broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading tune suggestions"});
+            StaticData.tuneSuggestions = new TuneSuggestion();
+            String tuneLastKey = Utilities.getTuneLastKey(tuneEntity);
+            if (tuneLastKey != null) {
+                Integer keyIndex = Utilities.getKeyIndex(tuneLastKey);
+                String[] tagArray = tuneEntity.tuneTags == null ? new String[]{} : Arrays.stream(tuneEntity.tuneTags.split(DEFAULT_SEPARATOR)).filter(tag -> tag.length() > 0).toArray(String[]::new);
+                if (keyIndex != null) {
+                    StaticData.tuneSuggestions.minusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.minusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.relativeMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.relativeMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFourthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFourthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFifthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFifthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                }
+            }
+            broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNES_SUGGESTIONS});
             broadcastMessage(context, Constants.BroadcastName.tuneActivityProgressUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.progressValue, Constants.BroadcastKey.progressHint}, new Serializable[]{progressCurrentStep++, "Loading consultation update"});
             tuneEntity.tuneConsultationNumber++;
             DatabaseManager.updateTuneInDatabase(tuneEntity);

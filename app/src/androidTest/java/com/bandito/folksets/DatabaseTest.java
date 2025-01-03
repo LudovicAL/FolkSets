@@ -1,5 +1,6 @@
 package com.bandito.folksets;
 
+import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.TUNE_ID;
 import static com.bandito.folksets.util.Constants.TUNE_TAGS;
 import static com.bandito.folksets.util.Constants.TABLE_SET;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
  */
 @RunWith(AndroidJUnit4.class)
-public class ExampleInstrumentedTest {
+public class DatabaseTest {
 
     private Context appContext;
 
@@ -179,6 +180,18 @@ public class ExampleInstrumentedTest {
             Assertions.assertThat(setEntityList).hasSize(1);
             Assertions.assertThat(setEntityList.get(0).setName).isEqualTo(newName);
             Assertions.assertThat(setEntityList.get(0).setTunes).isEqualTo(setEntity.setTunes);
+        });
+    }
+
+    @Test
+    public void findRandomTuneWithKeyInDatabase() {
+        Assertions.assertThatNoException().isThrownBy(() -> {
+            DatabaseManager.initializeDatabase(appContext);
+            DatabaseManager.truncateTable(TABLE_TUNE);
+            DatabaseManager.insertTuneInDatabase(tuneEntity);
+            DatabaseManager.insertTuneInDatabase(tuneEntity);
+            TuneEntity result = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(tuneEntity.tuneKeys, tuneEntity.tuneTags.split(DEFAULT_SEPARATOR), 99L);
+            Assertions.assertThat(result).isNotNull();
         });
     }
 

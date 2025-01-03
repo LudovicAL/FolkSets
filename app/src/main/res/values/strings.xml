@@ -73,6 +73,7 @@
     <string name="move_tune_down">Move tune down</string>
     <string name="delete_set">Delete set</string>
 
+    <string name="suggest_tune">Suggest tune</string>
     <string name="sets_containing_this_tune">Sets containing this tune</string>
     <string name="tunes_by_same_composer">Tunes by same composers</string>
     <string name="previous">Previous</string>
@@ -96,6 +97,8 @@
 
     <string name="zoom_in">Zoom in</string>
     <string name="zoom_out">Zoom out</string>
+
+    <string name="select_a_direction">Select a direction</string>
 
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>

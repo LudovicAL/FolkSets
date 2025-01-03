@@ -26,4 +26,5 @@ public class StaticData {
     public static TuneEntity nextTune = null;
     public static TuneEntity previousTune = null;
     public static List<TuneEntity> tuneByComposersList;
+    public static TuneSuggestion tuneSuggestions;
 }
