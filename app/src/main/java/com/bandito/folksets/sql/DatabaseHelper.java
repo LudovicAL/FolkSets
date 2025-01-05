@@ -339,7 +339,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 uniqueValueSet.addAll(Arrays.asList(titleArray));
             }
         }
-        return uniqueValueSet.toArray(String[]::new);
+        return uniqueValueSet.toArray(new String[0]);
     }
 
     public String[] getAllUniqueNameInSetTable(SQLiteDatabase sqLiteDatabase) {

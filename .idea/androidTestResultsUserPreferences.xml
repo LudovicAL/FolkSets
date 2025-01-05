@@ -258,6 +258,7 @@
                   <entry key="Duration" value="90" />
                   <entry key="Nexus_9_API_33" value="120" />
                   <entry key="Tests" value="360" />
+                  <entry key="samsung SM-T307U" value="120" />
                 </map>
               </option>
             </AndroidTestResultsTableState>
