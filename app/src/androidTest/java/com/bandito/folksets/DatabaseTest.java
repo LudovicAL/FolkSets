@@ -379,7 +379,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void getAllTagsInTuneTable() {
+    public void getAllUniqueValueInTuneTable() {
         Assertions.assertThatNoException().isThrownBy(() -> {
             DatabaseManager.initializeDatabase(appContext);
             DatabaseManager.truncateTable(TABLE_TUNE);
@@ -391,26 +391,8 @@ public class DatabaseTest {
             DatabaseManager.insertTuneInDatabase(tuneEntity1);
             DatabaseManager.insertTuneInDatabase(tuneEntity2);
             DatabaseManager.insertTuneInDatabase(tuneEntity3);
-            String[] tagArray = DatabaseManager.getAllUniqueTagInTuneTable();
+            String[] tagArray = DatabaseManager.getAllUniqueValueInTuneTable(TUNE_TAGS);
             Assertions.assertThat(tagArray).hasSize(5);
-        });
-    }
-
-    @Test
-    public void getAllPlayersInTuneTable() {
-        Assertions.assertThatNoException().isThrownBy(() -> {
-            DatabaseManager.initializeDatabase(appContext);
-            DatabaseManager.truncateTable(TABLE_TUNE);
-            TuneEntity tuneEntity1 = generateTuneEntity();
-            TuneEntity tuneEntity2 = generateTuneEntity();
-            TuneEntity tuneEntity3 = generateTuneEntity();
-            tuneEntity2.tunePlayedBy = "Grace;Patrice;Carl";
-            tuneEntity3.tunePlayedBy = "Patrice;Carl;Henry";
-            DatabaseManager.insertTuneInDatabase(tuneEntity1);
-            DatabaseManager.insertTuneInDatabase(tuneEntity2);
-            DatabaseManager.insertTuneInDatabase(tuneEntity3);
-            String[] playerArray = DatabaseManager.getAllUniquePlayedByInTuneTable();
-            Assertions.assertThat(playerArray).hasSize(5);
         });
     }
 
