@@ -88,7 +88,7 @@
     <string name="loading_speed_versus_crop_precision">Loading speed versus crop precision</string>
     <string name="precise_crop_slower_loading">Precise crop\nSlower loading</string>
     <string name="imprecise_crop_faster_loading">Imprecise crop\nFaster loading</string>
-    <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle left. If the whitespace around loaded tunes is cropped too imprecisely, move the seekbar\'s handle right.)</string>
+    <string name="pdf_cropper_seekbar_explanation">(If loading tunes takes too long, move the seekbar\'s handle right. If the whitespace around loaded tunes is cropped too imprecisely, move the seekbar\'s handle left.)</string>
 
     <string name="create_new_tag">Create new tag</string>
     <string name="create_new_player">Create new player</string>
