@@ -331,55 +331,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String query = "SELECT DISTINCT " + field + " FROM " + TABLE_TUNE + " WHERE " + field + " IS NOT NULL";
         query += getSortOptionString(field, null);
         Cursor cursor = sqLiteDatabase.rawQuery(query, new String[0]);
-        return convertCursorToStringList(cursor, field).toArray(new String[0]);
-    }
-
-    public String[] getAllUniqueTitleInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tuneTitlesArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_TITLES);
-        Set<String> uniqueTitleSet = new HashSet<>();
-        for (String tuneTitles : tuneTitlesArray) {
+        List<String> stringList = convertCursorToStringList(cursor, field);
+        Set<String> uniqueValueSet = new HashSet<>();
+        for (String tuneTitles : stringList) {
             String[] titleArray = StringUtils.split(tuneTitles, DEFAULT_SEPARATOR);
             if (titleArray != null) {
-                uniqueTitleSet.addAll(Arrays.asList(titleArray));
+                uniqueValueSet.addAll(Arrays.asList(titleArray));
             }
         }
-        return uniqueTitleSet.toArray(new String[0]);
-    }
-
-    public String[] getAllUniqueTagInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_TAGS);
-        Set<String> uniqueTagSet = new HashSet<>();
-        for (String tags : tagsArray) {
-            String[] tagArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
-            if (tagArray != null) {
-                uniqueTagSet.addAll(Arrays.asList(tagArray));
-            }
-        }
-        return uniqueTagSet.toArray(new String[0]);
-    }
-
-    public String[] getAllUniqueComposerInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] tagsArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_COMPOSERS);
-        Set<String> uniqueComposerSet = new HashSet<>();
-        for (String tags : tagsArray) {
-            String[] composerArray = StringUtils.split(tags, DEFAULT_SEPARATOR);
-            if (composerArray != null) {
-                uniqueComposerSet.addAll(Arrays.asList(composerArray));
-            }
-        }
-        return uniqueComposerSet.toArray(new String[0]);
-    }
-
-    public String[] getAllUniquePlayedByInTuneTable(SQLiteDatabase sqLiteDatabase) {
-        String[] playersArray = getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_PLAYED_BY);
-        Set<String> uniquePlayerSet = new HashSet<>();
-        for (String players : playersArray) {
-            String[] playerArray = StringUtils.split(players, DEFAULT_SEPARATOR);
-            if (playerArray != null) {
-                uniquePlayerSet.addAll(Arrays.asList(playerArray));
-            }
-        }
-        return uniquePlayerSet.toArray(new String[0]);
+        return uniqueValueSet.toArray(String[]::new);
     }
 
     public String[] getAllUniqueNameInSetTable(SQLiteDatabase sqLiteDatabase) {

@@ -2,6 +2,8 @@ package com.bandito.folksets;
 
 import static com.bandito.folksets.util.Constants.DEFAULT_SEPARATOR;
 import static com.bandito.folksets.util.Constants.OPERATION;
+import static com.bandito.folksets.util.Constants.TUNE_PLAYED_BY;
+import static com.bandito.folksets.util.Constants.TUNE_TAGS;
 import static com.bandito.folksets.util.Constants.TUNE_TITLES;
 
 import android.app.Activity;
@@ -101,9 +103,9 @@ public class ManagementActivity extends AppCompatActivity implements AdapterView
             searchTextView.setText(tagsOrPlayers == Constants.ManagementOperation.manageTags ? R.string.select_a_tag : R.string.select_a_player);
             searchTextInputEditText.addTextChangedListener(textWatcher);
             if (tagsOrPlayers == Constants.ManagementOperation.manageTags) {
-                StaticData.uniqueTuneTagArray = DatabaseManager.getAllUniqueTagInTuneTable();
+                StaticData.uniqueTuneTagArray = DatabaseManager.getAllUniqueValueInTuneTable(TUNE_TAGS);
             } else {
-                StaticData.uniqueTunePlayedByArray = DatabaseManager.getAllUniquePlayedByInTuneTable();
+                StaticData.uniqueTunePlayedByArray = DatabaseManager.getAllUniqueValueInTuneTable(TUNE_PLAYED_BY);
             }
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An exception occured during the OnCreate step of class ManagementActivity.", e, true));

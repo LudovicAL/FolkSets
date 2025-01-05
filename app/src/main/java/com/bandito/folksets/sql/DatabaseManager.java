@@ -20,6 +20,7 @@ import android.app.Activity;
 import androidx.core.util.Pair;
 
 import java.util.List;
+import java.util.Set;
 
 public class DatabaseManager {
 
@@ -242,83 +243,19 @@ public class DatabaseManager {
         }
     }
 
+    public static String[] getAllUniqueValueInTuneTable(String field) throws FolkSetsException {
+        try {
+            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, field);
+        } catch (Exception e) {
+            throw new FolkSetsException("An exception occured while getting unique values from tune table.", e);
+        }
+    }
+
     public static void removeTuneFromSets(long tuneId) throws FolkSetsException {
         try {
             databaseHelper.removeTuneFromSets(sqLiteDatabase, tuneId);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while removing a tune from sets.", e);
-        }
-    }
-
-    public static String[] getAllUniqueTitleInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueTitleInTuneTable(sqLiteDatabase);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique titles from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueTagInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueTagInTuneTable(sqLiteDatabase);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique tags from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueComposerInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueComposerInTuneTable(sqLiteDatabase);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique composers from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueRegionInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_REGION_OF_ORIGIN);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique regions of origin from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueKeyInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_KEY);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique keys from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueIncipitInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_INCIPIT);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique incipits from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueFormInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_FORM);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique forms from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniquePlayedByInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniquePlayedByInTuneTable(sqLiteDatabase);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique players from the tune table", e);
-        }
-    }
-
-    public static String[] getAllUniqueNoteInTuneTable() throws FolkSetsException {
-        try {
-            return databaseHelper.getAllUniqueValueInTuneTable(sqLiteDatabase, TUNE_NOTE);
-        } catch (Exception e) {
-            throw new FolkSetsException("An exception occured while retrieving all unique notes from the tune table", e);
         }
     }
 
