@@ -94,7 +94,7 @@ public class ChipGroupUtilities {
         public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
             try {
                 if (DELIMITER_INPUT_PATTERN.matcher(charSequence).find()) {
-                    String sanitizedString = charSequence.toString().replace(DEFAULT_SEPARATOR, "");
+                    String sanitizedString = charSequence.toString().replace(DEFAULT_SEPARATOR, "").replace("\n", "");
                     if (!sanitizedString.isEmpty()) {
                         addChipsToChipGroup(context, new String[]{sanitizedString}, chipGroup);
                     }
