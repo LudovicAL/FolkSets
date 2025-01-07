@@ -162,10 +162,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sqLiteDatabase.update(TABLE_SET, contentValues, whereClause, new String[0]);
     }
 
-    public TuneEntity findRandomTuneWithKeyAndTagsInDatabase(SQLiteDatabase sqLiteDatabase, String key, String[] tagArray, Long exceptTuneId) {
+    public TuneEntity findRandomTuneWithKeyAndTagsAndRegionInDatabase(SQLiteDatabase sqLiteDatabase, String key, String[] tagArray, String[] regionOfOrigin, Long exceptTuneId) {
         StringBuilder query = new StringBuilder("SELECT * FROM " + TABLE_TUNE + " WHERE (((" + TUNE_KEY + " = '" + key + "') OR (" + TUNE_KEY + " LIKE '" + key + ";%'))");
         for (String tag : tagArray) {
             query.append(" AND (" + TUNE_TAGS + " LIKE '%" + tag + "%')");
+        }
+        for (String region : regionOfOrigin) {
+            query.append(" AND ((" + TUNE_REGION_OF_ORIGIN + " = '" + region + "') OR (" + TUNE_REGION_OF_ORIGIN + " LIKE '" + region + ";%') OR (" + TUNE_REGION_OF_ORIGIN + " LIKE '%;" + region + ";%') OR (" + TUNE_REGION_OF_ORIGIN + " LIKE '%;" + region + "'))");
         }
         if (exceptTuneId != null) {
             query.append(" AND (" + TUNE_ID + " != " + exceptTuneId + ")");

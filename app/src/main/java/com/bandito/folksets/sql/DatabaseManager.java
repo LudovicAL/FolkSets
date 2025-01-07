@@ -147,9 +147,9 @@ public class DatabaseManager {
         }
     }
 
-    public static TuneEntity findRandomTuneWithKeyAndTagsInDatabase(String key, String[] tagArray, Long exceptTuneId) throws FolkSetsException {
+    public static TuneEntity findRandomTuneWithKeyAndTagsInDatabase(String key, String[] tagArray, String[] regionOfOrigin, Long exceptTuneId) throws FolkSetsException {
         try {
-            return databaseHelper.findRandomTuneWithKeyAndTagsInDatabase(sqLiteDatabase, key, tagArray, exceptTuneId);
+            return databaseHelper.findRandomTuneWithKeyAndTagsAndRegionInDatabase(sqLiteDatabase, key, tagArray, regionOfOrigin, exceptTuneId);
         } catch (Exception e) {
             throw new FolkSetsException("An exception occured while looking for a random tune with key in the database.", e);
         }

@@ -190,7 +190,7 @@ public class DatabaseTest {
             DatabaseManager.truncateTable(TABLE_TUNE);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
-            TuneEntity result = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(tuneEntity.tuneKeys, tuneEntity.tuneTags.split(DEFAULT_SEPARATOR), 99L);
+            TuneEntity result = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(tuneEntity.tuneKeys, tuneEntity.tuneTags.split(DEFAULT_SEPARATOR), tuneEntity.tuneRegionOfOrigin.split(DEFAULT_SEPARATOR), 99L);
             Assertions.assertThat(result).isNotNull();
         });
     }

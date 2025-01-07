@@ -147,17 +147,18 @@ public class PrepareTuneActivityDataThread extends Thread {
             if (tuneLastKey != null) {
                 Integer keyIndex = Utilities.getKeyIndex(tuneLastKey);
                 String[] tagArray = tuneEntity.tuneTags == null ? new String[]{} : Arrays.stream(tuneEntity.tuneTags.split(DEFAULT_SEPARATOR)).filter(tag -> tag.length() > 0).toArray(String[]::new);
+                String[] regionArray = tuneEntity.tuneRegionOfOrigin == null ? new String[]{} : Arrays.stream(tuneEntity.tuneRegionOfOrigin.split(DEFAULT_SEPARATOR)).filter(region -> region.length() > 0).toArray(String[]::new);
                 if (keyIndex != null) {
-                    StaticData.tuneSuggestions.minusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.minusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.relativeMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.relativeMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusFourthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusFourthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusFifthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.minor), tagArray, tuneEntity.tuneId);
-                    StaticData.tuneSuggestions.plusFifthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.major), tagArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.minusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.minor), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.minusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, -2, Constants.KeyQualifier.major), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.relativeMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.minor), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.relativeMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, 0, Constants.KeyQualifier.major), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusToneMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.minor), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusToneMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +2, Constants.KeyQualifier.major), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFourthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.minor), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFourthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +12, Constants.KeyQualifier.major), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFifthMinor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.minor), tagArray, regionArray, tuneEntity.tuneId);
+                    StaticData.tuneSuggestions.plusFifthMajor = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(Utilities.getKeyWithInterval(tuneLastKey, +1, Constants.KeyQualifier.major), tagArray, regionArray, tuneEntity.tuneId);
                 }
             }
             broadcastMessage(context, Constants.BroadcastName.staticDataUpdate, new Constants.BroadcastKey[]{Constants.BroadcastKey.staticDataValue}, new String[]{TUNES_SUGGESTIONS});
