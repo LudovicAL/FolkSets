@@ -190,7 +190,7 @@ public class DatabaseTest {
             DatabaseManager.truncateTable(TABLE_TUNE);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
             DatabaseManager.insertTuneInDatabase(tuneEntity);
-            TuneEntity result = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(tuneEntity.tuneKeys, tuneEntity.tuneTags.split(DEFAULT_SEPARATOR), tuneEntity.tuneRegionOfOrigin.split(DEFAULT_SEPARATOR), 99L);
+            TuneEntity result = DatabaseManager.findRandomTuneWithKeyAndTagsInDatabase(tuneEntity.tuneKeys, tuneEntity.tuneTags.split(DEFAULT_SEPARATOR), tuneEntity.tuneRegionsOfOrigin.split(DEFAULT_SEPARATOR), 99L);
             Assertions.assertThat(result).isNotNull();
         });
     }
@@ -404,7 +404,7 @@ public class DatabaseTest {
                 "2024-01-01");
         generatedTuneEntity.tuneTags = "tag1;tag2;tag3";
         generatedTuneEntity.tuneComposers = "composer1;composer2;composer3";
-        generatedTuneEntity.tuneRegionOfOrigin = "regiong of origin";
+        generatedTuneEntity.tuneRegionsOfOrigin = "regiong of origin";
         generatedTuneEntity.tuneKeys = "key";
         generatedTuneEntity.tuneIncipit = "incipit";
         generatedTuneEntity.tuneForm = "form";

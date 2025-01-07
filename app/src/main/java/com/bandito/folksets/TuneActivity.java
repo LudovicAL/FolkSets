@@ -79,7 +79,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     private ChipGroup tuneTagsChipGroup;
     private AutoCompleteTextView tuneComposersAutoCompleteTextView;
     private ChipGroup tuneComposersChipGroup;
-    private AutoCompleteTextView tuneRegionOfOriginAutoCompleteTextView;
+    private AutoCompleteTextView tuneRegionsOfOriginAutoCompleteTextView;
+    private ChipGroup tuneRegionsOfOriginChipGroup;
     private AutoCompleteTextView tuneKeysAutoCompleteTextView;
     private ChipGroup tuneKeysChipGroup;
     private AutoCompleteTextView tuneIncipitAutoCompleteTextView;
@@ -107,12 +108,13 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             tuneTitlesChipGroup = headerView.findViewById(R.id.tune_nav_header_title_chipgroup);
             tuneTagsChipGroup = headerView.findViewById(R.id.tune_nav_header_tag_chipgroup);
             tuneComposersChipGroup = headerView.findViewById(R.id.tune_nav_header_composer_chipgroup);
+            tuneRegionsOfOriginChipGroup = headerView.findViewById(R.id.tune_nav_header_region_chipgroup);
             tuneKeysChipGroup = headerView.findViewById(R.id.tune_nav_header_key_chipgroup);
             tunePlayedByChipGroup = headerView.findViewById(R.id.tune_nav_header_players_chipgroup);
             tuneTitlesAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_title_autocompletetextview);
             tuneTagsAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_tag_autocompletetextview);
             tuneComposersAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_composer_autocompletetextview);
-            tuneRegionOfOriginAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_region_autocompletetextview);
+            tuneRegionsOfOriginAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_region_autocompletetextview);
             tuneKeysAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_key_autocompletetextview);
             tuneIncipitAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_incipit_autocompletetextview);
             tuneFormAutoCompleteTextView = headerView.findViewById(R.id.tune_nav_header_form_autocompletetextview);
@@ -164,6 +166,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             TextWatcher titleTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
             TextWatcher tagTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
             TextWatcher composerTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup);
+            TextWatcher regionsOfOriginTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneRegionsOfOriginAutoCompleteTextView, tuneRegionsOfOriginChipGroup);
             TextWatcher keyTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tuneKeysAutoCompleteTextView, tuneKeysChipGroup);
             TextWatcher playedByTextWatcher = new ChipGroupUtilities.CustomTextWatcher(this, this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
             //Prepare the autocompletes
@@ -173,7 +176,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             tuneTagsAutoCompleteTextView.addTextChangedListener(tagTextWatcher);
             tuneComposersAutoCompleteTextView.setThreshold(0);
             tuneComposersAutoCompleteTextView.addTextChangedListener(composerTextWatcher);
-            tuneRegionOfOriginAutoCompleteTextView.setThreshold(0);
+            tuneRegionsOfOriginAutoCompleteTextView.setThreshold(0);
+            tuneRegionsOfOriginAutoCompleteTextView.addTextChangedListener(regionsOfOriginTextWatcher);
             tuneKeysAutoCompleteTextView.setThreshold(0);
             tuneKeysAutoCompleteTextView.addTextChangedListener(keyTextWatcher);
             tuneIncipitAutoCompleteTextView.setThreshold(0);
@@ -187,7 +191,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneTitles, DEFAULT_SEPARATOR), tuneTitlesChipGroup);
             ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneTags, DEFAULT_SEPARATOR), tuneTagsChipGroup);
             ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneComposers, DEFAULT_SEPARATOR), tuneComposersChipGroup);
-            tuneRegionOfOriginAutoCompleteTextView.setText(tuneEntity.tuneRegionOfOrigin);
+            ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneRegionsOfOrigin, DEFAULT_SEPARATOR), tuneRegionsOfOriginChipGroup);
             ChipGroupUtilities.addChipsToChipGroup(this, StringUtils.split(tuneEntity.tuneKeys, DEFAULT_SEPARATOR), tuneKeysChipGroup);
             tuneIncipitAutoCompleteTextView.setText(tuneEntity.tuneIncipit);
             tuneFormAutoCompleteTextView.setText(tuneEntity.tuneForm);
@@ -219,7 +223,7 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
             tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
             tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
             tuneEntity.tuneComposers = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup);
-            tuneEntity.tuneRegionOfOrigin = tuneRegionOfOriginAutoCompleteTextView.getText().toString();
+            tuneEntity.tuneRegionsOfOrigin = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneRegionsOfOriginAutoCompleteTextView, tuneRegionsOfOriginChipGroup);
             tuneEntity.tuneKeys = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneKeysAutoCompleteTextView, tuneKeysChipGroup);
             tuneEntity.tuneIncipit = tuneIncipitAutoCompleteTextView.getText().toString();
             tuneEntity.tuneForm = tuneFormAutoCompleteTextView.getText().toString();
@@ -500,7 +504,8 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
         tuneTagsAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup));
         tuneComposersAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneComposerArray));
         tuneComposersAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup));
-        tuneRegionOfOriginAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneRegionArray));
+        tuneRegionsOfOriginAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneRegionArray));
+        tuneRegionsOfOriginAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, this, tuneRegionsOfOriginAutoCompleteTextView, tuneRegionsOfOriginChipGroup));
         tuneKeysAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneKeyArray));
         tuneKeysAutoCompleteTextView.setOnItemClickListener(new ChipGroupUtilities.CustomOnItemClickListener(this, this, tuneKeysAutoCompleteTextView, tuneKeysChipGroup));
         tuneIncipitAutoCompleteTextView.setAdapter(new ArrayAdapter<>(this, android.R.layout.select_dialog_item, StaticData.uniqueTuneIncipitArray));
