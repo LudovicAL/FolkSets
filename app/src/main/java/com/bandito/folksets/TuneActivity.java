@@ -147,6 +147,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 tuneEntity = (TuneEntity) getIntent().getExtras().getSerializable(TUNE_ENTITY);
             } else {
                 setEntity = (SetEntity) getIntent().getExtras().getSerializable(SET_ENTITY);
+                TextView setNameTextView = findViewById(R.id.recyclerview_footer_setName_textView);
+                setNameTextView.setText(setEntity.setName);
+                setNameTextView.setVisibility(VISIBLE);
                 position = getIntent().getExtras().getInt(POSITION);
                 try {
                     tuneEntity = DatabaseManager.findTuneByIdInDatabase("*", setEntity.getTune(position), null, null).get(0);
@@ -586,6 +589,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayTunesByComposers() {
+        if (tuneOrSet == TuneOrSet.set) {
+            return;
+        }
         if (StaticData.tuneByComposersList == null || StaticData.tuneByComposersList.isEmpty()) {
             return;
         }
@@ -595,6 +601,9 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void displayTunesSuggestions() {
+        if (tuneOrSet == TuneOrSet.set) {
+            return;
+        }
         if (StaticData.tuneSuggestions == null || !StaticData.tuneSuggestions.hasSuggestion()) {
             return;
         }

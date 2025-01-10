@@ -39,6 +39,23 @@
         app:layout_constraintRight_toRightOf="parent">
 
         <TextView
+            android:id="@+id/recyclerview_footer_setName_textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="1sp"
+            android:layout_marginEnd="1sp"
+            android:background="@color/purple"
+            android:clickable="true"
+            android:text="@string/placeholder"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/recyclerview_footer_tuneSuggestions_textView"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="parent" />
+
+        <TextView
             android:id="@+id/recyclerview_footer_tuneSuggestions_textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
