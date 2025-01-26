@@ -169,6 +169,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         String textToSearch = textInputEditText.getText().toString();
         if (textToSearch.isEmpty()) {
             setListRecyclerViewAdapter.setSetEntityList(DatabaseManager.findAllSetsInDatabase("*", SET_NAME, null));
+            setMatchNumberTextview.setText("");
         } else {
             int i = materialButtonToggleGroup.getCheckedButtonId();
             if (i == R.id.fragment_set_list_setname_materialbutton) {
@@ -177,7 +178,7 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
             } else if (i == R.id.fragment_set_list_tuneinsets_materialbutton) {
                 Log.i(TAG, "Seaching tune in set: " + textToSearch);
                 Pair<Integer, List<SetEntity>> result = DatabaseManager.findSetsWithTunesInDatabase(textToSearch, SET_NAME, null);
-                setMatchNumber(result.first);
+                setMatchNumber(result.first, result.second.size());
                 setListRecyclerViewAdapter.setSetEntityList(result.second);
             }
         }
@@ -190,8 +191,8 @@ public class SetListFragment extends Fragment implements View.OnClickListener, S
         ((TextInputLayout)getActivity().findViewById((R.id.fragment_set_list_textinputlayout))).setHint(hint);
     }
 
-    private void setMatchNumber(int matchNumber) {
-        setMatchNumberTextview.setText(getResources().getQuantityString(R.plurals.tunes_matching_your_prompt, matchNumber, matchNumber));
+    private void setMatchNumber(int numberOfTunesMatchingPrompt, int numberOfSetsMatchingPrompt) {
+        setMatchNumberTextview.setText(getResources().getQuantityString(R.plurals.number_of_tunes, numberOfTunesMatchingPrompt, numberOfTunesMatchingPrompt) + " and " + getResources().getQuantityString(R.plurals.number_of_sets, numberOfSetsMatchingPrompt, numberOfSetsMatchingPrompt) + " matching your prompt.");
     }
 
     @Override

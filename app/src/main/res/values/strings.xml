@@ -13,9 +13,13 @@
     <string name="tab_settings">SETTINGS</string>
     <string name="set_songs_dropdown">Set songs drop down</string>
 
-    <plurals name="tunes_matching_your_prompt">
-        <item quantity="one">%d tune matching your prompt</item>
-        <item quantity="other">%d tunes matching your prompt</item>
+    <plurals name="number_of_tunes">
+        <item quantity="one">%d tune</item>
+        <item quantity="other">%d tunes</item>
+    </plurals>
+    <plurals name="number_of_sets">
+        <item quantity="one">%d set</item>
+        <item quantity="other">%d sets</item>
     </plurals>
 
     <string name="title">Title</string>

@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
@@ -31,6 +32,7 @@ import com.bandito.folksets.sql.DatabaseManager;
 import com.bandito.folksets.sql.entities.SetEntity;
 import com.bandito.folksets.sql.entities.TuneEntity;
 import com.bandito.folksets.util.Constants;
+import com.bandito.folksets.util.StaticData;
 import com.bandito.folksets.util.Utilities;
 
 import org.apache.commons.lang3.StringUtils;
@@ -116,11 +118,15 @@ public class SetListRecyclerViewAdapter extends RecyclerView.Adapter<SetListRecy
                 if (view.getId() == R.id.adapter_set_item_select_floatingactionbutton) {
                     displayPopupMenuOfTunesInSet(view);
                 } else if (view.getId() == R.id.adapter_set_item_edit_floatingactionbutton) {
-                    List<SetEntity> setEntityListOfClickedSet = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setEntityList.get(getAdapterPosition()).setId), null, null);
-                    Utilities.loadActivity(activity, context, SetActivity.class, new Pair[]{
-                            new Pair<>(OPERATION, Constants.SetOperation.editSet),
-                            new Pair<>(SET_ENTITY, setEntityListOfClickedSet.get(0))
-                    });
+                    if (StaticData.tuneEntityList == null) {
+                        Toast.makeText(context, "Please wait for the loading to finish before editing an existing set.", Toast.LENGTH_LONG).show();
+                    } else {
+                        List<SetEntity> setEntityListOfClickedSet = DatabaseManager.findSetByIdInDatabase("*", String.valueOf(setEntityList.get(getAdapterPosition()).setId), null, null);
+                        Utilities.loadActivity(activity, context, SetActivity.class, new Pair[]{
+                                new Pair<>(OPERATION, Constants.SetOperation.editSet),
+                                new Pair<>(SET_ENTITY, setEntityListOfClickedSet.get(0))
+                        });
+                    }
                 } else if (itemClickListener != null) {
                     itemClickListener.onItemClick(view, getAdapterPosition());
                 }
