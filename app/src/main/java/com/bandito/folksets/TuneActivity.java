@@ -223,14 +223,14 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(this, "At least one title is required", Toast.LENGTH_SHORT).show();
                 return;
             }
-            tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup);
-            tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup);
-            tuneEntity.tuneComposers = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup);
-            tuneEntity.tuneRegionsOfOrigin = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneRegionsOfOriginAutoCompleteTextView, tuneRegionsOfOriginChipGroup);
-            tuneEntity.tuneKeys = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneKeysAutoCompleteTextView, tuneKeysChipGroup);
+            tuneEntity.tuneTitles = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTitlesAutoCompleteTextView, tuneTitlesChipGroup, false);
+            tuneEntity.tuneTags = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneTagsAutoCompleteTextView, tuneTagsChipGroup, false);
+            tuneEntity.tuneComposers = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneComposersAutoCompleteTextView, tuneComposersChipGroup, false);
+            tuneEntity.tuneRegionsOfOrigin = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneRegionsOfOriginAutoCompleteTextView, tuneRegionsOfOriginChipGroup, false);
+            tuneEntity.tuneKeys = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tuneKeysAutoCompleteTextView, tuneKeysChipGroup, true);
             tuneEntity.tuneIncipit = tuneIncipitAutoCompleteTextView.getText().toString();
             tuneEntity.tuneForm = tuneFormAutoCompleteTextView.getText().toString();
-            tuneEntity.tunePlayedBy = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup);
+            tuneEntity.tunePlayedBy = ChipGroupUtilities.retrieveChipsFromChipGroup(this, tunePlayedByAutoCompleteTextView, tunePlayedByChipGroup, false);
             tuneEntity.tuneNote = tuneNoteAutoCompleteTextView.getText().toString();
             DatabaseManager.updateTuneInDatabase(tuneEntity);
             Toast.makeText(this, "Tune saved", Toast.LENGTH_SHORT).show();

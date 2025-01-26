@@ -45,7 +45,7 @@ public class ChipGroupUtilities {
         }
     }
 
-    public static String retrieveChipsFromChipGroup(Context context, AutoCompleteTextView autoCompleteTextView, ChipGroup chipGroup) throws FolkSetsException {
+    public static String retrieveChipsFromChipGroup(Context context, AutoCompleteTextView autoCompleteTextView, ChipGroup chipGroup, boolean allowDuplicateValues) throws FolkSetsException {
         try {
             if (autoCompleteTextView.getText() != null) {
                 String content = autoCompleteTextView.getText().toString();
@@ -56,11 +56,11 @@ public class ChipGroupUtilities {
                 }
             }
             StringBuilder stringBuilder = new StringBuilder();
-            List<CharSequence> tagList = new ArrayList<>();
+            List<CharSequence> chipList = new ArrayList<>();
             for (int i = 0, max = chipGroup.getChildCount(); i < max; i++) {
                 CharSequence chipValue = ((Chip) chipGroup.getChildAt(i)).getText();
-                if (!tagList.contains(chipValue)) {
-                    tagList.add(chipValue);
+                if (!chipList.contains(chipValue) || allowDuplicateValues) {
+                    chipList.add(chipValue);
                     stringBuilder.append(chipValue);
                     if (i < max - 1) {
                         stringBuilder.append(DEFAULT_SEPARATOR);
