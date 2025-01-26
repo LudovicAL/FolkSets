@@ -209,11 +209,8 @@ public class Utilities {
                 return null;
             }
             keyIndex += desiredInterval;
-            while (keyIndex > (KEYS.length - 1)) {
-                keyIndex -= KEYS.length;
-            }
-            while (keyIndex < 0) {
-                keyIndex += KEYS.length;
+            if (keyIndex < 0 || keyIndex > (KEYS.length - 1)) {
+                return null;
             }
             return desiredKeyQualifier == Constants.KeyQualifier.major ? KEYS[keyIndex].first : KEYS[keyIndex].second;
         } catch (Exception e) {

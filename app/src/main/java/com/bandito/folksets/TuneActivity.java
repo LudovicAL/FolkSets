@@ -414,19 +414,51 @@ public class TuneActivity extends AppCompatActivity implements View.OnClickListe
                     dialog.dismiss();
                 }
             });
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_minustoneminor_textview), StaticData.tuneSuggestions.minusToneMinor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_minustonemajor_textview), StaticData.tuneSuggestions.minusToneMajor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_relativeminor_textview), StaticData.tuneSuggestions.relativeMinor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_relativemajor_textview), StaticData.tuneSuggestions.relativeMajor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plustoneminor_textview), StaticData.tuneSuggestions.plusToneMinor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plustonemajor_textview), StaticData.tuneSuggestions.plusToneMajor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfourthminor_textview), StaticData.tuneSuggestions.plusFourthMinor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfourthmajor_textview), StaticData.tuneSuggestions.plusFourthMajor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfifthminor_textview), StaticData.tuneSuggestions.plusFifthMinor);
-            activateTuneSuggestionTextView(dialog.findViewById(R.id.stringinput_plusfifthmajor_textview), StaticData.tuneSuggestions.plusFifthMajor);
+            String tuneLastKey = Utilities.getTuneLastKey(tuneEntity);
+            ((TextView)dialog.findViewById(R.id.tunesuggestions_dialog_currentkey_textview)).setText("Current key: " + tuneLastKey);
+            TextView tunesuggestions_dialog_minustoneminor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_minustoneminor_textview);
+            TextView tunesuggestions_dialog_minustonemajor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_minustonemajor_textview);
+            TextView tunesuggestions_dialog_relativeminor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_relativeminor_textview);
+            TextView tunesuggestions_dialog_relativemajor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_relativemajor_textview);
+            TextView tunesuggestions_dialog_plustoneminor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plustoneminor_textview);
+            TextView tunesuggestions_dialog_plustonemajor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plustonemajor_textview);
+            TextView tunesuggestions_dialog_plusfourthminor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plusfourthminor_textview);
+            TextView tunesuggestions_dialog_plusfourthmajor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plusfourthmajor_textview);
+            TextView tunesuggestions_dialog_plusfifthminor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plusfifthminor_textview);
+            TextView tunesuggestions_dialog_plusfifthmajor_textview = dialog.findViewById(R.id.tunesuggestions_dialog_plusfifthmajor_textview);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_minustoneminor_textview, R.string.minus_1_minor, tuneLastKey, -2, KeyQualifier.minor);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_minustonemajor_textview, R.string.minus_1_major, tuneLastKey, -2, KeyQualifier.major);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_relativeminor_textview, R.string.relative_minor, tuneLastKey, 0, KeyQualifier.minor);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_relativemajor_textview, R.string.relative_major, tuneLastKey, 0, KeyQualifier.major);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plustoneminor_textview, R.string.plus_1_minor, tuneLastKey, +2, KeyQualifier.minor);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plustonemajor_textview, R.string.plus_1_major, tuneLastKey, +2, KeyQualifier.major);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plusfourthminor_textview, R.string.plus_4_minor, tuneLastKey, -1, KeyQualifier.minor);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plusfourthmajor_textview, R.string.plus_4_major, tuneLastKey, -1, KeyQualifier.major);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plusfifthminor_textview, R.string.plus_5_minor, tuneLastKey, +1, KeyQualifier.minor);
+            setTuneSuggestionTextViewText(tunesuggestions_dialog_plusfifthmajor_textview, R.string.plus_5_major, tuneLastKey, +1, KeyQualifier.major);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_minustoneminor_textview, StaticData.tuneSuggestions.minusToneMinor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_minustonemajor_textview, StaticData.tuneSuggestions.minusToneMajor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_relativeminor_textview, StaticData.tuneSuggestions.relativeMinor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_relativemajor_textview, StaticData.tuneSuggestions.relativeMajor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plustoneminor_textview, StaticData.tuneSuggestions.plusToneMinor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plustonemajor_textview, StaticData.tuneSuggestions.plusToneMajor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plusfourthminor_textview, StaticData.tuneSuggestions.plusFourthMinor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plusfourthmajor_textview, StaticData.tuneSuggestions.plusFourthMajor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plusfifthminor_textview, StaticData.tuneSuggestions.plusFifthMinor);
+            activateTuneSuggestionTextView(tunesuggestions_dialog_plusfifthmajor_textview, StaticData.tuneSuggestions.plusFifthMajor);
         } catch (Exception e) {
             ExceptionManager.manageException(this, this, TAG, new FolkSetsException("An error occured while displaying the tune suggestions dialog.", e));
         }
+    }
+
+    private void setTuneSuggestionTextViewText(TextView textView, int baseStringResId, String currentTuneLastKey, int desiredInterval, KeyQualifier desiredKeyQualifier) {
+        String keyWithInterval = null;
+        try {
+            keyWithInterval = Utilities.getKeyWithInterval(currentTuneLastKey, desiredInterval, desiredKeyQualifier);
+        } catch (Exception e) {
+            //Do nothing
+        }
+        textView.setText(getString(baseStringResId, keyWithInterval == null ? "--" : keyWithInterval));
     }
 
     private void activateTuneSuggestionTextView(TextView textView, TuneEntity suggestedTuneEntity) {

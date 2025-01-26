@@ -103,6 +103,16 @@
     <string name="zoom_out">Zoom out</string>
 
     <string name="select_a_direction">Select a direction</string>
+    <string name="minus_1_minor">-1 minor (%1$s)</string>
+    <string name="minus_1_major">-1 major (%1$s)</string>
+    <string name="relative_minor">relative minor (%1$s)</string>
+    <string name="relative_major">relative major (%1$s)</string>
+    <string name="plus_1_minor">+1 minor (%1$s)</string>
+    <string name="plus_1_major">+1 major (%1$s)</string>
+    <string name="plus_4_minor">+4 minor (%1$s)</string>
+    <string name="plus_4_major">+4 major (%1$s)</string>
+    <string name="plus_5_minor">+5 minor (%1$s)</string>
+    <string name="plus_5_major">+5 major (%1$s)</string>
 
     <string-array name="tune_sort_array">
         <item>@string/sort_by_title</item>
